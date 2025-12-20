@@ -1,0 +1,23 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="circle-clip">
+      <circle cx="16" cy="16" r="15"/>
+    </clipPath>
+  </defs>
+  
+  <!-- Fondo circular blanco -->
+  <circle cx="16" cy="16" r="16" fill="#ffffff"/>
+  
+  <!-- Borde circular -->
+  <circle cx="16" cy="16" r="15" fill="none" stroke="#ecf0f1" stroke-width="2"/>
+  
+  <!-- Logo dentro del círculo -->
+  <image 
+    href="/logo.png" 
+    x="4" 
+    y="4" 
+    width="24" 
+    height="24" 
+    clip-path="url(#circle-clip)"
+  />
+</svg>
