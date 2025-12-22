@@ -12,7 +12,6 @@ import {
   validateImage,
 } from "../../supabase/storageService";
 import { featuredFoods as initialFoods } from "../../data/foods";
-import "./Manager.css";
 
 /**
  * Gestor de Platos Destacados
@@ -169,23 +168,37 @@ const FoodManager = () => {
   };
 
   if (loading) {
-    return <div className="manager-loading">Cargando platos destacados...</div>;
+    return (
+      <div className="text-center py-10 text-lg text-zinc-500">
+        Cargando platos destacados...
+      </div>
+    );
   }
 
   return (
-    <div className="manager">
-      <div className="manager-header">
-        <h2>Gestión de Platos Destacados</h2>
-        <button onClick={() => setShowForm(!showForm)} className="btn-primary">
+    <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
+      <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-zinc-100">
+        <h2 className="text-2xl font-bold text-zinc-800">
+          Gestión de Platos Destacados
+        </h2>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-800 text-white hover:bg-zinc-700 hover:-translate-y-0.5"
+        >
           {showForm ? "Cancelar" : "+ Nuevo Plato"}
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="manager-form">
-          <div className="form-row">
-            <div className="form-group">
-              <label>Nombre *</label>
+        <form
+          onSubmit={handleSubmit}
+          className="bg-zinc-50 border-2 border-zinc-200 rounded-xl p-6 mb-8"
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div className="flex flex-col gap-2">
+              <label className="font-semibold text-zinc-700 text-sm">
+                Nombre *
+              </label>
               <input
                 type="text"
                 value={formData.name}
@@ -193,11 +206,14 @@ const FoodManager = () => {
                   setFormData({ ...formData, name: e.target.value })
                 }
                 required
+                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
               />
             </div>
 
-            <div className="form-group">
-              <label>Categoría *</label>
+            <div className="flex flex-col gap-2">
+              <label className="font-semibold text-zinc-700 text-sm">
+                Categoría *
+              </label>
               <input
                 type="text"
                 value={formData.category}
@@ -206,12 +222,15 @@ const FoodManager = () => {
                 }
                 required
                 placeholder="ej: hamburguesas"
+                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
               />
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Descripción *</label>
+          <div className="flex flex-col gap-2 mb-4">
+            <label className="font-semibold text-zinc-700 text-sm">
+              Descripción *
+            </label>
             <textarea
               value={formData.description}
               onChange={(e) =>
@@ -219,12 +238,15 @@ const FoodManager = () => {
               }
               required
               rows="3"
+              className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm resize-y min-h-[80px] transition-colors duration-200 focus:outline-none focus:border-zinc-800"
             />
           </div>
 
-          <div className="form-group">
-            <label>Etiquetas</label>
-            <div className="tags-input-container">
+          <div className="flex flex-col gap-2 mb-4">
+            <label className="font-semibold text-zinc-700 text-sm">
+              Etiquetas
+            </label>
+            <div className="flex gap-2">
               <input
                 type="text"
                 value={tagInput}
@@ -233,16 +255,28 @@ const FoodManager = () => {
                   e.key === "Enter" && (e.preventDefault(), addTag())
                 }
                 placeholder="Agregar etiqueta y presionar Enter"
+                className="flex-1 px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
               />
-              <button type="button" onClick={addTag} className="btn-add-tag">
+              <button
+                type="button"
+                onClick={addTag}
+                className="px-4 py-3 bg-zinc-800 text-white border-none rounded-lg cursor-pointer font-semibold transition-colors duration-200 hover:bg-zinc-700"
+              >
                 Agregar
               </button>
             </div>
-            <div className="tags-list">
+            <div className="flex flex-wrap gap-2 mt-3">
               {formData.tags.map((tag, index) => (
-                <span key={index} className="tag">
+                <span
+                  key={index}
+                  className="inline-flex items-center gap-1.5 bg-zinc-800 text-white px-3 py-1.5 rounded-full text-sm font-medium"
+                >
                   {tag}
-                  <button type="button" onClick={() => removeTag(tag)}>
+                  <button
+                    type="button"
+                    onClick={() => removeTag(tag)}
+                    className="bg-transparent border-none text-white text-lg cursor-pointer p-0 w-5 h-5 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-white/20"
+                  >
                     ×
                   </button>
                 </span>
@@ -250,69 +284,104 @@ const FoodManager = () => {
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Imagen {!editingFood && "*"}</label>
+          <div className="flex flex-col gap-2 mb-4">
+            <label className="font-semibold text-zinc-700 text-sm">
+              Imagen {!editingFood && "*"}
+            </label>
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
               required={!editingFood}
+              className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm"
             />
-            <small>JPG, PNG o WEBP. Máximo 5MB</small>
+            <small className="text-zinc-500 text-xs">
+              JPG, PNG o WEBP. Máximo 5MB
+            </small>
           </div>
 
           {(formData.image || imageFile) && (
-            <div className="image-preview">
+            <div className="mt-3 text-center">
               <img
                 src={
                   imageFile ? URL.createObjectURL(imageFile) : formData.image
                 }
                 alt="Preview"
+                className="max-w-[300px] max-h-[200px] rounded-lg border-2 border-zinc-200 object-cover mx-auto"
               />
             </div>
           )}
 
-          <div className="form-actions">
-            <button type="submit" className="btn-primary" disabled={uploading}>
+          <div className="flex gap-3 mt-6 pt-5 border-t border-zinc-200">
+            <button
+              type="submit"
+              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-800 text-white hover:bg-zinc-700 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
+              disabled={uploading}
+            >
               {uploading
                 ? "Guardando..."
                 : editingFood
                 ? "Actualizar"
                 : "Crear"}
             </button>
-            <button type="button" onClick={resetForm} className="btn-secondary">
+            <button
+              type="button"
+              onClick={resetForm}
+              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+            >
               Cancelar
             </button>
           </div>
         </form>
       )}
 
-      <div className="manager-list">
+      <div className="flex flex-col gap-4">
         {foods.length === 0 ? (
-          <p className="empty-message">No hay platos destacados</p>
+          <p className="text-center py-10 text-zinc-400 text-base">
+            No hay platos destacados
+          </p>
         ) : (
           foods.map((food) => (
-            <div key={food.firebaseId} className="manager-item">
-              <img src={food.image} alt={food.name} />
-              <div className="item-info">
-                <h3>{food.name}</h3>
-                <p className="item-category">{food.category}</p>
-                <p className="item-description">{food.description}</p>
-                <div className="item-tags">
+            <div
+              key={food.firebaseId}
+              className="flex gap-4 p-4 bg-white border-2 border-zinc-200 rounded-xl transition-all duration-200 hover:border-zinc-800 hover:shadow-lg flex-wrap md:flex-nowrap"
+            >
+              <img
+                src={food.image}
+                alt={food.name}
+                className="w-full md:w-[120px] h-auto md:h-[120px] object-cover rounded-lg shrink-0"
+              />
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold text-zinc-800 mb-2">
+                  {food.name}
+                </h3>
+                <span className="inline-block bg-zinc-800 text-white px-3 py-1 rounded-xl text-xs font-semibold mb-2 capitalize">
+                  {food.category}
+                </span>
+                <p className="text-zinc-500 text-sm leading-relaxed mb-2">
+                  {food.description}
+                </p>
+                <div className="flex flex-wrap gap-1.5 mt-2">
                   {food.tags?.map((tag, index) => (
-                    <span key={index} className="tag">
+                    <span
+                      key={index}
+                      className="bg-zinc-100 text-zinc-600 text-xs px-2.5 py-1 rounded-full"
+                    >
                       {tag}
                     </span>
                   ))}
                 </div>
               </div>
-              <div className="item-actions">
-                <button onClick={() => handleEdit(food)} className="btn-edit">
+              <div className="flex flex-row md:flex-col gap-2 justify-center w-full md:w-auto">
+                <button
+                  onClick={() => handleEdit(food)}
+                  className="flex-1 md:flex-none px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-emerald-500 text-white min-w-[100px] hover:bg-emerald-600"
+                >
                   Editar
                 </button>
                 <button
                   onClick={() => handleDelete(food)}
-                  className="btn-delete"
+                  className="flex-1 md:flex-none px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-red-500 text-white min-w-[100px] hover:bg-red-600"
                 >
                   Eliminar
                 </button>

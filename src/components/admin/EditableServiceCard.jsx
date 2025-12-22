@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { uploadImage, validateImage } from "../../supabase/storageService";
-import "../ServiceCard.css";
-import "./EditableCard.css";
 
 /**
  * Componente EditableServiceCard - Tarjeta de servicio editable
@@ -18,7 +16,6 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
   });
   const [featureInput, setFeatureInput] = useState("");
 
-  // Mapa de iconos profesionales (igual que ServiceCard)
   const iconMap = {
     lunch: (
       <svg
@@ -28,6 +25,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        className="w-8 h-8"
       >
         <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
         <path d="M7 2v20" />
@@ -42,6 +40,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        className="w-8 h-8"
       >
         <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
         <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
@@ -58,6 +57,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        className="w-8 h-8"
       >
         <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
         <path d="M8.5 8.5v.01" />
@@ -149,31 +149,40 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
 
   if (!isEditing) {
     return (
-      <div className="service-card editable-card">
-        <div className="service-icon">{renderIcon()}</div>
-        <div className="card-actions">
+      <div className="bg-white rounded-2xl p-8 shadow-sm border border-zinc-200 transition-all duration-300 relative group hover:shadow-lg hover:-translate-y-1">
+        <div className="w-14 h-14 bg-zinc-100 rounded-2xl flex items-center justify-center mb-6 text-zinc-700 transition-all duration-300 group-hover:bg-zinc-800 group-hover:text-white">
+          {renderIcon()}
+        </div>
+        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
           <button
-            className="btn-edit"
+            className="bg-white/95 border-none rounded-lg px-3 py-2 cursor-pointer text-sm font-medium shadow-lg transition-all duration-200 hover:bg-blue-500 hover:text-white hover:scale-105"
             onClick={() => setIsEditing(true)}
             title="Editar"
           >
             Editar
           </button>
           <button
-            className="btn-delete"
+            className="bg-white/95 border-none rounded-lg px-3 py-2 cursor-pointer text-sm font-medium shadow-lg transition-all duration-200 hover:bg-red-500 hover:text-white hover:scale-105"
             onClick={handleDelete}
             title="Eliminar"
           >
             Eliminar
           </button>
         </div>
-        <h3 className="service-title">{service.title}</h3>
-        <p className="service-description">{service.description}</p>
+        <h3 className="text-xl font-semibold text-zinc-800 mb-3">
+          {service.title}
+        </h3>
+        <p className="text-zinc-500 text-sm leading-relaxed mb-5">
+          {service.description}
+        </p>
         {service.features && service.features.length > 0 && (
-          <ul className="service-features">
+          <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
             {service.features.map((feature, index) => (
-              <li key={index} className="service-feature">
-                <span className="feature-bullet"></span>
+              <li
+                key={index}
+                className="flex items-center gap-2.5 text-zinc-600 text-sm"
+              >
+                <span className="w-1.5 h-1.5 bg-zinc-800 rounded-full flex-shrink-0"></span>
                 {feature}
               </li>
             ))}
@@ -184,14 +193,16 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
   }
 
   return (
-    <div className="service-card editable-card editing">
-      <div className="edit-form">
-        <div className="edit-group">
-          <label className="edit-label">Tipo de icono</label>
+    <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-emerald-500 transition-all duration-300 relative">
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col">
+          <label className="text-xs font-semibold text-zinc-500 mb-1.5 uppercase">
+            Tipo de icono
+          </label>
           <select
             value={formData.icon}
             onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-            className="edit-input"
+            className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-emerald-500"
           >
             <option value="lunch">Lunch</option>
             <option value="breakfast">Desayuno</option>
@@ -203,7 +214,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
           type="text"
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          className="edit-input edit-title"
+          className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-lg font-semibold transition-colors duration-200 focus:outline-none focus:border-emerald-500"
           placeholder="Título del servicio"
         />
 
@@ -212,22 +223,32 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
           }
-          className="edit-textarea"
+          className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm resize-y min-h-[70px] transition-colors duration-200 focus:outline-none focus:border-emerald-500"
           placeholder="Descripción"
           rows="3"
         />
 
-        <div className="features-editor">
-          <label className="edit-label">Características</label>
-          <div className="features-list">
+        <div className="mb-3">
+          <label className="text-xs font-semibold text-zinc-500 mb-1.5 uppercase block">
+            Características
+          </label>
+          <div className="flex flex-col gap-2 mb-2">
             {formData.features.map((feature, index) => (
-              <div key={index} className="feature-item">
+              <div
+                key={index}
+                className="bg-zinc-100 px-3 py-2.5 rounded-lg flex justify-between items-center text-sm"
+              >
                 <span>{feature}</span>
-                <button onClick={() => removeFeature(feature)}>×</button>
+                <button
+                  onClick={() => removeFeature(feature)}
+                  className="bg-red-500 text-white border-none w-6 h-6 rounded-full text-base cursor-pointer flex items-center justify-center transition-colors duration-200 hover:bg-red-600"
+                >
+                  ×
+                </button>
               </div>
             ))}
           </div>
-          <div className="feature-input-group">
+          <div className="flex gap-2">
             <input
               type="text"
               value={featureInput}
@@ -236,12 +257,12 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
                 e.key === "Enter" && (e.preventDefault(), addFeature())
               }
               placeholder="Agregar característica"
-              className="edit-input"
+              className="flex-1 px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-emerald-500"
             />
             <button
               type="button"
               onClick={addFeature}
-              className="btn-add-feature"
+              className="bg-emerald-500 text-white border-none rounded-lg px-4 py-2.5 text-lg font-bold cursor-pointer transition-all duration-200 hover:bg-emerald-600 hover:scale-105"
             >
               +
             </button>
@@ -249,33 +270,40 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
         </div>
 
         {formData.image && (
-          <div className="service-image-preview">
-            <img src={formData.image} alt="Preview" />
+          <div className="rounded-lg overflow-hidden mb-3">
+            <img
+              src={formData.image}
+              alt="Preview"
+              className="w-full h-36 object-cover"
+            />
           </div>
         )}
 
-        <div className="image-upload-group">
-          <label className="upload-label">
+        <div className="mb-3">
+          <label className="bg-white text-zinc-700 px-4 py-2.5 rounded-lg cursor-pointer font-medium transition-all duration-200 flex items-center justify-center gap-2 border-2 border-zinc-200 w-full hover:bg-emerald-500 hover:text-white hover:border-emerald-500">
             {uploading ? "Subiendo..." : "Cambiar imagen"}
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
               disabled={uploading}
-              style={{ display: "none" }}
+              className="hidden"
             />
           </label>
         </div>
 
-        <div className="edit-actions">
+        <div className="flex gap-2 mt-4">
           <button
             onClick={handleSave}
-            className="btn-save"
+            className="flex-1 py-3 border-none rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 bg-emerald-500 text-white hover:bg-emerald-600 hover:-translate-y-0.5 hover:shadow-lg disabled:bg-zinc-300 disabled:cursor-not-allowed"
             disabled={uploading}
           >
             Guardar
           </button>
-          <button onClick={handleCancel} className="btn-cancel">
+          <button
+            onClick={handleCancel}
+            className="flex-1 py-3 border-none rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+          >
             Cancelar
           </button>
         </div>

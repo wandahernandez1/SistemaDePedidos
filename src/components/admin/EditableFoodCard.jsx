@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { uploadImage, validateImage } from "../../supabase/storageService";
-import "../FoodCard.css";
-import "./EditableCard.css";
 
 /**
  * Componente EditableFoodCard - Tarjeta de plato destacado editable
@@ -88,26 +86,32 @@ const EditableFoodCard = ({ food, onSave, onDelete, onOpen }) => {
 
   if (!isEditing) {
     return (
-      <div className="food-card editable-card">
-        <div className="food-image-container">
+      <div
+        className="bg-white rounded-2xl overflow-hidden shadow-sm border border-zinc-200 transition-all duration-300 relative group hover:shadow-lg hover:-translate-y-0.5 cursor-pointer"
+        onClick={() => onOpen && onOpen(food.category)}
+      >
+        <div className="relative aspect-[4/3] overflow-hidden">
           <img
             src={food.image}
             alt={food.name}
-            className="food-image"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
           {food.tags && food.tags.length > 0 && (
-            <div className="food-tags">
+            <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5 max-w-[calc(100%-24px)]">
               {food.tags.map((tag, index) => (
-                <span key={index} className="food-tag">
+                <span
+                  key={index}
+                  className="bg-zinc-800/90 text-white text-xs font-medium px-2.5 py-1 rounded-full backdrop-blur-sm"
+                >
                   {tag}
                 </span>
               ))}
             </div>
           )}
-          <div className="card-actions">
+          <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
             <button
-              className="btn-edit"
+              className="bg-white/95 border-none rounded-lg px-3 py-2 cursor-pointer text-sm font-medium shadow-lg transition-all duration-200 hover:bg-blue-500 hover:text-white hover:scale-105"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsEditing(true);
@@ -117,7 +121,7 @@ const EditableFoodCard = ({ food, onSave, onDelete, onOpen }) => {
               Editar
             </button>
             <button
-              className="btn-delete"
+              className="bg-white/95 border-none rounded-lg px-3 py-2 cursor-pointer text-sm font-medium shadow-lg transition-all duration-200 hover:bg-red-500 hover:text-white hover:scale-105"
               onClick={(e) => {
                 e.stopPropagation();
                 handleDelete();
@@ -129,9 +133,13 @@ const EditableFoodCard = ({ food, onSave, onDelete, onOpen }) => {
           </div>
         </div>
 
-        <div className="food-content">
-          <h3 className="food-name">{food.name}</h3>
-          <p className="food-description">{food.description}</p>
+        <div className="p-5">
+          <h3 className="text-xl font-semibold text-zinc-800 mb-2">
+            {food.name}
+          </h3>
+          <p className="text-zinc-500 text-sm leading-relaxed m-0 line-clamp-2">
+            {food.description}
+          </p>
         </div>
       </div>
     );
@@ -139,37 +147,37 @@ const EditableFoodCard = ({ food, onSave, onDelete, onOpen }) => {
 
   return (
     <div
-      className="food-card editable-card editing"
+      className="bg-white rounded-2xl overflow-hidden shadow-lg border-2 border-emerald-500 transition-all duration-300 relative"
       onClick={() => onOpen && onOpen(food.category)}
       style={{ cursor: onOpen ? "pointer" : "default" }}
     >
-      <div className="food-image-container">
+      <div className="relative aspect-[4/3] overflow-hidden">
         <img
           src={formData.image}
           alt={formData.name}
-          className="food-image"
+          className="w-full h-full object-cover"
           loading="lazy"
         />
-        <div className="image-upload-overlay">
-          <label className="upload-label">
+        <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+          <label className="bg-white text-zinc-700 px-6 py-3 rounded-lg cursor-pointer font-medium transition-all duration-200 flex items-center gap-2 hover:bg-emerald-500 hover:text-white hover:scale-105">
             {uploading ? "Subiendo..." : "📷 Cambiar imagen"}
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
               disabled={uploading}
-              style={{ display: "none" }}
+              className="hidden"
             />
           </label>
         </div>
       </div>
 
-      <div className="food-content edit-form">
+      <div className="p-4 flex flex-col gap-3">
         <input
           type="text"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="edit-input edit-title"
+          className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-lg font-semibold transition-colors duration-200 focus:outline-none focus:border-emerald-500"
           placeholder="Nombre del plato"
         />
 
@@ -178,7 +186,7 @@ const EditableFoodCard = ({ food, onSave, onDelete, onOpen }) => {
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
           }
-          className="edit-textarea"
+          className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm resize-y min-h-[70px] transition-colors duration-200 focus:outline-none focus:border-emerald-500"
           placeholder="Descripción"
           rows="3"
         />
@@ -188,7 +196,7 @@ const EditableFoodCard = ({ food, onSave, onDelete, onOpen }) => {
           onChange={(e) =>
             setFormData({ ...formData, category: e.target.value })
           }
-          className="edit-select"
+          className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-emerald-500"
         >
           <option value="hamburguesas">Hamburguesas</option>
           <option value="empanadas">Empanadas</option>
@@ -198,16 +206,24 @@ const EditableFoodCard = ({ food, onSave, onDelete, onOpen }) => {
           <option value="ensaladas">Ensaladas</option>
         </select>
 
-        <div className="tags-editor">
-          <div className="tags-list">
+        <div className="mb-3">
+          <div className="flex flex-wrap gap-2 mb-2">
             {formData.tags.map((tag, index) => (
-              <span key={index} className="tag-item">
+              <span
+                key={index}
+                className="bg-blue-100 text-blue-600 px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5"
+              >
                 {tag}
-                <button onClick={() => removeTag(tag)}>×</button>
+                <button
+                  onClick={() => removeTag(tag)}
+                  className="bg-transparent border-none text-blue-600 text-base cursor-pointer p-0 w-4 h-4 flex items-center justify-center rounded-full transition-colors duration-200 hover:bg-black/10"
+                >
+                  ×
+                </button>
               </span>
             ))}
           </div>
-          <div className="tag-input-group">
+          <div className="flex gap-2">
             <input
               type="text"
               value={tagInput}
@@ -216,23 +232,30 @@ const EditableFoodCard = ({ food, onSave, onDelete, onOpen }) => {
                 e.key === "Enter" && (e.preventDefault(), addTag())
               }
               placeholder="Agregar etiqueta"
-              className="tag-input"
+              className="flex-1 px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-emerald-500"
             />
-            <button type="button" onClick={addTag} className="btn-add-tag">
+            <button
+              type="button"
+              onClick={addTag}
+              className="bg-emerald-500 text-white border-none rounded-lg px-4 py-2.5 text-lg font-bold cursor-pointer transition-all duration-200 hover:bg-emerald-600 hover:scale-105"
+            >
               +
             </button>
           </div>
         </div>
 
-        <div className="edit-actions">
+        <div className="flex gap-2 mt-4">
           <button
             onClick={handleSave}
-            className="btn-save"
+            className="flex-1 py-3 border-none rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 bg-emerald-500 text-white hover:bg-emerald-600 hover:-translate-y-0.5 hover:shadow-lg disabled:bg-zinc-300 disabled:cursor-not-allowed"
             disabled={uploading}
           >
             ✓ Guardar
           </button>
-          <button onClick={handleCancel} className="btn-cancel">
+          <button
+            onClick={handleCancel}
+            className="flex-1 py-3 border-none rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+          >
             ✕ Cancelar
           </button>
         </div>

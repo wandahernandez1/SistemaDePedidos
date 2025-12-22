@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import "./BurgerCustomizationModal.css";
 
 /**
  * Modal para personalizar hamburguesas - agregar o quitar ingredientes
@@ -30,7 +29,7 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
     ],
   };
 
-  // Ingredientes adicionales disponibles con sus precios, organizados por categoría
+  // Ingredientes adicionales disponibles
   const additionalIngredients = {
     proteinas: [
       { id: "extra-patty", name: "Medallón extra", price: 1500, icon: "🥩" },
@@ -72,14 +71,12 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
 
   const burgerBaseIngredients = baseIngredients[burger.nombre] || [];
 
-  // Estado para ingredientes
   const [removedIngredients, setRemovedIngredients] = useState([]);
-  const [addedIngredients, setAddedIngredients] = useState([]); // { id, name, price, icon, quantity }
+  const [addedIngredients, setAddedIngredients] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const [activeCategory, setActiveCategory] = useState("proteinas");
   const [showSummary, setShowSummary] = useState(false);
 
-  // Toggle para remover ingredientes base
   const toggleRemoveIngredient = (ingredient) => {
     if (removedIngredients.includes(ingredient)) {
       setRemovedIngredients(removedIngredients.filter((i) => i !== ingredient));
@@ -88,7 +85,6 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
     }
   };
 
-  // Agregar o incrementar ingrediente adicional
   const addIngredient = (ingredient) => {
     const existing = addedIngredients.find((i) => i.id === ingredient.id);
     if (existing) {
@@ -105,7 +101,6 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
     }
   };
 
-  // Decrementar o remover ingrediente adicional
   const removeIngredient = (ingredientId) => {
     const existing = addedIngredients.find((i) => i.id === ingredientId);
     if (existing && existing.quantity > 1) {
@@ -121,13 +116,11 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
     }
   };
 
-  // Obtener cantidad de un ingrediente
   const getIngredientQuantity = (ingredientId) => {
     const ingredient = addedIngredients.find((i) => i.id === ingredientId);
     return ingredient ? ingredient.quantity : 0;
   };
 
-  // Calcular precio total
   const calculateTotalPrice = () => {
     const basePrice = burger.precio;
     const additionsPrice = addedIngredients.reduce(
@@ -137,7 +130,6 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
     return (basePrice + additionsPrice) * quantity;
   };
 
-  // Manejar agregar al carrito
   const handleAddToCart = () => {
     const customization = {
       removed: removedIngredients,
@@ -155,7 +147,6 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
     onClose();
   };
 
-  // Generar texto descriptivo de la personalización
   const generateCustomizationText = () => {
     const parts = [];
     if (removedIngredients.length > 0) {
@@ -170,7 +161,6 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
     return parts.length > 0 ? parts.join(" | ") : "";
   };
 
-  // Obtener precio adicional total
   const getAdditionsTotal = () => {
     return addedIngredients.reduce(
       (sum, ing) => sum + ing.price * ing.quantity,
@@ -178,7 +168,6 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
     );
   };
 
-  // Prevenir scroll del body cuando el modal está abierto
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -187,16 +176,19 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
   }, []);
 
   const modalContent = (
-    <div className="burger-modal-overlay" onClick={onClose}>
+    <div
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999] p-4 m-0 animate-fade-in"
+      onClick={onClose}
+    >
       <div
-        className="burger-modal-content"
+        className="bg-white rounded-3xl max-w-4xl w-full max-h-[95vh] overflow-hidden shadow-2xl relative animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="burger-modal-header">
+        <div className="bg-gradient-to-r from-zinc-900 to-zinc-700 px-6 py-6 pb-8 relative">
           <button
             onClick={onClose}
-            className="burger-modal-close"
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border-none text-white cursor-pointer flex items-center justify-center transition-all duration-200 z-10 hover:bg-white/30 hover:scale-110"
             aria-label="Cerrar"
           >
             <svg
@@ -204,6 +196,7 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
               viewBox="0 0 24 24"
               stroke="currentColor"
               strokeWidth={2.5}
+              className="w-6 h-6"
             >
               <path
                 strokeLinecap="round"
@@ -213,11 +206,15 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
             </svg>
           </button>
 
-          <div className="burger-modal-header-content">
-            <div className="burger-modal-icon">🍔</div>
-            <div className="burger-modal-title-section">
-              <h2 className="burger-modal-title">{burger.nombre}</h2>
-              <p className="burger-modal-subtitle">
+          <div className="flex items-center gap-4">
+            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center text-5xl shadow-md">
+              🍔
+            </div>
+            <div className="flex-1">
+              <h2 className="text-3xl font-bold text-white m-0 drop-shadow-sm">
+                {burger.nombre}
+              </h2>
+              <p className="text-white/90 m-0 mt-1 font-medium">
                 {showSummary
                   ? "Resumen de tu pedido"
                   : "Personaliza tu hamburguesa a tu gusto"}
@@ -227,173 +224,182 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
         </div>
 
         {/* Main Content */}
-        <div className="burger-modal-main">
+        <div className="flex max-h-[calc(95vh-200px)]">
           {!showSummary ? (
-            /* Paso 1: Personalización */
-            <>
-              {/* Left Panel - Customization */}
-              <div className="burger-modal-left-panel">
-                {/* Base Ingredients */}
-                {burgerBaseIngredients.length > 0 && (
-                  <div className="burger-section burger-section-with-total">
-                    <div className="burger-section-header">
-                      <div className="burger-section-icon">✓</div>
-                      <div>
-                        <h3 className="burger-section-title">
-                          Ingredientes incluidos
-                        </h3>
-                        <p className="burger-section-description">
-                          Toca para quitar los que no quieras
-                        </p>
-                      </div>
+            <div className="flex-1 overflow-y-auto p-6 w-full">
+              {/* Base Ingredients */}
+              {burgerBaseIngredients.length > 0 && (
+                <div className="mb-6 bg-white rounded-2xl p-6 shadow-sm border-2 border-zinc-200">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 bg-zinc-100 rounded-lg flex items-center justify-center text-lg border border-zinc-200">
+                      ✓
                     </div>
-                    <div className="burger-ingredient-grid">
-                      {burgerBaseIngredients.map((ingredient) => {
-                        const isRemoved =
-                          removedIngredients.includes(ingredient);
-                        return (
-                          <button
-                            key={ingredient}
-                            onClick={() => toggleRemoveIngredient(ingredient)}
-                            className={`burger-base-ingredient ${
-                              isRemoved ? "removed" : ""
-                            }`}
-                          >
-                            <span className="ingredient-text">
-                              {ingredient}
-                            </span>
-                            {isRemoved && (
-                              <span className="remove-badge">✕</span>
-                            )}
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {/* Subtotal y botón Siguiente */}
-                    <div className="burger-section-footer">
-                      <div className="total-row">
-                        <span className="total-label">Subtotal</span>
-                        <span className="total-amount">
-                          $
-                          {(
-                            burger.precio + getAdditionsTotal()
-                          ).toLocaleString()}
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => setShowSummary(true)}
-                        className="add-to-cart-btn"
-                      >
-                        Siguiente →
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {/* Additional Ingredients */}
-                <div className="burger-section">
-                  <div className="burger-section-header">
-                    <div className="burger-section-icon">+</div>
                     <div>
-                      <h3 className="burger-section-title">
-                        Agregar ingredientes
+                      <h3 className="text-lg font-bold text-zinc-900 m-0">
+                        Ingredientes incluidos
                       </h3>
-                      <p className="burger-section-description">
-                        Elige tus favoritos de cada categoría
+                      <p className="text-xs text-zinc-500 m-0">
+                        Toca para quitar los que no quieras
                       </p>
                     </div>
                   </div>
-
-                  {/* Category Tabs */}
-                  <div className="burger-category-tabs">
-                    {Object.keys(additionalIngredients).map((category) => (
-                      <button
-                        key={category}
-                        onClick={() => setActiveCategory(category)}
-                        className={`burger-category-tab ${
-                          activeCategory === category ? "active" : ""
-                        }`}
-                      >
-                        {categoryNames[category]}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Ingredients Grid */}
-                  <div className="burger-ingredient-grid">
-                    {additionalIngredients[activeCategory].map((ingredient) => {
-                      const qty = getIngredientQuantity(ingredient.id);
-                      const isAdded = qty > 0;
+                  <div className="grid grid-cols-2 gap-2">
+                    {burgerBaseIngredients.map((ingredient) => {
+                      const isRemoved = removedIngredients.includes(ingredient);
                       return (
-                        <div
-                          key={ingredient.id}
-                          className={`burger-additional-ingredient ${
-                            isAdded ? "added" : ""
+                        <button
+                          key={ingredient}
+                          onClick={() => toggleRemoveIngredient(ingredient)}
+                          className={`relative py-3 px-4 rounded-xl border-2 text-left text-sm font-semibold cursor-pointer transition-all duration-200 ${
+                            isRemoved
+                              ? "border-red-300 bg-red-50 text-red-500"
+                              : "border-zinc-200 bg-zinc-50 text-zinc-900 hover:border-zinc-700 hover:bg-white"
                           }`}
                         >
-                          <div className="ingredient-header">
-                            <div className="ingredient-info">
-                              <span className="ingredient-icon-display">
-                                {ingredient.icon}
-                              </span>
-                              <div>
-                                <p className="ingredient-name">
-                                  {ingredient.name}
-                                </p>
-                                <p className="ingredient-price">
-                                  +${ingredient.price}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-
-                          {isAdded ? (
-                            <div className="ingredient-actions">
-                              <button
-                                onClick={() => removeIngredient(ingredient.id)}
-                                className="ingredient-btn ingredient-btn-remove"
-                              >
-                                −
-                              </button>
-                              <span className="ingredient-quantity">{qty}</span>
-                              <button
-                                onClick={() => addIngredient(ingredient)}
-                                className="ingredient-btn ingredient-btn-add"
-                              >
-                                +
-                              </button>
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => addIngredient(ingredient)}
-                              className="ingredient-btn ingredient-btn-add"
-                              style={{ width: "100%" }}
-                            >
-                              Agregar
-                            </button>
+                          <span
+                            className={
+                              isRemoved ? "line-through opacity-60" : ""
+                            }
+                          >
+                            {ingredient}
+                          </span>
+                          {isRemoved && (
+                            <span className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs">
+                              ✕
+                            </span>
                           )}
-                        </div>
+                        </button>
                       );
                     })}
                   </div>
+
+                  {/* Subtotal */}
+                  <div className="mt-6 pt-6 border-t-2 border-zinc-200">
+                    <div className="flex items-baseline justify-between mb-3">
+                      <span className="text-base font-semibold text-zinc-500">
+                        Subtotal
+                      </span>
+                      <span className="text-3xl font-bold text-zinc-900">
+                        $
+                        {(burger.precio + getAdditionsTotal()).toLocaleString()}
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => setShowSummary(true)}
+                      className="w-full py-5 px-6 bg-gradient-to-r from-zinc-900 to-zinc-700 text-white border-none rounded-xl text-lg font-bold cursor-pointer shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                    >
+                      Siguiente →
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Additional Ingredients */}
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 bg-zinc-100 rounded-lg flex items-center justify-center text-lg border border-zinc-200">
+                    +
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-zinc-900 m-0">
+                      Agregar ingredientes
+                    </h3>
+                    <p className="text-xs text-zinc-500 m-0">
+                      Elige tus favoritos de cada categoría
+                    </p>
+                  </div>
+                </div>
+
+                {/* Category Tabs */}
+                <div className="flex gap-2 overflow-x-auto pb-2 mb-3">
+                  {Object.keys(additionalIngredients).map((category) => (
+                    <button
+                      key={category}
+                      onClick={() => setActiveCategory(category)}
+                      className={`px-4 py-2 rounded-lg font-semibold text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
+                        activeCategory === category
+                          ? "bg-zinc-900 text-white shadow-md"
+                          : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+                      }`}
+                    >
+                      {categoryNames[category]}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Ingredients Grid */}
+                <div className="grid grid-cols-2 gap-2">
+                  {additionalIngredients[activeCategory].map((ingredient) => {
+                    const qty = getIngredientQuantity(ingredient.id);
+                    const isAdded = qty > 0;
+                    return (
+                      <div
+                        key={ingredient.id}
+                        className={`p-3 rounded-xl border-2 transition-all duration-200 ${
+                          isAdded
+                            ? "border-zinc-700 bg-zinc-50"
+                            : "border-zinc-200 bg-white hover:border-zinc-400"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-2xl">{ingredient.icon}</span>
+                            <div>
+                              <p className="text-sm font-bold text-zinc-900 m-0">
+                                {ingredient.name}
+                              </p>
+                              <p className="text-xs text-zinc-500 font-semibold">
+                                +${ingredient.price}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {isAdded ? (
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => removeIngredient(ingredient.id)}
+                              className="flex-1 h-8 rounded-lg border-none bg-zinc-100 text-zinc-600 font-bold cursor-pointer transition-all duration-200 hover:bg-zinc-200"
+                            >
+                              −
+                            </button>
+                            <span className="w-8 text-center font-bold text-zinc-900">
+                              {qty}
+                            </span>
+                            <button
+                              onClick={() => addIngredient(ingredient)}
+                              className="flex-1 h-8 rounded-lg border-none bg-zinc-900 text-white font-bold cursor-pointer transition-all duration-200 hover:bg-zinc-700"
+                            >
+                              +
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => addIngredient(ingredient)}
+                            className="w-full h-8 rounded-lg border-none bg-zinc-900 text-white font-bold cursor-pointer transition-all duration-200 hover:bg-zinc-700"
+                          >
+                            Agregar
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-            </>
+            </div>
           ) : (
-            /* Paso 2: Resumen Final */
-            <div className="burger-summary-full">
-              {/* Back Button */}
+            /* Summary View */
+            <div className="w-full overflow-y-auto p-6 bg-zinc-50">
               <button
                 onClick={() => setShowSummary(false)}
-                className="burger-back-btn"
+                className="flex items-center gap-2 py-3 px-4 bg-white border-2 border-zinc-200 rounded-xl text-zinc-600 font-semibold text-sm cursor-pointer transition-all duration-200 mb-6 hover:border-zinc-700 hover:bg-zinc-50 hover:text-zinc-900"
               >
                 <svg
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                   strokeWidth={2.5}
-                  style={{ width: "1.25rem", height: "1.25rem" }}
+                  className="w-5 h-5"
                 >
                   <path
                     strokeLinecap="round"
@@ -404,19 +410,18 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                 Volver a personalizar
               </button>
 
-              <div className="burger-summary-content">
+              <div className="max-w-3xl">
                 {/* Burger Info */}
-                <div className="burger-summary-section">
-                  <h3 className="burger-summary-section-title">
-                    <span className="burger-summary-icon">🍔</span>
-                    Tu hamburguesa
+                <div className="mb-6">
+                  <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-4">
+                    <span>🍔</span> Tu hamburguesa
                   </h3>
-                  <div className="burger-summary-card">
-                    <div className="burger-summary-item">
-                      <span className="burger-summary-item-name">
+                  <div className="bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
+                    <div className="flex justify-between items-center">
+                      <span className="font-bold text-zinc-900">
                         {burger.nombre}
                       </span>
-                      <span className="burger-summary-item-price">
+                      <span className="font-bold text-zinc-900">
                         ${burger.precio.toLocaleString()}
                       </span>
                     </div>
@@ -427,19 +432,18 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                 {burgerBaseIngredients.filter(
                   (ing) => !removedIngredients.includes(ing)
                 ).length > 0 && (
-                  <div className="burger-summary-section">
-                    <h3 className="burger-summary-section-title">
-                      <span className="burger-summary-icon">✓</span>
-                      Ingredientes incluidos
+                  <div className="mb-6">
+                    <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-4">
+                      <span>✓</span> Ingredientes incluidos
                     </h3>
-                    <div className="burger-summary-card">
-                      <div className="burger-summary-ingredients-list">
+                    <div className="bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
+                      <div className="flex flex-wrap gap-2">
                         {burgerBaseIngredients
                           .filter((ing) => !removedIngredients.includes(ing))
                           .map((ing, idx) => (
                             <span
                               key={idx}
-                              className="burger-summary-ingredient-tag"
+                              className="bg-zinc-100 text-zinc-700 px-3 py-1.5 rounded-lg text-sm font-medium"
                             >
                               {ing}
                             </span>
@@ -451,17 +455,16 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
 
                 {/* Removed Ingredients */}
                 {removedIngredients.length > 0 && (
-                  <div className="burger-summary-section">
-                    <h3 className="burger-summary-section-title">
-                      <span className="burger-summary-icon">✕</span>
-                      Sin estos ingredientes
+                  <div className="mb-6">
+                    <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-4">
+                      <span>✕</span> Sin estos ingredientes
                     </h3>
-                    <div className="burger-summary-card">
-                      <div className="burger-summary-ingredients-list">
+                    <div className="bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
+                      <div className="flex flex-wrap gap-2">
                         {removedIngredients.map((ing, idx) => (
                           <span
                             key={idx}
-                            className="burger-summary-ingredient-tag removed"
+                            className="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-sm font-medium line-through"
                           >
                             {ing}
                           </span>
@@ -473,50 +476,57 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
 
                 {/* Added Ingredients */}
                 {addedIngredients.length > 0 && (
-                  <div className="burger-summary-section">
-                    <h3 className="burger-summary-section-title">
-                      <span className="burger-summary-icon">+</span>
-                      Ingredientes adicionales
+                  <div className="mb-6">
+                    <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-4">
+                      <span>+</span> Ingredientes adicionales
                     </h3>
-                    <div className="burger-summary-card">
+                    <div className="bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
                       {addedIngredients.map((ing) => (
-                        <div key={ing.id} className="burger-summary-item">
-                          <span className="burger-summary-item-name">
+                        <div
+                          key={ing.id}
+                          className="flex justify-between items-center py-2 border-b border-zinc-100 last:border-b-0"
+                        >
+                          <span className="text-zinc-700">
                             {ing.icon}{" "}
                             {ing.quantity > 1 ? `${ing.quantity}x ` : ""}
                             {ing.name}
                           </span>
-                          <span className="burger-summary-item-price">
+                          <span className="font-semibold text-zinc-900">
                             +${(ing.price * ing.quantity).toLocaleString()}
                           </span>
                         </div>
                       ))}
-                      <div className="burger-summary-subtotal">
-                        <span>Subtotal extras</span>
-                        <span>+${getAdditionsTotal().toLocaleString()}</span>
+                      <div className="flex justify-between items-center pt-3 mt-3 border-t border-zinc-200">
+                        <span className="font-semibold text-zinc-600">
+                          Subtotal extras
+                        </span>
+                        <span className="font-bold text-zinc-900">
+                          +${getAdditionsTotal().toLocaleString()}
+                        </span>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* Quantity & Total */}
-                <div className="burger-summary-section">
-                  <h3 className="burger-summary-section-title">
-                    <span className="burger-summary-icon">🔢</span>
-                    Cantidad
+                {/* Quantity */}
+                <div className="mb-6">
+                  <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-4">
+                    <span>🔢</span> Cantidad
                   </h3>
-                  <div className="quantity-controls">
+                  <div className="flex items-center gap-3 bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       disabled={quantity <= 1}
-                      className="quantity-btn"
+                      className="w-12 h-12 rounded-lg bg-zinc-900 text-white border-none text-2xl font-bold cursor-pointer transition-all duration-200 hover:bg-zinc-700 disabled:bg-zinc-200 disabled:cursor-not-allowed"
                     >
                       −
                     </button>
-                    <span className="quantity-display">{quantity}</span>
+                    <span className="flex-1 text-center text-3xl font-bold text-zinc-900">
+                      {quantity}
+                    </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="quantity-btn"
+                      className="w-12 h-12 rounded-lg bg-zinc-900 text-white border-none text-2xl font-bold cursor-pointer transition-all duration-200 hover:bg-zinc-700"
                     >
                       +
                     </button>
@@ -524,28 +534,31 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                 </div>
 
                 {/* Final Total */}
-                <div className="burger-summary-total-section">
-                  <div className="burger-summary-total-row">
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
+                  <div className="flex items-baseline justify-between mb-4">
                     <div>
-                      <div className="burger-summary-total-label">
+                      <div className="text-base font-semibold text-zinc-500">
                         Total a pagar
                       </div>
-                      <div className="burger-summary-total-detail">
+                      <div className="text-sm text-zinc-400">
                         {quantity} x $
                         {(burger.precio + getAdditionsTotal()).toLocaleString()}
                       </div>
                     </div>
-                    <div className="burger-summary-total-amount">
+                    <div className="text-4xl font-bold text-zinc-900">
                       ${calculateTotalPrice().toLocaleString()}
                     </div>
                   </div>
-                  <button onClick={handleAddToCart} className="add-to-cart-btn">
+                  <button
+                    onClick={handleAddToCart}
+                    className="w-full py-5 px-6 bg-gradient-to-r from-zinc-900 to-zinc-700 text-white border-none rounded-xl text-lg font-bold cursor-pointer shadow-lg transition-all duration-200 flex items-center justify-center gap-2 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                  >
                     <svg
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                       strokeWidth={2.5}
-                      style={{ width: "1.5rem", height: "1.5rem" }}
+                      className="w-6 h-6"
                     >
                       <path
                         strokeLinecap="round"

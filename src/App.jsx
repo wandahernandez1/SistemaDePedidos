@@ -10,7 +10,6 @@ import AdminLogin from "./components/admin/AdminLogin";
 import AdminDashboard from "./components/admin/AdminDashboard";
 import ProductManager from "./components/admin/ProductManager";
 import ProtectedRoute from "./components/admin/ProtectedRoute";
-import "./App.css";
 
 /**
  * Componente principal de la aplicación

@@ -1,5 +1,4 @@
 import { formatPrice } from "../utils/formatPrice";
-import "./CartItem.css";
 
 /**
  * Componente CartItem - Item individual dentro del carrito
@@ -10,35 +9,48 @@ const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
   const unidadText = item.unidad === "docena" ? "docena(s)" : "unidad(es)";
 
   return (
-    <div className="cart-item">
-      <div className="cart-item-image">
-        <img src={item.imagen} alt={item.nombre} />
+    <div className="flex gap-3 p-3 bg-white rounded-xl border border-zinc-200 transition-all duration-200 hover:border-zinc-300 hover:shadow-sm">
+      {/* Image */}
+      <div className="shrink-0 w-14 h-14 rounded-lg overflow-hidden bg-zinc-100 border border-zinc-200">
+        <img
+          src={item.imagen}
+          alt={item.nombre}
+          className="w-full h-full object-cover"
+        />
       </div>
 
-      <div className="cart-item-details">
-        <h4 className="cart-item-name">{item.nombre}</h4>
+      {/* Details */}
+      <div className="flex-1 flex flex-col gap-2">
+        <h4 className="text-[0.9375rem] font-bold text-zinc-800 m-0 tracking-tight leading-tight">
+          {item.nombre}
+        </h4>
+
         {item.customizationText && (
-          <p className="cart-item-customization">{item.customizationText}</p>
+          <p className="text-xs text-green-600 m-0 bg-green-50 px-2 py-1 rounded border border-green-100 font-medium">
+            {item.customizationText}
+          </p>
         )}
-        <p className="cart-item-unit">
+
+        <p className="text-sm text-zinc-500 m-0 font-medium">
           {formatPrice(item.precio)} / {item.unidad}
         </p>
 
-        <div className="cart-item-controls">
-          <div className="quantity-controls">
+        {/* Controls */}
+        <div className="flex items-center justify-between gap-3 mt-1">
+          <div className="flex items-center gap-2 bg-zinc-100 rounded-lg p-1 border border-zinc-200">
             <button
-              className="quantity-button"
+              className="w-7 h-7 border-none bg-zinc-900 text-white rounded-md text-base font-semibold cursor-pointer flex items-center justify-center transition-all duration-200 hover:bg-zinc-700 hover:scale-105 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
               onClick={() => onDecrement(item.id)}
               disabled={item.quantity <= 1}
               aria-label="Disminuir cantidad"
             >
               −
             </button>
-            <span className="quantity-display">
+            <span className="min-w-[85px] text-center text-sm font-bold text-zinc-800">
               {item.quantity} {unidadText}
             </span>
             <button
-              className="quantity-button"
+              className="w-7 h-7 border-none bg-zinc-900 text-white rounded-md text-base font-semibold cursor-pointer flex items-center justify-center transition-all duration-200 hover:bg-zinc-700 hover:scale-105 active:scale-95"
               onClick={() => onIncrement(item.id)}
               aria-label="Aumentar cantidad"
             >
@@ -47,7 +59,7 @@ const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
           </div>
 
           <button
-            className="remove-button"
+            className="bg-white border border-zinc-200 rounded-md w-7 h-7 text-xl font-light cursor-pointer flex items-center justify-center transition-all duration-200 text-zinc-500 hover:bg-red-500 hover:border-red-500 hover:text-white hover:scale-105"
             onClick={() => onRemove(item.id)}
             aria-label="Eliminar del carrito"
           >
@@ -55,8 +67,11 @@ const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
           </button>
         </div>
 
-        <p className="cart-item-subtotal">
-          Subtotal: <strong>{formatPrice(subtotal)}</strong>
+        <p className="text-sm text-zinc-500 m-0 mt-1 font-medium">
+          Subtotal:{" "}
+          <strong className="text-zinc-800 text-[0.9375rem]">
+            {formatPrice(subtotal)}
+          </strong>
         </p>
       </div>
     </div>

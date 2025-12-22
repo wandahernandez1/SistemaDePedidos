@@ -1,5 +1,3 @@
-import "./ServiceCard.css";
-
 /**
  * Componente ServiceCard - Tarjeta de servicio para eventos
  */
@@ -18,6 +16,7 @@ const ServiceCard = ({ service, onContact }) => {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        className="w-full h-full"
       >
         <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" />
         <path d="M7 2v20" />
@@ -32,6 +31,7 @@ const ServiceCard = ({ service, onContact }) => {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        className="w-full h-full"
       >
         <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
         <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" />
@@ -48,6 +48,7 @@ const ServiceCard = ({ service, onContact }) => {
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        className="w-full h-full"
       >
         <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5" />
         <path d="M8.5 8.5v.01" />
@@ -60,34 +61,43 @@ const ServiceCard = ({ service, onContact }) => {
   };
 
   const renderIcon = () => {
-    // Si el icono es de tipo string (emoji antiguo), mostrar el del mapa
     if (typeof service.icon === "string" && iconMap[service.icon]) {
       return iconMap[service.icon];
     }
-    // Si es un emoji, no mostrarlo
-    return iconMap["catering"]; // Default
+    return iconMap["catering"];
   };
 
   return (
-    <div className="service-card">
-      <div className="service-card-content">
-        <div className="service-header">
-          <div className="service-icon">{renderIcon()}</div>
-          <div className="service-text">
-            <h3 className="service-title">{service.title}</h3>
-            <p className="service-description">{service.description}</p>
+    <div className="bg-white rounded-xl overflow-hidden border border-zinc-200 transition-all duration-300 h-full group hover:border-zinc-400 hover:shadow-lg">
+      <div className="p-6 flex flex-col gap-5">
+        {/* Header */}
+        <div className="flex gap-4 items-center">
+          <div className="shrink-0 w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-105">
+            <div className="w-6 h-6">{renderIcon()}</div>
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-zinc-900 m-0 tracking-tight">
+              {service.title}
+            </h3>
+            <p className="text-sm text-zinc-500 m-0 mt-0.5 line-clamp-2">
+              {service.description}
+            </p>
           </div>
         </div>
 
-        <ul className="service-features">
+        {/* Features */}
+        <ul className="list-none p-0 m-0 flex flex-col gap-2">
           {service.features.map((feature, index) => (
-            <li key={index} className="service-feature">
+            <li
+              key={index}
+              className="flex items-center gap-2.5 text-sm text-zinc-600"
+            >
               <svg
-                className="feature-icon"
+                className="w-4 h-4 shrink-0 text-zinc-900"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                strokeWidth={2}
+                strokeWidth={2.5}
               >
                 <path
                   strokeLinecap="round"
@@ -95,12 +105,16 @@ const ServiceCard = ({ service, onContact }) => {
                   d="M5 13l4 4L19 7"
                 />
               </svg>
-              <span className="feature-text">{feature}</span>
+              <span>{feature}</span>
             </li>
           ))}
         </ul>
 
-        <button className="service-contact-button" onClick={handleContact}>
+        {/* CTA Button */}
+        <button
+          className="w-full py-3 px-4 bg-zinc-900 text-white border-none rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 hover:bg-zinc-800 active:scale-[0.98]"
+          onClick={handleContact}
+        >
           Consultar disponibilidad
         </button>
       </div>

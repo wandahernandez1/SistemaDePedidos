@@ -18,8 +18,6 @@ import { deleteImage } from "../../supabase/storageService";
 import { products as initialProducts } from "../../data/products";
 import { featuredFoods as initialFoods } from "../../data/foods";
 import { services as initialServices } from "../../data/services";
-import "../../App.css";
-import "./AdminDashboard.css";
 
 /**
  * Panel principal de administración con UI igual a la página pública
@@ -103,7 +101,6 @@ const AdminDashboard = () => {
     }
   };
 
-  // Filtrar productos
   useEffect(() => {
     let filtered = products;
 
@@ -220,7 +217,6 @@ const AdminDashboard = () => {
     await loadServices();
   };
 
-  // Nombres de categorías
   const categoryNames = {
     hamburguesas: "Hamburguesas",
     empanadas: "Empanadas",
@@ -232,17 +228,8 @@ const AdminDashboard = () => {
 
   if (loading) {
     return (
-      <div className="app">
-        <div
-          style={{
-            minHeight: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "20px",
-            color: "#666",
-          }}
-        >
+      <div className="min-h-screen bg-zinc-50 flex flex-col">
+        <div className="min-h-screen flex items-center justify-center text-xl text-zinc-500 font-medium">
           Cargando...
         </div>
       </div>
@@ -250,22 +237,35 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="app admin-mode">
+    <div className="min-h-screen bg-zinc-50 flex flex-col">
       {/* Admin Header */}
-      <div className="admin-header-bar">
-        <div className="admin-header-content">
-          <div className="admin-info">
-            <span className="admin-badge">🔧 Modo Administrador</span>
-            <span className="admin-user">👤 {user?.username}</span>
+      <div className="bg-zinc-800 shadow-lg sticky top-0 z-50 border-b-4 border-emerald-500">
+        <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center flex-wrap gap-3">
+          <div className="flex items-center gap-4">
+            <span className="bg-white text-zinc-800 px-4 py-2 rounded-full font-semibold text-sm shadow">
+              🔧 Modo Administrador
+            </span>
+            <span className="text-white text-sm font-medium">
+              👤 {user?.username}
+            </span>
           </div>
-          <div className="admin-actions">
-            <button onClick={handleShowConfig} className="btn-config">
+          <div className="flex gap-3">
+            <button
+              onClick={handleShowConfig}
+              className="px-4 py-2.5 border-none rounded-lg font-medium text-sm cursor-pointer transition-all duration-200 bg-white text-zinc-700 shadow hover:bg-amber-400 hover:text-white hover:-translate-y-0.5 hover:shadow-lg"
+            >
               ⚙️ Configuración
             </button>
-            <button onClick={() => navigate("/")} className="btn-view-store">
+            <button
+              onClick={() => navigate("/")}
+              className="px-4 py-2.5 border-none rounded-lg font-medium text-sm cursor-pointer transition-all duration-200 bg-white text-zinc-700 shadow hover:bg-emerald-500 hover:text-white hover:-translate-y-0.5 hover:shadow-lg"
+            >
               👁️ Ver como Usuario
             </button>
-            <button onClick={handleLogout} className="btn-logout">
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2.5 border-none rounded-lg font-medium text-sm cursor-pointer transition-all duration-200 bg-white text-zinc-700 shadow hover:bg-red-500 hover:text-white hover:-translate-y-0.5 hover:shadow-lg"
+            >
               🚪 Salir
             </button>
           </div>
@@ -275,29 +275,37 @@ const AdminDashboard = () => {
       <Navbar totalItems={0} onCartClick={() => {}} isAdmin={true} />
 
       {showConfig ? (
-        <div className="admin-config-container">
-          <div className="config-header">
-            <button className="back-button" onClick={handleBackToMenu}>
+        <div className="max-w-7xl mx-auto px-6 py-6 flex-1">
+          <div className="mb-6">
+            <button
+              className="bg-transparent border-none text-zinc-500 py-2.5 text-base font-medium cursor-pointer transition-colors duration-200 inline-flex items-center gap-2 hover:text-zinc-800"
+              onClick={handleBackToMenu}
+            >
               ← Volver al panel
             </button>
-            <h2>Configuración del Sistema</h2>
+            <h2 className="text-3xl font-bold text-zinc-800 mt-4">
+              Configuración del Sistema
+            </h2>
           </div>
           <ConfigManager />
         </div>
       ) : showMenuView ? (
-        <div className="product-list">
-          <div className="menu-header">
-            <h2 className="menu-title">
+        <main className="flex-1 py-8">
+          <div className="text-center py-12 px-6">
+            <h2 className="text-4xl font-bold text-zinc-800 mb-3">
               Panel de Administración - Menú Principal
             </h2>
-            <p className="menu-description">
+            <p className="text-zinc-500 text-lg mb-4">
               Haz clic en las tarjetas para editarlas o eliminarlas
             </p>
-            <button onClick={handleCreateFood} className="btn-add-item">
+            <button
+              onClick={handleCreateFood}
+              className="bg-emerald-500 text-white border-none px-6 py-3 rounded-lg font-semibold text-sm cursor-pointer transition-all duration-200 shadow-lg hover:-translate-y-0.5 hover:shadow-xl hover:bg-emerald-600 mt-4"
+            >
               + Agregar Plato Destacado
             </button>
           </div>
-          <div className="menu-grid">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-6 max-w-7xl mx-auto">
             {foods.map((food) => (
               <EditableFoodCard
                 key={food.id}
@@ -317,26 +325,34 @@ const AdminDashboard = () => {
               />
             ))}
           </div>
-        </div>
+        </main>
       ) : (
-        <div className="product-list">
+        <main className="flex-1 py-8 px-6">
           {selectedCategory === "servicios" ? (
-            <div className="services-manager">
-              <button className="back-button" onClick={handleBackToMenu}>
+            <div className="max-w-7xl mx-auto">
+              <button
+                className="bg-transparent border-none text-zinc-500 py-2.5 text-base font-medium cursor-pointer transition-colors duration-200 inline-flex items-center gap-2 hover:text-zinc-800 mb-4"
+                onClick={handleBackToMenu}
+              >
                 ← Volver al menú
               </button>
-              <div className="category-header">
-                <div className="category-info">
-                  <h2 className="category-title">Servicios</h2>
-                  <div className="category-count">
+              <div className="flex justify-between items-center flex-wrap gap-4 mb-6">
+                <div>
+                  <h2 className="text-3xl font-bold text-zinc-800">
+                    Servicios
+                  </h2>
+                  <div className="text-zinc-500 mt-1">
                     {services.length} servicios
                   </div>
                 </div>
-                <button onClick={handleCreateService} className="btn-add-item">
+                <button
+                  onClick={handleCreateService}
+                  className="bg-emerald-500 text-white border-none px-6 py-3 rounded-lg font-semibold text-sm cursor-pointer transition-all duration-200 shadow-lg hover:-translate-y-0.5 hover:shadow-xl hover:bg-emerald-600"
+                >
                   + Agregar Servicio
                 </button>
               </div>
-              <div className="services-grid">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {services.map((service) => (
                   <EditableServiceCard
                     key={service.id}
@@ -358,27 +374,30 @@ const AdminDashboard = () => {
                 return acc;
               }, {})
             ).map(([category, categoryProducts]) => (
-              <div key={category} className="category-section">
-                <button className="back-button" onClick={handleBackToMenu}>
+              <div key={category} className="max-w-7xl mx-auto mb-10">
+                <button
+                  className="bg-transparent border-none text-zinc-500 py-2.5 text-base font-medium cursor-pointer transition-colors duration-200 inline-flex items-center gap-2 hover:text-zinc-800 mb-4"
+                  onClick={handleBackToMenu}
+                >
                   ← Volver al menú
                 </button>
-                <div className="category-header">
-                  <div className="category-info">
-                    <h2 className="category-title">
+                <div className="flex justify-between items-center flex-wrap gap-4 mb-6">
+                  <div>
+                    <h2 className="text-3xl font-bold text-zinc-800">
                       {categoryNames[category] || category}
                     </h2>
-                    <div className="category-count">
+                    <div className="text-zinc-500 mt-1">
                       {categoryProducts.length} productos
                     </div>
                   </div>
                   <button
                     onClick={handleCreateProduct}
-                    className="btn-add-item"
+                    className="bg-emerald-500 text-white border-none px-6 py-3 rounded-lg font-semibold text-sm cursor-pointer transition-all duration-200 shadow-lg hover:-translate-y-0.5 hover:shadow-xl hover:bg-emerald-600"
                   >
                     + Agregar Producto
                   </button>
                 </div>
-                <div className="product-grid">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                   {categoryProducts.map((product) => (
                     <EditableProductCard
                       key={product.id}
@@ -391,7 +410,7 @@ const AdminDashboard = () => {
               </div>
             ))
           )}
-        </div>
+        </main>
       )}
 
       <Footer />

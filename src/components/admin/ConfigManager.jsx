@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { getConfig, updateConfig } from "../../supabase/supabaseService";
-import "./Manager.css";
 
 /**
  * Gestor de Configuración del Negocio
@@ -59,7 +58,6 @@ const ConfigManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validaciones
     if (!formData.telefono_whatsapp) {
       setMessage("El teléfono de WhatsApp es obligatorio");
       return;
@@ -105,19 +103,25 @@ const ConfigManager = () => {
   };
 
   if (loading) {
-    return <div className="manager-loading">Cargando configuración...</div>;
+    return (
+      <div className="text-center py-10 text-lg text-zinc-500">
+        Cargando configuración...
+      </div>
+    );
   }
 
   return (
-    <div className="manager">
-      <div className="manager-header">
-        <h2>Configuración del Negocio</h2>
-        <div className="config-status">
+    <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
+      <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-zinc-100">
+        <h2 className="text-2xl font-bold text-zinc-800">
+          Configuración del Negocio
+        </h2>
+        <div className="flex items-center">
           {message && (
             <span
-              className={
-                message.includes("✅") ? "success-message" : "error-message"
-              }
+              className={`font-semibold text-sm ${
+                message.includes("✅") ? "text-emerald-500" : "text-red-500"
+              }`}
             >
               {message}
             </span>
@@ -125,14 +129,18 @@ const ConfigManager = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="manager-form config-form">
+      <form onSubmit={handleSubmit} className="bg-white">
         {/* Horarios */}
-        <div className="config-section">
-          <h3>⏰ Horarios de Atención</h3>
+        <div className="mb-8 p-5 bg-zinc-50 rounded-xl border-2 border-zinc-200">
+          <h3 className="text-zinc-800 mb-4 text-lg font-semibold">
+            ⏰ Horarios de Atención
+          </h3>
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Horario de Apertura *</label>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div className="flex flex-col gap-2">
+              <label className="font-semibold text-zinc-700 text-sm">
+                Horario de Apertura *
+              </label>
               <input
                 type="time"
                 value={formData.horario_apertura}
@@ -140,11 +148,14 @@ const ConfigManager = () => {
                   setFormData({ ...formData, horario_apertura: e.target.value })
                 }
                 required
+                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
               />
             </div>
 
-            <div className="form-group">
-              <label>Horario de Cierre *</label>
+            <div className="flex flex-col gap-2">
+              <label className="font-semibold text-zinc-700 text-sm">
+                Horario de Cierre *
+              </label>
               <input
                 type="time"
                 value={formData.horario_cierre}
@@ -152,19 +163,24 @@ const ConfigManager = () => {
                   setFormData({ ...formData, horario_cierre: e.target.value })
                 }
                 required
+                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
               />
             </div>
           </div>
 
-          <div className="form-group">
-            <label>Días Laborales *</label>
-            <div className="dias-selector">
+          <div className="flex flex-col gap-2">
+            <label className="font-semibold text-zinc-700 text-sm">
+              Días Laborales *
+            </label>
+            <div className="flex flex-wrap gap-2 mt-2">
               {diasSemana.map((dia) => (
                 <button
                   key={dia.value}
                   type="button"
-                  className={`dia-button ${
-                    formData.dias_laborales.includes(dia.value) ? "active" : ""
+                  className={`px-4 py-2.5 border-2 rounded-lg cursor-pointer font-semibold transition-all duration-200 ${
+                    formData.dias_laborales.includes(dia.value)
+                      ? "bg-zinc-800 text-white border-zinc-800"
+                      : "bg-white text-zinc-600 border-zinc-200 hover:border-zinc-800 hover:-translate-y-0.5"
                   }`}
                   onClick={() => toggleDiaLaboral(dia.value)}
                 >
@@ -172,16 +188,22 @@ const ConfigManager = () => {
                 </button>
               ))}
             </div>
-            <small>Selecciona los días en que el negocio está abierto</small>
+            <small className="text-zinc-500 text-xs">
+              Selecciona los días en que el negocio está abierto
+            </small>
           </div>
         </div>
 
         {/* Demora */}
-        <div className="config-section">
-          <h3>🕒 Tiempo de Preparación</h3>
+        <div className="mb-8 p-5 bg-zinc-50 rounded-xl border-2 border-zinc-200">
+          <h3 className="text-zinc-800 mb-4 text-lg font-semibold">
+            🕒 Tiempo de Preparación
+          </h3>
 
-          <div className="form-group">
-            <label>Tiempo de Demora (minutos) *</label>
+          <div className="flex flex-col gap-2">
+            <label className="font-semibold text-zinc-700 text-sm">
+              Tiempo de Demora (minutos) *
+            </label>
             <input
               type="number"
               value={formData.tiempo_demora}
@@ -195,17 +217,24 @@ const ConfigManager = () => {
               min="0"
               max="180"
               step="5"
+              className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
             />
-            <small>Tiempo estimado de preparación de los pedidos</small>
+            <small className="text-zinc-500 text-xs">
+              Tiempo estimado de preparación de los pedidos
+            </small>
           </div>
         </div>
 
         {/* WhatsApp */}
-        <div className="config-section">
-          <h3>📱 Contacto</h3>
+        <div className="mb-8 p-5 bg-zinc-50 rounded-xl border-2 border-zinc-200">
+          <h3 className="text-zinc-800 mb-4 text-lg font-semibold">
+            📱 Contacto
+          </h3>
 
-          <div className="form-group">
-            <label>Teléfono WhatsApp *</label>
+          <div className="flex flex-col gap-2 mb-4">
+            <label className="font-semibold text-zinc-700 text-sm">
+              Teléfono WhatsApp *
+            </label>
             <input
               type="text"
               value={formData.telefono_whatsapp}
@@ -214,14 +243,17 @@ const ConfigManager = () => {
               }
               required
               placeholder="549111234567"
+              className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
             />
-            <small>
+            <small className="text-zinc-500 text-xs">
               Formato internacional sin espacios ni guiones. Ej: 5491112345678
             </small>
           </div>
 
-          <div className="form-group">
-            <label>Mensaje de Bienvenida</label>
+          <div className="flex flex-col gap-2">
+            <label className="font-semibold text-zinc-700 text-sm">
+              Mensaje de Bienvenida
+            </label>
             <textarea
               value={formData.mensaje_bienvenida}
               onChange={(e) =>
@@ -229,40 +261,50 @@ const ConfigManager = () => {
               }
               rows="3"
               placeholder="¡Bienvenido a La Cocina de Lau!"
+              className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm resize-y min-h-[80px] transition-colors duration-200 focus:outline-none focus:border-zinc-800"
             />
-            <small>Mensaje que aparece al inicio de la tienda</small>
+            <small className="text-zinc-500 text-xs">
+              Mensaje que aparece al inicio de la tienda
+            </small>
           </div>
         </div>
 
         {/* Vista Previa */}
-        <div className="config-section preview-section">
-          <h3>👀 Vista Previa</h3>
-          <div className="config-preview">
-            <p>
-              <strong>Horario:</strong> {formData.horario_apertura} a{" "}
-              {formData.horario_cierre}
+        <div className="mb-8 p-5 bg-blue-50 rounded-xl border-2 border-zinc-800">
+          <h3 className="text-zinc-800 mb-4 text-lg font-semibold">
+            👀 Vista Previa
+          </h3>
+          <div className="p-4 bg-white rounded-lg text-sm">
+            <p className="my-2 text-zinc-700">
+              <strong className="text-zinc-800">Horario:</strong>{" "}
+              {formData.horario_apertura} a {formData.horario_cierre}
             </p>
-            <p>
-              <strong>Días:</strong>{" "}
+            <p className="my-2 text-zinc-700">
+              <strong className="text-zinc-800">Días:</strong>{" "}
               {formData.dias_laborales.length > 0
                 ? formData.dias_laborales
                     .map((d) => d.charAt(0).toUpperCase() + d.slice(1))
                     .join(", ")
                 : "No seleccionados"}
             </p>
-            <p>
-              <strong>Demora:</strong> {formData.tiempo_demora} minutos
+            <p className="my-2 text-zinc-700">
+              <strong className="text-zinc-800">Demora:</strong>{" "}
+              {formData.tiempo_demora} minutos
             </p>
-            <p>
-              <strong>WhatsApp:</strong>{" "}
+            <p className="my-2 text-zinc-700">
+              <strong className="text-zinc-800">WhatsApp:</strong>{" "}
               {formData.telefono_whatsapp || "No configurado"}
             </p>
           </div>
         </div>
 
         {/* Botones */}
-        <div className="form-actions">
-          <button type="submit" className="btn-primary" disabled={saving}>
+        <div className="flex gap-3 mt-6 pt-5 border-t border-zinc-200">
+          <button
+            type="submit"
+            className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-800 text-white hover:bg-zinc-700 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
+            disabled={saving}
+          >
             {saving ? "Guardando..." : "💾 Guardar Configuración"}
           </button>
         </div>
