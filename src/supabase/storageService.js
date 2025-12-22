@@ -87,7 +87,7 @@ export const deleteImage = async (imageUrl) => {
 export const validateImage = (file) => {
   const validTypes = [
     "image/jpeg",
-    "image/jpg", 
+    "image/jpg",
     "image/png",
     "image/webp",
     "image/gif",
@@ -98,7 +98,7 @@ export const validateImage = (file) => {
     "image/heic",
     "image/heif",
     "image/ico",
-    "image/x-icon"
+    "image/x-icon",
   ];
   const maxSize = 10 * 1024 * 1024; // 10MB
 
@@ -107,12 +107,26 @@ export const validateImage = (file) => {
   }
 
   // Verificar si es una imagen por el tipo o la extensión
-  const fileExtension = file.name.split('.').pop().toLowerCase();
-  const validExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg', 'bmp', 'avif', 'tiff', 'tif', 'heic', 'heif', 'ico'];
-  
+  const fileExtension = file.name.split(".").pop().toLowerCase();
+  const validExtensions = [
+    "jpg",
+    "jpeg",
+    "png",
+    "webp",
+    "gif",
+    "svg",
+    "bmp",
+    "avif",
+    "tiff",
+    "tif",
+    "heic",
+    "heif",
+    "ico",
+  ];
+
   const isValidType = validTypes.includes(file.type);
   const isValidExtension = validExtensions.includes(fileExtension);
-  
+
   if (!isValidType && !isValidExtension) {
     throw new Error(
       "Tipo de archivo no válido. Formatos permitidos: JPG, PNG, WEBP, GIF, SVG, BMP, AVIF, TIFF, HEIC, ICO"
