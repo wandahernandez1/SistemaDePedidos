@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ServiceCard from "./ServiceCard";
 import { whatsappNumber } from "../data/services";
 import { getAll, TABLES as COLLECTIONS } from "../supabase/supabaseService";
+import { MessageCircle } from "lucide-react";
 
 /**
  * Componente ServicesSection - Sección completa de servicios
@@ -42,11 +43,11 @@ const ServicesSection = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-4">
         {/* Services Subsection */}
         <div className="mb-16">
-          <div className="text-center mb-10 py-7 px-8 bg-white rounded-xl border border-zinc-200">
-            <h2 className="text-3xl font-bold text-zinc-900 m-0 mb-2.5 tracking-tight md:text-2xl">
+          <div className="text-center mb-10 py-7 px-8 bg-white rounded-xl border border-secondary-200">
+            <h2 className="text-3xl font-bold text-secondary-900 m-0 mb-2.5 tracking-tight md:text-2xl">
               Servicios para Eventos
             </h2>
-            <p className="text-base text-zinc-500 m-0 mx-auto max-w-xl leading-relaxed font-medium md:text-sm">
+            <p className="text-base text-secondary-500 m-0 mx-auto max-w-xl leading-relaxed font-medium md:text-sm">
               Hacemos de tu evento una experiencia inolvidable
             </p>
           </div>
@@ -68,19 +69,20 @@ const ServicesSection = () => {
         </div>
 
         {/* CTA Footer */}
-        <div className="mt-16 pt-16 border-t border-zinc-200">
-          <div className="text-center max-w-xl mx-auto p-12 bg-white border border-zinc-200 rounded-lg md:p-8">
-            <h3 className="text-3xl font-semibold text-zinc-800 m-0 mb-4 tracking-tight md:text-2xl">
+        <div className="mt-16 pt-16 border-t border-secondary-200">
+          <div className="text-center max-w-xl mx-auto p-12 bg-white border border-secondary-200 rounded-lg md:p-8">
+            <h3 className="text-3xl font-semibold text-secondary-800 m-0 mb-4 tracking-tight md:text-2xl">
               ¿Tenés alguna consulta?
             </h3>
-            <p className="text-base text-zinc-500 m-0 mb-8 leading-relaxed md:text-sm">
+            <p className="text-base text-secondary-500 m-0 mb-8 leading-relaxed md:text-sm">
               Contactanos por WhatsApp y te asesoramos sin compromiso
             </p>
             <button
-              className="bg-zinc-800 text-white border-none rounded-md py-4 px-8 text-base font-semibold cursor-pointer transition-all duration-200 inline-flex items-center gap-2 hover:bg-zinc-700 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0"
+              className="bg-primary-500 text-white border-none rounded-md py-4 px-8 text-base font-semibold cursor-pointer transition-all duration-200 inline-flex items-center gap-2 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0"
               onClick={() => handleContactService("Consulta general")}
             >
-              💬 Contactar por WhatsApp
+              <MessageCircle className="w-5 h-5" />
+              Contactar por WhatsApp
             </button>
           </div>
         </div>

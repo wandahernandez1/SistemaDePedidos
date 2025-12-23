@@ -1,4 +1,13 @@
 import { useState } from "react";
+import {
+  X,
+  Store,
+  Truck,
+  Clock,
+  Trash2,
+  Sparkles,
+  MessageCircle,
+} from "lucide-react";
 import CartItem from "./CartItem";
 import { formatPrice } from "../utils/formatPrice";
 import {
@@ -120,25 +129,25 @@ const Cart = ({
         }`}
       >
         {/* Header */}
-        <div className="flex justify-between items-center px-6 py-5 border-b border-zinc-200 bg-white">
-          <h2 className="text-2xl font-bold text-zinc-900 m-0 tracking-tight">
+        <div className="flex justify-between items-center px-6 py-5 border-b border-secondary-200 bg-white">
+          <h2 className="text-2xl font-bold text-secondary-900 m-0 tracking-tight">
             Tu Pedido
           </h2>
           <button
-            className="bg-transparent border-none text-2xl cursor-pointer text-zinc-500 w-9 h-9 flex items-center justify-center rounded-lg transition-all duration-200 font-light hover:bg-zinc-100 hover:text-zinc-800"
+            className="bg-transparent border-none cursor-pointer text-secondary-500 w-9 h-9 flex items-center justify-center rounded-lg transition-all duration-200 hover:bg-secondary-100 hover:text-secondary-800"
             onClick={onClose}
             aria-label="Cerrar carrito"
           >
-            ×
+            <X className="h-5 w-5" />
           </button>
         </div>
 
         {cartItems.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center px-8 py-12 text-center">
-            <h3 className="text-xl font-bold text-zinc-800 m-0 mb-2 tracking-tight">
+            <h3 className="text-xl font-bold text-secondary-800 m-0 mb-2 tracking-tight">
               Carrito vacío
             </h3>
-            <p className="text-zinc-500 m-0 text-base">
+            <p className="text-secondary-500 m-0 text-base">
               Agrega productos para comenzar tu pedido
             </p>
           </div>
@@ -158,10 +167,10 @@ const Cart = ({
             </div>
 
             {/* Footer */}
-            <div className="border-t border-zinc-200 p-4 bg-white flex-shrink-0">
+            <div className="border-t border-secondary-200 p-4 bg-white flex-shrink-0">
               {/* Delivery Type */}
               <div className="mb-4">
-                <label className="flex items-center gap-2 text-xs font-bold text-zinc-800 mb-2">
+                <label className="flex items-center gap-2 text-xs font-bold text-secondary-800 mb-2">
                   Tipo de entrega
                 </label>
                 <div className="flex gap-2">
@@ -169,17 +178,23 @@ const Cart = ({
                     type="button"
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 border-2 rounded-lg bg-white cursor-pointer transition-all duration-200 ${
                       deliveryType === "pickup"
-                        ? "border-zinc-900 bg-zinc-50"
-                        : "border-zinc-200 hover:border-zinc-900"
+                        ? "border-primary-500 bg-primary-50"
+                        : "border-secondary-200 hover:border-primary-500"
                     }`}
                     onClick={() => setDeliveryType("pickup")}
                   >
-                    <span className="text-lg">🏪</span>
+                    <Store
+                      className={`h-5 w-5 ${
+                        deliveryType === "pickup"
+                          ? "text-primary-500"
+                          : "text-secondary-500"
+                      }`}
+                    />
                     <span
                       className={`text-xs font-semibold ${
                         deliveryType === "pickup"
-                          ? "text-zinc-900"
-                          : "text-zinc-800"
+                          ? "text-primary-600"
+                          : "text-secondary-700"
                       }`}
                     >
                       Retiro
@@ -189,17 +204,23 @@ const Cart = ({
                     type="button"
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 border-2 rounded-lg bg-white cursor-pointer transition-all duration-200 ${
                       deliveryType === "delivery"
-                        ? "border-zinc-900 bg-zinc-50"
-                        : "border-zinc-200 hover:border-zinc-900"
+                        ? "border-primary-500 bg-primary-50"
+                        : "border-secondary-200 hover:border-primary-500"
                     }`}
                     onClick={() => setDeliveryType("delivery")}
                   >
-                    <span className="text-lg">🛵</span>
+                    <Truck
+                      className={`h-5 w-5 ${
+                        deliveryType === "delivery"
+                          ? "text-primary-500"
+                          : "text-secondary-500"
+                      }`}
+                    />
                     <span
                       className={`text-xs font-semibold ${
                         deliveryType === "delivery"
-                          ? "text-zinc-900"
-                          : "text-zinc-800"
+                          ? "text-primary-600"
+                          : "text-secondary-700"
                       }`}
                     >
                       Envío
@@ -212,7 +233,7 @@ const Cart = ({
                   <div className="mt-3 animate-fade-in">
                     <input
                       type="text"
-                      className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm transition-all duration-200 bg-white focus:outline-none focus:border-zinc-900"
+                      className="w-full px-3 py-2.5 border-2 border-secondary-200 rounded-lg text-sm transition-all duration-200 bg-white focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20"
                       placeholder="Dirección de envío..."
                       value={deliveryAddress}
                       onChange={(e) => setDeliveryAddress(e.target.value)}
@@ -224,17 +245,18 @@ const Cart = ({
               {/* Time Selection */}
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
-                  <label className="flex items-center gap-1.5 text-xs font-bold text-zinc-800">
-                    🕐 Horario
+                  <label className="flex items-center gap-1.5 text-xs font-bold text-secondary-800">
+                    <Clock className="h-4 w-4 text-primary-500" />
+                    Horario
                   </label>
-                  <span className="text-[10px] text-zinc-400">
+                  <span className="text-[10px] text-secondary-400">
                     {horarioApertura} - {horarioCierre} hs
                   </span>
                 </div>
 
                 <button
                   type="button"
-                  className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-zinc-800 cursor-pointer flex items-center gap-2 hover:border-zinc-900 hover:bg-zinc-50"
+                  className="w-full px-3 py-2.5 border-2 border-secondary-200 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-secondary-800 cursor-pointer flex items-center gap-2 hover:border-primary-500 hover:bg-primary-50"
                   onClick={() => setShowTimeSelector(true)}
                 >
                   <span className="flex-1 text-left">
@@ -242,7 +264,7 @@ const Cart = ({
                       ? `${deliveryTime} hs`
                       : "Seleccionar horario"}
                   </span>
-                  <span className="text-xs text-zinc-400">▼</span>
+                  <span className="text-xs text-secondary-400">▼</span>
                 </button>
 
                 {/* Time Modal */}
@@ -252,18 +274,18 @@ const Cart = ({
                     onClick={() => setShowTimeSelector(false)}
                   >
                     <div
-                      className="bg-white rounded-t-3xl w-full max-w-md max-h-[70vh] overflow-hidden animate-slide-up"
+                      className="bg-white rounded-t-3xl w-full max-w-md max-h-[70vh] overflow-hidden animate-slide-in"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-200 sticky top-0 bg-white">
+                      <div className="flex items-center justify-between px-6 py-5 border-b border-secondary-200 sticky top-0 bg-white">
                         <h3 className="text-lg font-bold m-0">
                           Selecciona un horario
                         </h3>
                         <button
-                          className="w-9 h-9 rounded-full border-none bg-zinc-100 text-2xl cursor-pointer flex items-center justify-center transition-all duration-200 hover:bg-zinc-200"
+                          className="w-9 h-9 rounded-full border-none bg-secondary-100 cursor-pointer flex items-center justify-center transition-all duration-200 hover:bg-secondary-200"
                           onClick={() => setShowTimeSelector(false)}
                         >
-                          ×
+                          <X className="h-5 w-5 text-secondary-600" />
                         </button>
                       </div>
                       <div className="grid grid-cols-3 gap-3 p-5 max-h-[calc(70vh-80px)] overflow-y-auto">
@@ -273,8 +295,8 @@ const Cart = ({
                             type="button"
                             className={`py-4 px-3 border-2 rounded-xl text-base font-semibold cursor-pointer transition-all duration-200 min-h-[52px] ${
                               deliveryTime === time
-                                ? "bg-zinc-900 border-zinc-900 text-white"
-                                : "bg-white border-zinc-200 text-zinc-800 hover:border-zinc-900 hover:bg-zinc-50"
+                                ? "bg-primary-500 border-primary-500 text-white"
+                                : "bg-white border-secondary-200 text-secondary-800 hover:border-primary-500 hover:bg-primary-50"
                             }`}
                             onClick={() => {
                               setDeliveryTime(time);
@@ -290,7 +312,7 @@ const Cart = ({
                 )}
 
                 {estimatedTime && (
-                  <p className="mt-2 px-2.5 py-2 bg-zinc-900 rounded-lg text-xs text-white font-semibold text-center">
+                  <p className="mt-2 px-2.5 py-2 bg-primary-500 rounded-lg text-xs text-white font-semibold text-center">
                     Estimado: <strong>{estimatedTime}</strong>
                     <span className="ml-1 opacity-80">(+30 min)</span>
                   </p>
@@ -298,11 +320,11 @@ const Cart = ({
               </div>
 
               {/* Total */}
-              <div className="flex justify-between items-center p-3 mb-3 bg-zinc-100 rounded-lg border border-zinc-200">
-                <span className="text-xs font-bold text-zinc-500 uppercase tracking-wide">
+              <div className="flex justify-between items-center p-3 mb-3 bg-secondary-100 rounded-lg border border-secondary-200">
+                <span className="text-xs font-bold text-secondary-500 uppercase tracking-wide">
                   Total
                 </span>
-                <span className="text-2xl font-bold text-zinc-900 tracking-tight">
+                <span className="text-2xl font-bold text-secondary-900 tracking-tight">
                   {formatPrice(total)}
                 </span>
               </div>
@@ -310,16 +332,18 @@ const Cart = ({
               {/* Actions */}
               <div className="flex gap-2">
                 <button
-                  className="py-3 px-3 border border-zinc-200 rounded-lg text-xs font-bold cursor-pointer transition-all duration-200 flex items-center justify-center gap-1 bg-white text-zinc-500 hover:bg-zinc-100 hover:border-zinc-400 hover:text-zinc-800"
+                  className="py-3 px-3 border border-secondary-200 rounded-lg text-xs font-bold cursor-pointer transition-all duration-200 flex items-center justify-center gap-1.5 bg-white text-secondary-500 hover:bg-red-50 hover:border-red-300 hover:text-red-600"
                   onClick={onClearCart}
                 >
-                  🗑️ Vaciar
+                  <Trash2 className="h-4 w-4" />
+                  Vaciar
                 </button>
                 <button
-                  className="flex-1 py-3 px-4 border-none rounded-lg text-sm font-bold cursor-pointer transition-all duration-200 flex items-center justify-center gap-1.5 bg-zinc-900 text-white shadow-sm hover:bg-zinc-800 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0"
+                  className="flex-1 py-3 px-4 border-none rounded-lg text-sm font-bold cursor-pointer transition-all duration-200 flex items-center justify-center gap-1.5 bg-primary-500 text-white shadow-sm hover:bg-primary-600 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0"
                   onClick={handleFinishOrder}
                 >
-                  ✨ Finalizar Pedido
+                  <Sparkles className="h-4 w-4" />
+                  Finalizar Pedido
                 </button>
               </div>
             </div>
@@ -330,22 +354,25 @@ const Cart = ({
       {/* Confirmation Modal */}
       {showConfirmation && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[1000] p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl animate-slide-up border border-zinc-200">
-            <h3 className="text-2xl font-bold text-zinc-800 m-0 mb-3 tracking-tight">
-              📱 ¿Confirmar pedido?
+          <div className="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl animate-slide-in border border-secondary-200">
+            <div className="w-16 h-16 mx-auto mb-4 bg-primary-100 rounded-full flex items-center justify-center">
+              <MessageCircle className="h-8 w-8 text-primary-500" />
+            </div>
+            <h3 className="text-2xl font-bold text-secondary-800 m-0 mb-3 tracking-tight">
+              Confirmar pedido
             </h3>
-            <p className="text-zinc-500 m-0 mb-7 text-base leading-relaxed">
+            <p className="text-secondary-500 m-0 mb-7 text-base leading-relaxed">
               Se abrirá WhatsApp con el detalle de tu pedido
             </p>
             <div className="flex gap-3">
               <button
-                className="flex-1 py-3.5 border border-zinc-200 rounded-xl text-base font-bold cursor-pointer transition-all duration-200 bg-zinc-100 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-800 hover:-translate-y-0.5"
+                className="flex-1 py-3.5 border border-secondary-200 rounded-xl text-base font-bold cursor-pointer transition-all duration-200 bg-secondary-100 text-secondary-500 hover:bg-secondary-200 hover:text-secondary-800 hover:-translate-y-0.5"
                 onClick={() => setShowConfirmation(false)}
               >
                 Cancelar
               </button>
               <button
-                className="flex-1 py-3.5 border-none rounded-xl text-base font-bold cursor-pointer transition-all duration-200 bg-zinc-900 text-white shadow-md hover:bg-zinc-800 hover:-translate-y-0.5 hover:shadow-lg"
+                className="flex-1 py-3.5 border-none rounded-xl text-base font-bold cursor-pointer transition-all duration-200 bg-primary-500 text-white shadow-md hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-lg"
                 onClick={handleConfirmOrder}
               >
                 Confirmar

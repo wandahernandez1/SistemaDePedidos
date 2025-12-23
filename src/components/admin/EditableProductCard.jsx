@@ -1,240 +1,141 @@
 import { useState } from "react";
-import { uploadImage, validateImage } from "../../supabase/storageService";
 import { formatPrice } from "../../utils/formatPrice";
 
 /**
- * Componente EditableProductCard - Tarjeta de producto editable
+ * Componente EditableProductCard - Tarjeta de producto editable (minimalista)
  */
-const EditableProductCard = ({ product, onSave, onDelete }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [formData, setFormData] = useState({
-    nombre: product.nombre,
-    descripcion: product.descripcion,
-    categoria: product.categoria,
-    precio: product.precio,
-    imagen: product.imagen,
-    unidad: product.unidad,
-  });
+const EditableProductCard = ({ product, onSave, onDelete, onEdit }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      try {
-        validateImage(file);
-        setUploading(true);
-        const imageUrl = await uploadImage(file, "products");
-        setFormData({ ...formData, imagen: imageUrl });
-        setUploading(false);
-      } catch (error) {
-        alert(error.message);
-        setUploading(false);
-        e.target.value = "";
-      }
-    }
-  };
-
-  const handleSave = async () => {
-    try {
-      await onSave(product.id, {
-        ...formData,
-        precio: Number(formData.precio),
-      });
-      setIsEditing(false);
-      alert("Producto actualizado correctamente");
-    } catch (error) {
-      console.error("Error al guardar:", error);
-      alert("Error al guardar los cambios");
-    }
-  };
-
-  const handleCancel = () => {
-    setFormData({
-      nombre: product.nombre,
-      descripcion: product.descripcion,
-      categoria: product.categoria,
-      precio: product.precio,
-      imagen: product.imagen,
-      unidad: product.unidad,
-    });
-    setIsEditing(false);
-  };
-
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
+    e.stopPropagation();
     if (window.confirm(`¿Eliminar "${product.nombre}"?`)) {
       try {
         await onDelete(product);
-        alert("Producto eliminado correctamente");
       } catch (error) {
         console.error("Error al eliminar:", error);
-        alert("Error al eliminar el producto");
       }
     }
   };
 
-  if (!isEditing) {
-    return (
-      <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-zinc-200 transition-all duration-300 relative group hover:shadow-lg hover:-translate-y-0.5">
-        <div className="relative aspect-square overflow-hidden">
-          <img
-            src={product.imagen}
-            alt={product.nombre}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            loading="lazy"
-          />
-          <span className="absolute top-3 right-3 bg-zinc-800 text-white text-xs font-medium px-3 py-1.5 rounded-full">
-            Por {product.unidad}
-          </span>
-          <div className="absolute top-3 left-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-            <button
-              className="bg-white/95 border-none rounded-full w-9 h-9 cursor-pointer text-base flex items-center justify-center shadow-lg transition-all duration-200 hover:bg-blue-500 hover:scale-110"
-              onClick={() => setIsEditing(true)}
-              title="Editar"
-            >
-              ✏️
-            </button>
-            <button
-              className="bg-white/95 border-none rounded-full w-9 h-9 cursor-pointer text-base flex items-center justify-center shadow-lg transition-all duration-200 hover:bg-red-500 hover:scale-110"
-              onClick={handleDelete}
-              title="Eliminar"
-            >
-              🗑️
-            </button>
-          </div>
-        </div>
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(product);
+    }
+  };
 
-        <div className="p-4 flex flex-col gap-2">
-          <h3 className="text-lg font-semibold text-zinc-800 m-0">
-            {product.nombre}
-          </h3>
-          <p className="text-zinc-500 text-sm leading-relaxed m-0 line-clamp-2">
-            {product.descripcion}
-          </p>
-          <div className="flex justify-between items-center pt-3 border-t border-zinc-100 mt-auto">
-            <span className="text-xl font-bold text-zinc-800">
-              {formatPrice(product.precio)}
-            </span>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const unitLabels = {
+    unidad: "Unidad",
+    docena: "Docena",
+    kg: "Kg",
+    litro: "Lt",
+  };
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-lg border-2 border-emerald-500 transition-all duration-300 relative">
+    <div
+      className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 transition-all duration-300 relative group hover:shadow-xl hover:-translate-y-1"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Imagen */}
       <div className="relative aspect-square overflow-hidden">
         <img
-          src={formData.imagen}
-          alt={formData.nombre}
-          className="w-full h-full object-cover"
+          src={product.imagen}
+          alt={product.nombre}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-black/70 flex items-center justify-center rounded-t-xl">
-          <label className="bg-white text-zinc-700 px-6 py-3 rounded-lg cursor-pointer font-medium transition-all duration-200 flex items-center gap-2 hover:bg-emerald-500 hover:text-white hover:scale-105">
-            {uploading ? "Subiendo..." : "📷 Cambiar imagen"}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              disabled={uploading}
-              className="hidden"
-            />
-          </label>
+        
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+        {/* Badge de unidad */}
+        <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+          Por {unitLabels[product.unidad] || product.unidad}
+        </span>
+
+        {/* Badge de disponibilidad */}
+        {product.disponible === false && (
+          <span className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+            No disponible
+          </span>
+        )}
+
+        {/* Badge destacado */}
+        {product.destacado && (
+          <span className="absolute top-3 left-3 bg-amber-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-1">
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            Destacado
+          </span>
+        )}
+
+        {/* Botones de acción */}
+        <div className={`
+          absolute bottom-3 right-3 flex gap-2 transition-all duration-300
+          ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}
+        `}>
+          <button
+            className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border-none transition-all duration-200 hover:bg-blue-500 hover:text-white hover:scale-110"
+            onClick={handleEdit}
+            title="Editar"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </button>
+          <button
+            className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border-none transition-all duration-200 hover:bg-red-500 hover:text-white hover:scale-110"
+            onClick={handleDelete}
+            title="Eliminar"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Precio sobre la imagen */}
+        <div className={`
+          absolute bottom-3 left-3 transition-all duration-300
+          ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}
+        `}>
+          <span className="bg-slate-900/90 text-white text-lg font-bold px-4 py-2 rounded-xl backdrop-blur-sm">
+            {formatPrice(product.precio)}
+          </span>
         </div>
       </div>
 
-      <div className="p-4 flex flex-col gap-3">
-        <input
-          type="text"
-          value={formData.nombre}
-          onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-          className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-lg font-semibold transition-colors duration-200 focus:outline-none focus:border-emerald-500"
-          placeholder="Nombre del producto"
-        />
-
-        <textarea
-          value={formData.descripcion}
-          onChange={(e) =>
-            setFormData({ ...formData, descripcion: e.target.value })
-          }
-          className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm font-inherit resize-y min-h-[60px] transition-colors duration-200 focus:outline-none focus:border-emerald-500"
-          placeholder="Descripción"
-          rows="2"
-        />
-
-        <div className="grid grid-cols-2 gap-3">
-          <div className="flex flex-col">
-            <label className="text-xs font-semibold text-zinc-500 mb-1.5 uppercase">
-              Categoría
-            </label>
-            <select
-              value={formData.categoria}
-              onChange={(e) =>
-                setFormData({ ...formData, categoria: e.target.value })
-              }
-              className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-emerald-500"
-            >
-              <option value="hamburguesas">Hamburguesas</option>
-              <option value="empanadas">Empanadas</option>
-              <option value="pizzas">Pizzas</option>
-              <option value="bebidas">Bebidas</option>
-              <option value="postres">Postres</option>
-              <option value="ensaladas">Ensaladas</option>
-            </select>
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs font-semibold text-zinc-500 mb-1.5 uppercase">
-              Unidad
-            </label>
-            <select
-              value={formData.unidad}
-              onChange={(e) =>
-                setFormData({ ...formData, unidad: e.target.value })
-              }
-              className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-emerald-500"
-            >
-              <option value="unidad">Unidad</option>
-              <option value="docena">Docena</option>
-              <option value="kg">Kilogramo</option>
-              <option value="litro">Litro</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="flex flex-col">
-          <label className="text-xs font-semibold text-zinc-500 mb-1.5 uppercase">
-            Precio
-          </label>
-          <input
-            type="number"
-            value={formData.precio}
-            onChange={(e) =>
-              setFormData({ ...formData, precio: e.target.value })
-            }
-            className="w-full px-3 py-2.5 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-emerald-500"
-            placeholder="Precio"
-            min="0"
-            step="0.01"
-          />
-        </div>
-
-        <div className="flex gap-2 mt-4">
+      {/* Contenido */}
+      <div className="p-4">
+        <h3 className="text-lg font-bold text-slate-800 mb-1 line-clamp-1">
+          {product.nombre}
+        </h3>
+        <p className="text-slate-500 text-sm leading-relaxed line-clamp-2 mb-3">
+          {product.descripcion}
+        </p>
+        
+        {/* Footer con precio */}
+        <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+          <span className="text-2xl font-bold text-slate-800">
+            {formatPrice(product.precio)}
+          </span>
           <button
-            onClick={handleSave}
-            className="flex-1 py-3 border-none rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 bg-emerald-500 text-white hover:bg-emerald-600 hover:-translate-y-0.5 hover:shadow-lg disabled:bg-zinc-300 disabled:cursor-not-allowed"
-            disabled={uploading}
+            onClick={handleEdit}
+            className="px-4 py-2 bg-slate-100 hover:bg-slate-800 hover:text-white text-slate-700 text-sm font-medium rounded-xl transition-all duration-200 border-none cursor-pointer"
           >
-            ✓ Guardar
-          </button>
-          <button
-            onClick={handleCancel}
-            className="flex-1 py-3 border-none rounded-lg text-sm font-semibold cursor-pointer transition-all duration-200 bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
-          >
-            ✕ Cancelar
+            Editar
           </button>
         </div>
       </div>
+
+      {/* Indicador de estado */}
+      <div className={`
+        absolute bottom-0 left-0 right-0 h-1 transition-opacity duration-300
+        ${product.disponible === false ? 'bg-red-500 opacity-100' : 'bg-gradient-to-r from-emerald-400 to-emerald-600 opacity-0 group-hover:opacity-100'}
+      `} />
     </div>
   );
 };

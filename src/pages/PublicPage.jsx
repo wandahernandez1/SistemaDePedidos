@@ -130,8 +130,8 @@ function PublicPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-50 flex flex-col">
-        <div className="min-h-screen flex items-center justify-center text-xl text-zinc-500 font-medium">
+      <div className="min-h-screen bg-secondary-50 flex flex-col">
+        <div className="min-h-screen flex items-center justify-center text-xl text-secondary-500 font-medium">
           Cargando productos...
         </div>
       </div>
@@ -139,7 +139,7 @@ function PublicPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 flex flex-col">
+    <div className="min-h-screen bg-secondary-50 flex flex-col">
       <Navbar totalItems={getTotalItems()} onCartClick={handleCartToggle} />
 
       <ProductList

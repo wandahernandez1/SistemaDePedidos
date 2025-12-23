@@ -1,5 +1,30 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import {
+  X,
+  Check,
+  Plus,
+  Minus,
+  Beef,
+  Egg,
+  ChevronRight,
+  ChevronLeft,
+  ShoppingCart,
+  Hash,
+  Leaf,
+  Droplet,
+  CircleDot,
+} from "lucide-react";
+
+// Mapeo de iconos para ingredientes - usando solo iconos disponibles en lucide-react
+const iconComponents = {
+  beef: Beef,
+  bacon: CircleDot, // Bacon no existe, usamos CircleDot como alternativa
+  egg: Egg,
+  cheese: CircleDot, // Cheese no existe, usamos CircleDot
+  leaf: Leaf,
+  droplet: Droplet,
+};
 
 /**
  * Modal para personalizar hamburguesas - agregar o quitar ingredientes
@@ -32,33 +57,33 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
   // Ingredientes adicionales disponibles
   const additionalIngredients = {
     proteinas: [
-      { id: "extra-patty", name: "Medallón extra", price: 1500, icon: "🥩" },
-      { id: "bacon", name: "Bacon", price: 800, icon: "🥓" },
-      { id: "fried-egg", name: "Huevo frito", price: 400, icon: "🍳" },
+      { id: "extra-patty", name: "Medallón extra", price: 1500, icon: "beef" },
+      { id: "bacon", name: "Bacon", price: 800, icon: "bacon" },
+      { id: "fried-egg", name: "Huevo frito", price: 400, icon: "egg" },
     ],
     quesos: [
-      { id: "cheddar", name: "Queso cheddar", price: 500, icon: "🧀" },
-      { id: "blue-cheese", name: "Queso azul", price: 600, icon: "🧀" },
-      { id: "swiss-cheese", name: "Queso suizo", price: 550, icon: "🧀" },
+      { id: "cheddar", name: "Queso cheddar", price: 500, icon: "cheese" },
+      { id: "blue-cheese", name: "Queso azul", price: 600, icon: "cheese" },
+      { id: "swiss-cheese", name: "Queso suizo", price: 550, icon: "cheese" },
     ],
     vegetales: [
       {
         id: "caramelized-onion",
         name: "Cebolla caramelizada",
         price: 400,
-        icon: "🧅",
+        icon: "leaf",
       },
-      { id: "avocado", name: "Palta", price: 700, icon: "🥑" },
-      { id: "pickles", name: "Pepinillos", price: 300, icon: "🥒" },
-      { id: "jalapeños", name: "Jalapeños", price: 350, icon: "🌶️" },
-      { id: "mushrooms", name: "Champiñones", price: 450, icon: "🍄" },
+      { id: "avocado", name: "Palta", price: 700, icon: "leaf" },
+      { id: "pickles", name: "Pepinillos", price: 300, icon: "leaf" },
+      { id: "jalapeños", name: "Jalapeños", price: 350, icon: "leaf" },
+      { id: "mushrooms", name: "Champiñones", price: 450, icon: "leaf" },
     ],
     salsas: [
-      { id: "bbq-sauce", name: "Salsa BBQ", price: 200, icon: "🍯" },
-      { id: "ranch", name: "Ranch", price: 200, icon: "🥛" },
-      { id: "mayo", name: "Mayonesa", price: 150, icon: "🥄" },
-      { id: "ketchup", name: "Ketchup", price: 150, icon: "🍅" },
-      { id: "mustard", name: "Mostaza", price: 150, icon: "💛" },
+      { id: "bbq-sauce", name: "Salsa BBQ", price: 200, icon: "droplet" },
+      { id: "ranch", name: "Ranch", price: 200, icon: "droplet" },
+      { id: "mayo", name: "Mayonesa", price: 150, icon: "droplet" },
+      { id: "ketchup", name: "Ketchup", price: 150, icon: "droplet" },
+      { id: "mustard", name: "Mostaza", price: 150, icon: "droplet" },
     ],
   };
 
@@ -181,34 +206,22 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-3xl max-w-4xl w-full max-h-[95vh] overflow-hidden shadow-2xl relative animate-slide-up"
+        className="bg-white rounded-3xl max-w-4xl w-full max-h-[95vh] overflow-hidden shadow-2xl relative animate-slide-in"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-zinc-900 to-zinc-700 px-6 py-6 pb-8 relative">
+        <div className="bg-gradient-to-r from-primary-600 to-primary-500 px-6 py-6 pb-8 relative">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm border-none text-white cursor-pointer flex items-center justify-center transition-all duration-200 z-10 hover:bg-white/30 hover:scale-110"
             aria-label="Cerrar"
           >
-            <svg
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2.5}
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X className="w-6 h-6" />
           </button>
 
           <div className="flex items-center gap-4">
-            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center text-5xl shadow-md">
-              🍔
+            <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-md">
+              <Beef className="w-10 h-10 text-white" />
             </div>
             <div className="flex-1">
               <h2 className="text-3xl font-bold text-white m-0 drop-shadow-sm">
@@ -229,16 +242,16 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
             <div className="flex-1 overflow-y-auto p-6 w-full">
               {/* Base Ingredients */}
               {burgerBaseIngredients.length > 0 && (
-                <div className="mb-6 bg-white rounded-2xl p-6 shadow-sm border-2 border-zinc-200">
+                <div className="mb-6 bg-white rounded-2xl p-6 shadow-sm border-2 border-secondary-200">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-zinc-100 rounded-lg flex items-center justify-center text-lg border border-zinc-200">
-                      ✓
+                    <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center border border-primary-200">
+                      <Check className="w-5 h-5 text-primary-600" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-zinc-900 m-0">
+                      <h3 className="text-lg font-bold text-secondary-900 m-0">
                         Ingredientes incluidos
                       </h3>
-                      <p className="text-xs text-zinc-500 m-0">
+                      <p className="text-xs text-secondary-500 m-0">
                         Toca para quitar los que no quieras
                       </p>
                     </div>
@@ -253,7 +266,7 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                           className={`relative py-3 px-4 rounded-xl border-2 text-left text-sm font-semibold cursor-pointer transition-all duration-200 ${
                             isRemoved
                               ? "border-red-300 bg-red-50 text-red-500"
-                              : "border-zinc-200 bg-zinc-50 text-zinc-900 hover:border-zinc-700 hover:bg-white"
+                              : "border-secondary-200 bg-secondary-50 text-secondary-900 hover:border-primary-500 hover:bg-white"
                           }`}
                         >
                           <span
@@ -264,8 +277,8 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                             {ingredient}
                           </span>
                           {isRemoved && (
-                            <span className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-xs">
-                              ✕
+                            <span className="absolute top-1 right-1 bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center">
+                              <X className="w-3 h-3" />
                             </span>
                           )}
                         </button>
@@ -274,21 +287,22 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                   </div>
 
                   {/* Subtotal */}
-                  <div className="mt-6 pt-6 border-t-2 border-zinc-200">
+                  <div className="mt-6 pt-6 border-t-2 border-secondary-200">
                     <div className="flex items-baseline justify-between mb-3">
-                      <span className="text-base font-semibold text-zinc-500">
+                      <span className="text-base font-semibold text-secondary-500">
                         Subtotal
                       </span>
-                      <span className="text-3xl font-bold text-zinc-900">
+                      <span className="text-3xl font-bold text-secondary-900">
                         $
                         {(burger.precio + getAdditionsTotal()).toLocaleString()}
                       </span>
                     </div>
                     <button
                       onClick={() => setShowSummary(true)}
-                      className="w-full py-5 px-6 bg-gradient-to-r from-zinc-900 to-zinc-700 text-white border-none rounded-xl text-lg font-bold cursor-pointer shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                      className="w-full py-5 px-6 bg-gradient-to-r from-primary-600 to-primary-500 text-white border-none rounded-xl text-lg font-bold cursor-pointer shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
                     >
-                      Siguiente →
+                      Siguiente
+                      <ChevronRight className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
@@ -297,14 +311,14 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
               {/* Additional Ingredients */}
               <div className="mb-6">
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-8 h-8 bg-zinc-100 rounded-lg flex items-center justify-center text-lg border border-zinc-200">
-                    +
+                  <div className="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center border border-primary-200">
+                    <Plus className="w-5 h-5 text-primary-600" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-zinc-900 m-0">
+                    <h3 className="text-lg font-bold text-secondary-900 m-0">
                       Agregar ingredientes
                     </h3>
-                    <p className="text-xs text-zinc-500 m-0">
+                    <p className="text-xs text-secondary-500 m-0">
                       Elige tus favoritos de cada categoría
                     </p>
                   </div>
@@ -318,8 +332,8 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                       onClick={() => setActiveCategory(category)}
                       className={`px-4 py-2 rounded-lg font-semibold text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
                         activeCategory === category
-                          ? "bg-zinc-900 text-white shadow-md"
-                          : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+                          ? "bg-primary-500 text-white shadow-md"
+                          : "bg-secondary-100 text-secondary-600 hover:bg-secondary-200"
                       }`}
                     >
                       {categoryNames[category]}
@@ -332,23 +346,37 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                   {additionalIngredients[activeCategory].map((ingredient) => {
                     const qty = getIngredientQuantity(ingredient.id);
                     const isAdded = qty > 0;
+                    const IconComponent =
+                      iconComponents[ingredient.icon] || Leaf;
                     return (
                       <div
                         key={ingredient.id}
                         className={`p-3 rounded-xl border-2 transition-all duration-200 ${
                           isAdded
-                            ? "border-zinc-700 bg-zinc-50"
-                            : "border-zinc-200 bg-white hover:border-zinc-400"
+                            ? "border-primary-500 bg-primary-50"
+                            : "border-secondary-200 bg-white hover:border-primary-300"
                         }`}
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <span className="text-2xl">{ingredient.icon}</span>
+                            <div
+                              className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                                isAdded ? "bg-primary-100" : "bg-secondary-100"
+                              }`}
+                            >
+                              <IconComponent
+                                className={`w-5 h-5 ${
+                                  isAdded
+                                    ? "text-primary-600"
+                                    : "text-secondary-500"
+                                }`}
+                              />
+                            </div>
                             <div>
-                              <p className="text-sm font-bold text-zinc-900 m-0">
+                              <p className="text-sm font-bold text-secondary-900 m-0">
                                 {ingredient.name}
                               </p>
-                              <p className="text-xs text-zinc-500 font-semibold">
+                              <p className="text-xs text-secondary-500 font-semibold">
                                 +${ingredient.price}
                               </p>
                             </div>
@@ -359,24 +387,24 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => removeIngredient(ingredient.id)}
-                              className="flex-1 h-8 rounded-lg border-none bg-zinc-100 text-zinc-600 font-bold cursor-pointer transition-all duration-200 hover:bg-zinc-200"
+                              className="flex-1 h-8 rounded-lg border-none bg-secondary-100 text-secondary-600 font-bold cursor-pointer transition-all duration-200 hover:bg-secondary-200 flex items-center justify-center"
                             >
-                              −
+                              <Minus className="w-4 h-4" />
                             </button>
-                            <span className="w-8 text-center font-bold text-zinc-900">
+                            <span className="w-8 text-center font-bold text-secondary-900">
                               {qty}
                             </span>
                             <button
                               onClick={() => addIngredient(ingredient)}
-                              className="flex-1 h-8 rounded-lg border-none bg-zinc-900 text-white font-bold cursor-pointer transition-all duration-200 hover:bg-zinc-700"
+                              className="flex-1 h-8 rounded-lg border-none bg-primary-500 text-white font-bold cursor-pointer transition-all duration-200 hover:bg-primary-600 flex items-center justify-center"
                             >
-                              +
+                              <Plus className="w-4 h-4" />
                             </button>
                           </div>
                         ) : (
                           <button
                             onClick={() => addIngredient(ingredient)}
-                            className="w-full h-8 rounded-lg border-none bg-zinc-900 text-white font-bold cursor-pointer transition-all duration-200 hover:bg-zinc-700"
+                            className="w-full h-8 rounded-lg border-none bg-primary-500 text-white font-bold cursor-pointer transition-all duration-200 hover:bg-primary-600"
                           >
                             Agregar
                           </button>
@@ -389,39 +417,27 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
             </div>
           ) : (
             /* Summary View */
-            <div className="w-full overflow-y-auto p-6 bg-zinc-50">
+            <div className="w-full overflow-y-auto p-6 bg-secondary-50">
               <button
                 onClick={() => setShowSummary(false)}
-                className="flex items-center gap-2 py-3 px-4 bg-white border-2 border-zinc-200 rounded-xl text-zinc-600 font-semibold text-sm cursor-pointer transition-all duration-200 mb-6 hover:border-zinc-700 hover:bg-zinc-50 hover:text-zinc-900"
+                className="flex items-center gap-2 py-3 px-4 bg-white border-2 border-secondary-200 rounded-xl text-secondary-600 font-semibold text-sm cursor-pointer transition-all duration-200 mb-6 hover:border-primary-500 hover:bg-secondary-50 hover:text-secondary-900"
               >
-                <svg
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  className="w-5 h-5"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
+                <ChevronLeft className="w-5 h-5" />
                 Volver a personalizar
               </button>
 
               <div className="max-w-3xl">
                 {/* Burger Info */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-4">
-                    <span>🍔</span> Tu hamburguesa
+                  <h3 className="text-lg font-bold text-secondary-900 flex items-center gap-2 mb-4">
+                    <Beef className="w-5 h-5 text-primary-500" /> Tu hamburguesa
                   </h3>
-                  <div className="bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
+                  <div className="bg-white rounded-xl p-4 shadow-sm border border-secondary-200">
                     <div className="flex justify-between items-center">
-                      <span className="font-bold text-zinc-900">
+                      <span className="font-bold text-secondary-900">
                         {burger.nombre}
                       </span>
-                      <span className="font-bold text-zinc-900">
+                      <span className="font-bold text-secondary-900">
                         ${burger.precio.toLocaleString()}
                       </span>
                     </div>
@@ -433,17 +449,18 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                   (ing) => !removedIngredients.includes(ing)
                 ).length > 0 && (
                   <div className="mb-6">
-                    <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-4">
-                      <span>✓</span> Ingredientes incluidos
+                    <h3 className="text-lg font-bold text-secondary-900 flex items-center gap-2 mb-4">
+                      <Check className="w-5 h-5 text-green-500" /> Ingredientes
+                      incluidos
                     </h3>
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
+                    <div className="bg-white rounded-xl p-4 shadow-sm border border-secondary-200">
                       <div className="flex flex-wrap gap-2">
                         {burgerBaseIngredients
                           .filter((ing) => !removedIngredients.includes(ing))
                           .map((ing, idx) => (
                             <span
                               key={idx}
-                              className="bg-zinc-100 text-zinc-700 px-3 py-1.5 rounded-lg text-sm font-medium"
+                              className="bg-secondary-100 text-secondary-700 px-3 py-1.5 rounded-lg text-sm font-medium"
                             >
                               {ing}
                             </span>
@@ -456,10 +473,11 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                 {/* Removed Ingredients */}
                 {removedIngredients.length > 0 && (
                   <div className="mb-6">
-                    <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-4">
-                      <span>✕</span> Sin estos ingredientes
+                    <h3 className="text-lg font-bold text-secondary-900 flex items-center gap-2 mb-4">
+                      <X className="w-5 h-5 text-red-500" /> Sin estos
+                      ingredientes
                     </h3>
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
+                    <div className="bg-white rounded-xl p-4 shadow-sm border border-secondary-200">
                       <div className="flex flex-wrap gap-2">
                         {removedIngredients.map((ing, idx) => (
                           <span
@@ -477,30 +495,34 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                 {/* Added Ingredients */}
                 {addedIngredients.length > 0 && (
                   <div className="mb-6">
-                    <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-4">
-                      <span>+</span> Ingredientes adicionales
+                    <h3 className="text-lg font-bold text-secondary-900 flex items-center gap-2 mb-4">
+                      <Plus className="w-5 h-5 text-primary-500" /> Ingredientes
+                      adicionales
                     </h3>
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
-                      {addedIngredients.map((ing) => (
-                        <div
-                          key={ing.id}
-                          className="flex justify-between items-center py-2 border-b border-zinc-100 last:border-b-0"
-                        >
-                          <span className="text-zinc-700">
-                            {ing.icon}{" "}
-                            {ing.quantity > 1 ? `${ing.quantity}x ` : ""}
-                            {ing.name}
-                          </span>
-                          <span className="font-semibold text-zinc-900">
-                            +${(ing.price * ing.quantity).toLocaleString()}
-                          </span>
-                        </div>
-                      ))}
-                      <div className="flex justify-between items-center pt-3 mt-3 border-t border-zinc-200">
-                        <span className="font-semibold text-zinc-600">
+                    <div className="bg-white rounded-xl p-4 shadow-sm border border-secondary-200">
+                      {addedIngredients.map((ing) => {
+                        const IconComponent = iconComponents[ing.icon] || Leaf;
+                        return (
+                          <div
+                            key={ing.id}
+                            className="flex justify-between items-center py-2 border-b border-secondary-100 last:border-b-0"
+                          >
+                            <span className="text-secondary-700 flex items-center gap-2">
+                              <IconComponent className="w-4 h-4 text-secondary-500" />
+                              {ing.quantity > 1 ? `${ing.quantity}x ` : ""}
+                              {ing.name}
+                            </span>
+                            <span className="font-semibold text-secondary-900">
+                              +${(ing.price * ing.quantity).toLocaleString()}
+                            </span>
+                          </div>
+                        );
+                      })}
+                      <div className="flex justify-between items-center pt-3 mt-3 border-t border-secondary-200">
+                        <span className="font-semibold text-secondary-600">
                           Subtotal extras
                         </span>
-                        <span className="font-bold text-zinc-900">
+                        <span className="font-bold text-secondary-900">
                           +${getAdditionsTotal().toLocaleString()}
                         </span>
                       </div>
@@ -510,62 +532,50 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
 
                 {/* Quantity */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 mb-4">
-                    <span>🔢</span> Cantidad
+                  <h3 className="text-lg font-bold text-secondary-900 flex items-center gap-2 mb-4">
+                    <Hash className="w-5 h-5 text-primary-500" /> Cantidad
                   </h3>
-                  <div className="flex items-center gap-3 bg-white rounded-xl p-4 shadow-sm border border-zinc-200">
+                  <div className="flex items-center gap-3 bg-white rounded-xl p-4 shadow-sm border border-secondary-200">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       disabled={quantity <= 1}
-                      className="w-12 h-12 rounded-lg bg-zinc-900 text-white border-none text-2xl font-bold cursor-pointer transition-all duration-200 hover:bg-zinc-700 disabled:bg-zinc-200 disabled:cursor-not-allowed"
+                      className="w-12 h-12 rounded-lg bg-primary-500 text-white border-none text-2xl font-bold cursor-pointer transition-all duration-200 hover:bg-primary-600 disabled:bg-secondary-200 disabled:cursor-not-allowed flex items-center justify-center"
                     >
-                      −
+                      <Minus className="w-6 h-6" />
                     </button>
-                    <span className="flex-1 text-center text-3xl font-bold text-zinc-900">
+                    <span className="flex-1 text-center text-3xl font-bold text-secondary-900">
                       {quantity}
                     </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="w-12 h-12 rounded-lg bg-zinc-900 text-white border-none text-2xl font-bold cursor-pointer transition-all duration-200 hover:bg-zinc-700"
+                      className="w-12 h-12 rounded-lg bg-primary-500 text-white border-none text-2xl font-bold cursor-pointer transition-all duration-200 hover:bg-primary-600 flex items-center justify-center"
                     >
-                      +
+                      <Plus className="w-6 h-6" />
                     </button>
                   </div>
                 </div>
 
                 {/* Final Total */}
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-secondary-200">
                   <div className="flex items-baseline justify-between mb-4">
                     <div>
-                      <div className="text-base font-semibold text-zinc-500">
+                      <div className="text-base font-semibold text-secondary-500">
                         Total a pagar
                       </div>
-                      <div className="text-sm text-zinc-400">
+                      <div className="text-sm text-secondary-400">
                         {quantity} x $
                         {(burger.precio + getAdditionsTotal()).toLocaleString()}
                       </div>
                     </div>
-                    <div className="text-4xl font-bold text-zinc-900">
+                    <div className="text-4xl font-bold text-secondary-900">
                       ${calculateTotalPrice().toLocaleString()}
                     </div>
                   </div>
                   <button
                     onClick={handleAddToCart}
-                    className="w-full py-5 px-6 bg-gradient-to-r from-zinc-900 to-zinc-700 text-white border-none rounded-xl text-lg font-bold cursor-pointer shadow-lg transition-all duration-200 flex items-center justify-center gap-2 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                    className="w-full py-5 px-6 bg-gradient-to-r from-primary-600 to-primary-500 text-white border-none rounded-xl text-lg font-bold cursor-pointer shadow-lg transition-all duration-200 flex items-center justify-center gap-2 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
                   >
-                    <svg
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
+                    <ShoppingCart className="w-6 h-6" />
                     Agregar al carrito
                   </button>
                 </div>
