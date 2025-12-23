@@ -140,21 +140,21 @@ const ServiceManager = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-10 text-lg text-zinc-500">
+      <div className="text-center py-10 text-lg text-neutral-500">
         Cargando servicios...
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
-      <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-zinc-100">
-        <h2 className="text-2xl font-bold text-zinc-800">
+    <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
+      <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-neutral-100">
+        <h2 className="text-2xl font-bold text-neutral-800">
           Gestión de Servicios para Eventos
         </h2>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-800 text-white hover:bg-zinc-700 hover:-translate-y-0.5"
+          className="px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-primary-500 text-white hover:bg-primary-600 hover:-translate-y-0.5"
         >
           {showForm ? "Cancelar" : "+ Nuevo Servicio"}
         </button>
@@ -163,11 +163,11 @@ const ServiceManager = () => {
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="bg-zinc-50 border-2 border-zinc-200 rounded-xl p-6 mb-8"
+          className="bg-neutral-50 border-2 border-neutral-200 rounded-xl p-6 mb-8"
         >
           <div className="grid grid-cols-1 sm:grid-cols-[3fr_1fr] gap-4 mb-4">
             <div className="flex flex-col gap-2">
-              <label className="font-semibold text-zinc-700 text-sm">
+              <label className="font-semibold text-neutral-700 text-sm">
                 Título *
               </label>
               <input
@@ -177,12 +177,12 @@ const ServiceManager = () => {
                   setFormData({ ...formData, title: e.target.value })
                 }
                 required
-                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+                className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-primary-500"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="font-semibold text-zinc-700 text-sm">
+              <label className="font-semibold text-neutral-700 text-sm">
                 Icono
               </label>
               <select
@@ -190,7 +190,7 @@ const ServiceManager = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, icon: e.target.value })
                 }
-                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+                className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-primary-500"
               >
                 {commonIcons.map((icon) => (
                   <option key={icon} value={icon}>
@@ -202,7 +202,7 @@ const ServiceManager = () => {
           </div>
 
           <div className="flex flex-col gap-2 mb-4">
-            <label className="font-semibold text-zinc-700 text-sm">
+            <label className="font-semibold text-neutral-700 text-sm">
               Descripción *
             </label>
             <textarea
@@ -212,12 +212,12 @@ const ServiceManager = () => {
               }
               required
               rows="3"
-              className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm resize-y min-h-[80px] transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+              className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm resize-y min-h-[80px] transition-colors duration-200 focus:outline-none focus:border-primary-500"
             />
           </div>
 
           <div className="flex flex-col gap-2 mb-4">
-            <label className="font-semibold text-zinc-700 text-sm">
+            <label className="font-semibold text-neutral-700 text-sm">
               Características
             </label>
             <div className="flex gap-2">
@@ -229,12 +229,12 @@ const ServiceManager = () => {
                   e.key === "Enter" && (e.preventDefault(), addFeature())
                 }
                 placeholder="Agregar característica y presionar Enter"
-                className="flex-1 px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+                className="flex-1 px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-primary-500"
               />
               <button
                 type="button"
                 onClick={addFeature}
-                className="px-4 py-3 bg-zinc-800 text-white border-none rounded-lg cursor-pointer font-semibold transition-colors duration-200 hover:bg-zinc-700"
+                className="px-4 py-3 bg-primary-500 text-white border-none rounded-lg cursor-pointer font-semibold transition-colors duration-200 hover:bg-primary-600"
               >
                 Agregar
               </button>
@@ -243,7 +243,7 @@ const ServiceManager = () => {
               {formData.features.map((feature, index) => (
                 <li
                   key={index}
-                  className="flex justify-between items-center p-2.5 px-3 bg-white border border-zinc-200 rounded-lg mb-2"
+                  className="flex justify-between items-center p-2.5 px-3 bg-white border border-neutral-200 rounded-lg mb-2"
                 >
                   {feature}
                   <button
@@ -258,17 +258,17 @@ const ServiceManager = () => {
             </ul>
           </div>
 
-          <div className="flex gap-3 mt-6 pt-5 border-t border-zinc-200">
+          <div className="flex gap-3 mt-6 pt-5 border-t border-neutral-200">
             <button
               type="submit"
-              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-800 text-white hover:bg-zinc-700 hover:-translate-y-0.5"
+              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-primary-500 text-white hover:bg-primary-600 hover:-translate-y-0.5"
             >
               {editingService ? "Actualizar" : "Crear"}
             </button>
             <button
               type="button"
               onClick={resetForm}
-              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
             >
               Cancelar
             </button>
@@ -278,28 +278,28 @@ const ServiceManager = () => {
 
       <div className="flex flex-col gap-4">
         {services.length === 0 ? (
-          <p className="text-center py-10 text-zinc-400 text-base">
+          <p className="text-center py-10 text-neutral-400 text-base">
             No hay servicios configurados
           </p>
         ) : (
           services.map((service) => (
             <div
               key={service.firebaseId}
-              className="flex gap-4 p-4 bg-white border-2 border-zinc-200 rounded-xl transition-all duration-200 hover:border-zinc-800 hover:shadow-lg flex-wrap md:flex-nowrap items-start"
+              className="flex gap-4 p-4 bg-white border-2 border-neutral-200 rounded-xl transition-all duration-200 hover:border-primary-500 hover:shadow-lg flex-wrap md:flex-nowrap items-start"
             >
-              <div className="text-5xl w-20 h-20 flex items-center justify-center bg-zinc-100 rounded-xl shrink-0">
+              <div className="text-5xl w-20 h-20 flex items-center justify-center bg-neutral-100 rounded-xl shrink-0">
                 {service.icon}
               </div>
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-zinc-800 mb-2">
+                <h3 className="text-lg font-semibold text-neutral-800 mb-2">
                   {service.title}
                 </h3>
-                <p className="text-zinc-500 text-sm leading-relaxed mb-2">
+                <p className="text-neutral-500 text-sm leading-relaxed mb-2">
                   {service.description}
                 </p>
                 <ul className="list-none p-0 m-0">
                   {service.features?.map((feature, index) => (
-                    <li key={index} className="text-zinc-600 text-sm mb-1">
+                    <li key={index} className="text-neutral-600 text-sm mb-1">
                       ✓ {feature}
                     </li>
                   ))}
@@ -308,7 +308,7 @@ const ServiceManager = () => {
               <div className="flex flex-row md:flex-col gap-2 justify-center w-full md:w-auto">
                 <button
                   onClick={() => handleEdit(service)}
-                  className="flex-1 md:flex-none px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-emerald-500 text-white min-w-[100px] hover:bg-emerald-600"
+                  className="flex-1 md:flex-none px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-primary-500 text-white min-w-[100px] hover:bg-primary-600"
                 >
                   Editar
                 </button>

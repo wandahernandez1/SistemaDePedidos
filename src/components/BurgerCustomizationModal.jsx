@@ -266,7 +266,7 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                           className={`relative py-3 px-4 rounded-xl border-2 text-left text-sm font-semibold cursor-pointer transition-all duration-200 ${
                             isRemoved
                               ? "border-red-300 bg-red-50 text-red-500"
-                              : "border-secondary-200 bg-secondary-50 text-secondary-900 hover:border-primary-500 hover:bg-white"
+                              : "border-secondary-200 bg-secondary-50 text-secondary-900 hover:border-primary-500 hover:bg-primary-50"
                           }`}
                         >
                           <span
@@ -330,10 +330,10 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                     <button
                       key={category}
                       onClick={() => setActiveCategory(category)}
-                      className={`px-4 py-2 rounded-lg font-semibold text-sm whitespace-nowrap cursor-pointer transition-all duration-200 ${
+                      className={`px-4 py-2 rounded-lg font-semibold text-sm whitespace-nowrap cursor-pointer transition-all duration-200 border-2 ${
                         activeCategory === category
-                          ? "bg-primary-500 text-white shadow-md"
-                          : "bg-secondary-100 text-secondary-600 hover:bg-secondary-200"
+                          ? "bg-primary-500 text-white shadow-md border-primary-500"
+                          : "bg-secondary-100 text-secondary-700 border-secondary-300 hover:bg-secondary-200 hover:border-secondary-400"
                       }`}
                     >
                       {categoryNames[category]}
@@ -354,7 +354,7 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                         className={`p-3 rounded-xl border-2 transition-all duration-200 ${
                           isAdded
                             ? "border-primary-500 bg-primary-50"
-                            : "border-secondary-200 bg-white hover:border-primary-300"
+                            : "border-secondary-200 bg-transparent hover:border-primary-300 hover:bg-secondary-50"
                         }`}
                       >
                         <div className="flex items-start justify-between mb-2">
@@ -387,7 +387,7 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                           <div className="flex items-center gap-2">
                             <button
                               onClick={() => removeIngredient(ingredient.id)}
-                              className="flex-1 h-8 rounded-lg border-none bg-secondary-100 text-secondary-600 font-bold cursor-pointer transition-all duration-200 hover:bg-secondary-200 flex items-center justify-center"
+                              className="flex-1 h-8 rounded-lg border-2 border-secondary-300 bg-secondary-200 text-secondary-700 font-bold cursor-pointer transition-all duration-200 hover:bg-secondary-300 hover:border-secondary-400 flex items-center justify-center"
                             >
                               <Minus className="w-4 h-4" />
                             </button>
@@ -420,7 +420,7 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
             <div className="w-full overflow-y-auto p-6 bg-secondary-50">
               <button
                 onClick={() => setShowSummary(false)}
-                className="flex items-center gap-2 py-3 px-4 bg-white border-2 border-secondary-200 rounded-xl text-secondary-600 font-semibold text-sm cursor-pointer transition-all duration-200 mb-6 hover:border-primary-500 hover:bg-secondary-50 hover:text-secondary-900"
+                className="flex items-center gap-2 py-3 px-4 bg-transparent border-2 border-secondary-200 rounded-xl text-secondary-600 font-semibold text-sm cursor-pointer transition-all duration-200 mb-6 hover:border-primary-500 hover:bg-secondary-50 hover:text-secondary-900"
               >
                 <ChevronLeft className="w-5 h-5" />
                 Volver a personalizar
@@ -460,7 +460,7 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                           .map((ing, idx) => (
                             <span
                               key={idx}
-                              className="bg-secondary-100 text-secondary-700 px-3 py-1.5 rounded-lg text-sm font-medium"
+                              className="bg-secondary-200 text-secondary-800 border border-secondary-300 px-3 py-1.5 rounded-lg text-sm font-semibold"
                             >
                               {ing}
                             </span>

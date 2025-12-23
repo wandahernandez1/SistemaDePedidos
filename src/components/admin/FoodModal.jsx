@@ -133,12 +133,12 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-neutral-200 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-slate-800">
+            <h2 className="text-xl font-bold text-neutral-800">
               {isNew ? "Nuevo Plato Destacado" : "Editar Plato Destacado"}
             </h2>
-            <p className="text-sm text-slate-500 mt-0.5">
+            <p className="text-sm text-neutral-500 mt-0.5">
               {isNew
                 ? "Completa los datos del nuevo plato"
                 : `Editando: ${food?.name}`}
@@ -146,10 +146,10 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors border-none cursor-pointer"
+            className="w-10 h-10 rounded-xl bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center transition-colors border-none cursor-pointer"
           >
             <svg
-              className="w-5 h-5 text-slate-600"
+              className="w-5 h-5 text-neutral-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -169,7 +169,7 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Imagen */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 Imagen del plato
               </label>
               <div
@@ -177,8 +177,8 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
                   relative border-2 border-dashed rounded-xl p-4 text-center transition-all cursor-pointer
                   ${
                     dragActive
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                      ? "border-primary-500 bg-primary-50"
+                      : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50"
                   }
                   ${errors.image ? "border-red-300 bg-red-50" : ""}
                 `}
@@ -204,7 +204,7 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
                 ) : (
                   <div className="py-8">
                     <svg
-                      className="w-12 h-12 mx-auto text-slate-400 mb-3"
+                      className="w-12 h-12 mx-auto text-neutral-400 mb-3"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -216,12 +216,12 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-                    <p className="text-slate-600 font-medium">
+                    <p className="text-neutral-600 font-medium">
                       {uploading
                         ? "Subiendo imagen..."
                         : "Arrastra una imagen o haz clic para seleccionar"}
                     </p>
-                    <p className="text-xs text-slate-400 mt-1">
+                    <p className="text-xs text-neutral-400 mt-1">
                       Soporta: JPG, PNG, WEBP, GIF, SVG, BMP, AVIF, HEIC (máx.
                       10MB)
                     </p>
@@ -242,7 +242,7 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
 
             {/* Nombre */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 Nombre del plato *
               </label>
               <input
@@ -252,12 +252,12 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
                   setFormData({ ...formData, name: e.target.value })
                 }
                 className={`
-                  w-full px-4 py-3 rounded-xl border-2 transition-colors text-slate-800 text-base
-                  focus:outline-none focus:border-blue-500
+                  w-full px-4 py-3 rounded-xl border-2 transition-colors text-neutral-800 text-base
+                  focus:outline-none focus:border-primary-500
                   ${
                     errors.name
                       ? "border-red-300 bg-red-50"
-                      : "border-slate-200"
+                      : "border-neutral-200"
                   }
                 `}
                 placeholder="Ej: Hamburguesas Gourmet"
@@ -269,7 +269,7 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
 
             {/* Descripción */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 Descripción *
               </label>
               <textarea
@@ -279,12 +279,12 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
                 }
                 rows={3}
                 className={`
-                  w-full px-4 py-3 rounded-xl border-2 transition-colors text-slate-800 text-base resize-none
-                  focus:outline-none focus:border-blue-500
+                  w-full px-4 py-3 rounded-xl border-2 transition-colors text-neutral-800 text-base resize-none
+                  focus:outline-none focus:border-primary-500
                   ${
                     errors.description
                       ? "border-red-300 bg-red-50"
-                      : "border-slate-200"
+                      : "border-neutral-200"
                   }
                 `}
                 placeholder="Describe el plato destacado"
@@ -298,7 +298,7 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
 
             {/* Categoría */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 Categoría
               </label>
               <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
@@ -316,7 +316,7 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
                         ${
                           formData.category === key
                             ? "border-primary-500 bg-primary-50 text-primary-700"
-                            : "border-slate-200 hover:border-slate-300 text-slate-600"
+                            : "border-neutral-200 hover:border-neutral-300 text-neutral-600"
                         }
                       `}
                     >
@@ -325,7 +325,7 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
                           className={`w-5 h-5 ${
                             formData.category === key
                               ? "text-primary-600"
-                              : "text-slate-500"
+                              : "text-neutral-500"
                           }`}
                         />
                       </div>
@@ -338,7 +338,7 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
 
             {/* Etiquetas */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 Etiquetas
               </label>
 
@@ -347,13 +347,13 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
                 {formData.tags.map((tag, index) => (
                   <span
                     key={index}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary-100 text-primary-700 rounded-full text-sm font-medium"
                   >
                     {tag}
                     <button
                       type="button"
                       onClick={() => removeTag(tag)}
-                      className="w-4 h-4 rounded-full bg-blue-200 hover:bg-blue-300 flex items-center justify-center text-blue-600 border-none cursor-pointer text-xs"
+                      className="w-4 h-4 rounded-full bg-primary-200 hover:bg-primary-300 flex items-center justify-center text-primary-600 border-none cursor-pointer text-xs"
                     >
                       ×
                     </button>
@@ -371,12 +371,12 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
                     e.key === "Enter" && (e.preventDefault(), addTag())
                   }
                   placeholder="Escribe una etiqueta"
-                  className="flex-1 px-4 py-2.5 rounded-xl border-2 border-slate-200 focus:outline-none focus:border-blue-500 text-slate-800"
+                  className="flex-1 px-4 py-2.5 rounded-xl border-2 border-neutral-200 focus:outline-none focus:border-primary-500 text-neutral-800"
                 />
                 <button
                   type="button"
                   onClick={addTag}
-                  className="px-4 py-2.5 bg-slate-800 text-white rounded-xl font-medium hover:bg-slate-700 transition-colors border-none cursor-pointer"
+                  className="px-4 py-2.5 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 transition-colors border-none cursor-pointer"
                 >
                   Agregar
                 </button>
@@ -384,7 +384,7 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
 
               {/* Etiquetas sugeridas */}
               <div className="mt-3">
-                <p className="text-xs text-slate-500 mb-2">Sugerencias:</p>
+                <p className="text-xs text-neutral-500 mb-2">Sugerencias:</p>
                 <div className="flex flex-wrap gap-2">
                   {suggestedTags
                     .filter((tag) => !formData.tags.includes(tag))
@@ -398,7 +398,7 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
                             tags: [...formData.tags, tag],
                           })
                         }
-                        className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-xs font-medium transition-colors border-none cursor-pointer"
+                        className="px-3 py-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-600 rounded-full text-xs font-medium transition-colors border-none cursor-pointer"
                       >
                         + {tag}
                       </button>
@@ -410,18 +410,18 @@ const FoodModal = ({ food, isNew, onClose, onSave }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-slate-200 flex justify-end gap-3">
+        <div className="px-6 py-4 border-t border-neutral-200 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 rounded-xl text-slate-700 font-medium hover:bg-slate-100 transition-colors border-none cursor-pointer"
+            className="px-5 py-2.5 rounded-xl text-neutral-700 font-medium hover:bg-neutral-100 transition-colors border-none cursor-pointer"
           >
             Cancelar
           </button>
           <button
             onClick={handleSubmit}
             disabled={uploading}
-            className="px-6 py-2.5 rounded-xl bg-slate-800 text-white font-medium hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-none cursor-pointer"
+            className="px-6 py-2.5 rounded-xl bg-primary-500 text-white font-medium hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-none cursor-pointer"
           >
             {uploading
               ? "Subiendo..."

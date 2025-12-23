@@ -30,17 +30,17 @@ const Filters = ({
   };
 
   return (
-    <div className="bg-secondary-50 py-5 border-b border-secondary-200 shadow-sm sticky top-[73px] z-40 backdrop-blur-md">
+    <div className="bg-secondary-50 dark:bg-secondary-900 py-5 border-b border-secondary-200 dark:border-secondary-800 shadow-sm sticky top-[73px] z-40 backdrop-blur-md transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 flex flex-col gap-5">
         {/* Barra de búsqueda */}
         <div className="relative flex items-center w-full max-w-md">
-          <Search className="absolute left-4 h-4 w-4 text-secondary-400 pointer-events-none" />
+          <Search className="absolute left-4 h-4 w-4 text-secondary-400 dark:text-secondary-500 pointer-events-none" />
           <input
             type="text"
             placeholder="Buscar productos..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full py-2.5 pl-11 pr-10 border border-secondary-200 rounded-lg text-sm font-medium transition-all duration-200 bg-white text-secondary-800 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 placeholder:text-secondary-400 placeholder:font-normal"
+            className="w-full py-2.5 pl-11 pr-10 border border-secondary-200 dark:border-secondary-700 rounded-lg text-sm font-medium transition-all duration-200 bg-white dark:bg-secondary-800 text-secondary-800 dark:text-secondary-100 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 placeholder:text-secondary-400 dark:placeholder:text-secondary-500 placeholder:font-normal"
           />
           {searchTerm && (
             <button
@@ -60,10 +60,10 @@ const Filters = ({
             return (
               <button
                 key={category}
-                className={`px-4 py-2 border rounded-lg text-sm font-semibold cursor-pointer flex items-center gap-2 transition-all duration-200 ${
+                className={`px-4 py-2 border-2 rounded-lg text-sm font-semibold cursor-pointer flex items-center gap-2 transition-all duration-200 ${
                   selectedCategory === category
                     ? "bg-primary-500 text-white border-primary-500 shadow-md hover:-translate-y-0.5 hover:shadow-lg hover:bg-primary-600"
-                    : "bg-white text-secondary-600 border-secondary-200 hover:bg-primary-50 hover:border-primary-500 hover:text-primary-600 hover:-translate-y-0.5 hover:shadow-sm"
+                    : "bg-white dark:bg-secondary-800 text-secondary-700 dark:text-secondary-200 border-secondary-300 dark:border-secondary-600 hover:bg-primary-50 dark:hover:bg-primary-900/30 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 hover:-translate-y-0.5 hover:shadow-sm"
                 }`}
                 onClick={() => onCategoryChange(category)}
               >

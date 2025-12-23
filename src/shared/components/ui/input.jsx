@@ -1,29 +1,28 @@
-import { forwardRef } from 'react';
-import { cva } from 'class-variance-authority';
-import { AlertCircle } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
+import { forwardRef } from "react";
+import { cva } from "class-variance-authority";
+import { AlertCircle } from "lucide-react";
+import { cn } from "@/shared/utils/cn";
 
 const inputVariants = cva(
-  'flex w-full rounded-input border bg-white px-3 py-2 text-sm text-secondary-900 transition-all duration-200 placeholder:text-secondary-400 focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50',
+  "flex w-full rounded-lg border-2 bg-white dark:bg-secondary-800 px-3 py-2 text-sm text-secondary-900 dark:text-secondary-100 transition-all duration-200 placeholder:text-secondary-400 dark:placeholder:text-secondary-500 focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       variant: {
         default:
-          'border-secondary-300 focus:border-primary-500 focus:ring-primary-500/20',
-        error:
-          'border-red-500 focus:border-red-500 focus:ring-red-500/20',
+          "border-secondary-300 dark:border-secondary-600 focus:border-primary-500 focus:ring-primary-500/20",
+        error: "border-red-500 focus:border-red-500 focus:ring-red-500/20",
         success:
-          'border-green-500 focus:border-green-500 focus:ring-green-500/20',
+          "border-green-500 focus:border-green-500 focus:ring-green-500/20",
       },
       inputSize: {
-        sm: 'h-8 text-xs',
-        md: 'h-10 text-sm',
-        lg: 'h-12 text-base',
+        sm: "h-8 text-xs",
+        md: "h-10 text-sm",
+        lg: "h-12 text-base",
       },
     },
     defaultVariants: {
-      variant: 'default',
-      inputSize: 'md',
+      variant: "default",
+      inputSize: "md",
     },
   }
 );
@@ -34,7 +33,7 @@ const Input = forwardRef(
       className,
       variant,
       inputSize,
-      type = 'text',
+      type = "text",
       label,
       error,
       helperText,
@@ -44,7 +43,7 @@ const Input = forwardRef(
     },
     ref
   ) => {
-    const inputVariant = error ? 'error' : variant;
+    const inputVariant = error ? "error" : variant;
 
     return (
       <div className="w-full space-y-1.5">
@@ -64,8 +63,8 @@ const Input = forwardRef(
             type={type}
             className={cn(
               inputVariants({ variant: inputVariant, inputSize }),
-              leftIcon && 'pl-10',
-              rightIcon && 'pr-10',
+              leftIcon && "pl-10",
+              rightIcon && "pr-10",
               className
             )}
             {...props}
@@ -84,8 +83,8 @@ const Input = forwardRef(
         {(error || helperText) && (
           <p
             className={cn(
-              'text-xs',
-              error ? 'text-red-500' : 'text-secondary-500'
+              "text-xs",
+              error ? "text-red-500" : "text-secondary-500"
             )}
           >
             {error || helperText}
@@ -96,6 +95,6 @@ const Input = forwardRef(
   }
 );
 
-Input.displayName = 'Input';
+Input.displayName = "Input";
 
 export { Input, inputVariants };

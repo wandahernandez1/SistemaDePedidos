@@ -35,7 +35,7 @@ const EditableFoodCard = ({ food, onSave, onDelete, onEdit }) => {
 
   return (
     <div
-      className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 transition-all duration-300 relative group hover:shadow-xl hover:-translate-y-1"
+      className="bg-white rounded-2xl overflow-hidden shadow-sm border border-neutral-200 transition-all duration-300 relative group hover:shadow-xl hover:-translate-y-1"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -57,13 +57,13 @@ const EditableFoodCard = ({ food, onSave, onDelete, onEdit }) => {
             {food.tags.slice(0, 2).map((tag, index) => (
               <span
                 key={index}
-                className="bg-white/95 backdrop-blur-sm text-slate-700 text-xs font-medium px-2.5 py-1 rounded-full shadow-sm"
+                className="bg-white/95 backdrop-blur-sm text-neutral-700 text-xs font-medium px-2.5 py-1 rounded-full shadow-sm"
               >
                 {tag}
               </span>
             ))}
             {food.tags.length > 2 && (
-              <span className="bg-slate-800/90 text-white text-xs font-medium px-2.5 py-1 rounded-full">
+              <span className="bg-neutral-800/90 text-white text-xs font-medium px-2.5 py-1 rounded-full">
                 +{food.tags.length - 2}
               </span>
             )}
@@ -72,7 +72,7 @@ const EditableFoodCard = ({ food, onSave, onDelete, onEdit }) => {
 
         {/* Categoría badge */}
         <div className="absolute top-3 right-3">
-          <span className="bg-slate-800/90 text-white text-xs font-medium px-2.5 py-1 rounded-full backdrop-blur-sm">
+          <span className="bg-neutral-800/90 text-white text-xs font-medium px-2.5 py-1 rounded-full backdrop-blur-sm">
             {categoryNames[food.category] || food.category}
           </span>
         </div>
@@ -127,16 +127,16 @@ const EditableFoodCard = ({ food, onSave, onDelete, onEdit }) => {
 
       {/* Contenido */}
       <div className="p-5">
-        <h3 className="text-lg font-bold text-slate-800 mb-2 line-clamp-1">
+        <h3 className="text-lg font-bold text-neutral-800 mb-2 line-clamp-1">
           {food.name}
         </h3>
-        <p className="text-slate-500 text-sm leading-relaxed line-clamp-2">
+        <p className="text-neutral-500 text-sm leading-relaxed line-clamp-2">
           {food.description}
         </p>
       </div>
 
       {/* Indicador de estado */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-400 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
     </div>
   );
 };

@@ -182,21 +182,21 @@ const ProductManager = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-10 text-lg text-zinc-500">
+      <div className="text-center py-10 text-lg text-neutral-500">
         Cargando productos...
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
-      <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-zinc-100">
-        <h2 className="text-2xl font-bold text-zinc-800">
+    <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
+      <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-neutral-100">
+        <h2 className="text-2xl font-bold text-neutral-800">
           Gestión de Productos
         </h2>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-800 text-white hover:bg-zinc-700 hover:-translate-y-0.5"
+          className="px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-primary-500 text-white hover:bg-primary-600 hover:-translate-y-0.5"
         >
           {showForm ? "Cancelar" : "+ Nuevo Producto"}
         </button>
@@ -205,11 +205,11 @@ const ProductManager = () => {
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="bg-zinc-50 border-2 border-zinc-200 rounded-xl p-6 mb-8"
+          className="bg-neutral-50 border-2 border-neutral-200 rounded-xl p-6 mb-8"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div className="flex flex-col gap-2">
-              <label className="font-semibold text-zinc-700 text-sm">
+              <label className="font-semibold text-neutral-700 text-sm">
                 Nombre *
               </label>
               <input
@@ -219,12 +219,12 @@ const ProductManager = () => {
                   setFormData({ ...formData, nombre: e.target.value })
                 }
                 required
-                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+                className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-primary-500"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="font-semibold text-zinc-700 text-sm">
+              <label className="font-semibold text-neutral-700 text-sm">
                 Categoría *
               </label>
               <select
@@ -233,7 +233,7 @@ const ProductManager = () => {
                   setFormData({ ...formData, categoria: e.target.value })
                 }
                 required
-                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+                className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-primary-500"
               >
                 <option value="hamburguesas">Hamburguesas</option>
                 <option value="empanadas">Empanadas</option>
@@ -244,7 +244,7 @@ const ProductManager = () => {
           </div>
 
           <div className="flex flex-col gap-2 mb-4">
-            <label className="font-semibold text-zinc-700 text-sm">
+            <label className="font-semibold text-neutral-700 text-sm">
               Descripción *
             </label>
             <textarea
@@ -254,13 +254,13 @@ const ProductManager = () => {
               }
               required
               rows="3"
-              className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm resize-y min-h-[80px] transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+              className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm resize-y min-h-[80px] transition-colors duration-200 focus:outline-none focus:border-primary-500"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div className="flex flex-col gap-2">
-              <label className="font-semibold text-zinc-700 text-sm">
+              <label className="font-semibold text-neutral-700 text-sm">
                 Precio *
               </label>
               <input
@@ -272,12 +272,12 @@ const ProductManager = () => {
                 required
                 min="0"
                 step="0.01"
-                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+                className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-primary-500"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="font-semibold text-zinc-700 text-sm">
+              <label className="font-semibold text-neutral-700 text-sm">
                 Unidad *
               </label>
               <select
@@ -286,7 +286,7 @@ const ProductManager = () => {
                   setFormData({ ...formData, unidad: e.target.value })
                 }
                 required
-                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+                className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-primary-500"
               >
                 <option value="unidad">Unidad</option>
                 <option value="docena">Docena</option>
@@ -297,7 +297,7 @@ const ProductManager = () => {
           </div>
 
           <div className="flex flex-col gap-2 mb-4">
-            <label className="font-semibold text-zinc-700 text-sm">
+            <label className="font-semibold text-neutral-700 text-sm">
               Imagen {!editingProduct && "*"}
             </label>
             <input
@@ -305,9 +305,9 @@ const ProductManager = () => {
               accept="image/*"
               onChange={handleImageChange}
               required={!editingProduct}
-              className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm"
+              className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm"
             />
-            <small className="text-zinc-500 text-xs">
+            <small className="text-neutral-500 text-xs">
               JPG, PNG o WEBP. Máximo 5MB
             </small>
           </div>
@@ -319,15 +319,15 @@ const ProductManager = () => {
                   imageFile ? URL.createObjectURL(imageFile) : formData.imagen
                 }
                 alt="Preview"
-                className="max-w-[300px] max-h-[200px] rounded-lg border-2 border-zinc-200 object-cover mx-auto"
+                className="max-w-[300px] max-h-[200px] rounded-lg border-2 border-neutral-200 object-cover mx-auto"
               />
             </div>
           )}
 
-          <div className="flex gap-3 mt-6 pt-5 border-t border-zinc-200">
+          <div className="flex gap-3 mt-6 pt-5 border-t border-neutral-200">
             <button
               type="submit"
-              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-800 text-white hover:bg-zinc-700 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-primary-500 text-white hover:bg-primary-600 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
               disabled={uploading}
             >
               {uploading
@@ -339,7 +339,7 @@ const ProductManager = () => {
             <button
               type="button"
               onClick={resetForm}
-              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
             >
               Cancelar
             </button>
@@ -347,14 +347,14 @@ const ProductManager = () => {
         </form>
       )}
 
-      <div className="flex items-center gap-3 mb-5 p-4 bg-zinc-50 rounded-lg">
-        <label className="font-semibold text-zinc-700">
+      <div className="flex items-center gap-3 mb-5 p-4 bg-neutral-50 rounded-lg">
+        <label className="font-semibold text-neutral-700">
           Filtrar por categoría:
         </label>
         <select
           value={filterCategory}
           onChange={(e) => setFilterCategory(e.target.value)}
-          className="px-3 py-2 border-2 border-zinc-200 rounded-lg text-sm cursor-pointer"
+          className="px-3 py-2 border-2 border-neutral-200 rounded-lg text-sm cursor-pointer"
         >
           {categories.map((cat) => (
             <option key={cat.value} value={cat.value}>
@@ -366,14 +366,14 @@ const ProductManager = () => {
 
       <div className="flex flex-col gap-4">
         {filteredProducts.length === 0 ? (
-          <p className="text-center py-10 text-zinc-400 text-base">
+          <p className="text-center py-10 text-neutral-400 text-base">
             No hay productos para mostrar
           </p>
         ) : (
           filteredProducts.map((product) => (
             <div
               key={product.firebaseId}
-              className="flex gap-4 p-4 bg-white border-2 border-zinc-200 rounded-xl transition-all duration-200 hover:border-zinc-800 hover:shadow-lg flex-wrap md:flex-nowrap"
+              className="flex gap-4 p-4 bg-white border-2 border-neutral-200 rounded-xl transition-all duration-200 hover:border-primary-500 hover:shadow-lg flex-wrap md:flex-nowrap"
             >
               <img
                 src={product.imagen}
@@ -381,23 +381,23 @@ const ProductManager = () => {
                 className="w-full md:w-[120px] h-auto md:h-[120px] object-cover rounded-lg shrink-0"
               />
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-zinc-800 mb-2">
+                <h3 className="text-lg font-semibold text-neutral-800 mb-2">
                   {product.nombre}
                 </h3>
-                <span className="inline-block bg-zinc-800 text-white px-3 py-1 rounded-xl text-xs font-semibold mb-2 capitalize">
+                <span className="inline-block bg-primary-500 text-white px-3 py-1 rounded-xl text-xs font-semibold mb-2 capitalize">
                   {product.categoria}
                 </span>
-                <p className="text-zinc-500 text-sm leading-relaxed mb-2">
+                <p className="text-neutral-500 text-sm leading-relaxed mb-2">
                   {product.descripcion}
                 </p>
-                <p className="text-lg font-bold text-zinc-800">
+                <p className="text-lg font-bold text-neutral-800">
                   ${product.precio.toLocaleString("es-AR")}/{product.unidad}
                 </p>
               </div>
               <div className="flex flex-row md:flex-col gap-2 justify-center w-full md:w-auto">
                 <button
                   onClick={() => handleEdit(product)}
-                  className="flex-1 md:flex-none px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-emerald-500 text-white min-w-[100px] hover:bg-emerald-600"
+                  className="flex-1 md:flex-none px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-primary-500 text-white min-w-[100px] hover:bg-primary-600"
                 >
                   Editar
                 </button>

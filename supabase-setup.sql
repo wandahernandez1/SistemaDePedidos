@@ -6,6 +6,7 @@
 -- ============================================
 
 -- Eliminar tablas si existen (para empezar desde cero)
+DROP TABLE IF EXISTS orders CASCADE;
 DROP TABLE IF EXISTS products CASCADE;
 DROP TABLE IF EXISTS foods CASCADE;
 DROP TABLE IF EXISTS services CASCADE;
@@ -66,6 +67,22 @@ CREATE TABLE config (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Tabla de pedidos (para tracking de órdenes)
+CREATE TABLE orders (
+  id BIGSERIAL PRIMARY KEY,
+  order_number TEXT UNIQUE NOT NULL,
+  items JSONB NOT NULL,
+  total NUMERIC NOT NULL,
+  delivery_type TEXT NOT NULL CHECK (delivery_type IN ('pickup', 'delivery')),
+  delivery_time TEXT,
+  delivery_address TEXT,
+  customer_phone TEXT,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'preparing', 'ready', 'delivered', 'cancelled')),
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- ============================================
 -- 2. CONFIGURAR POLÍTICAS RLS (Row Level Security)
 -- ============================================
@@ -75,18 +92,24 @@ ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE foods ENABLE ROW LEVEL SECURITY;
 ALTER TABLE services ENABLE ROW LEVEL SECURITY;
 ALTER TABLE config ENABLE ROW LEVEL SECURITY;
+ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 
 -- Políticas para lectura pública (todos pueden leer)
 CREATE POLICY "Lectura pública de productos" ON products FOR SELECT USING (true);
 CREATE POLICY "Lectura pública de foods" ON foods FOR SELECT USING (true);
 CREATE POLICY "Lectura pública de servicios" ON services FOR SELECT USING (true);
 CREATE POLICY "Lectura pública de config" ON config FOR SELECT USING (true);
+CREATE POLICY "Lectura pública de orders" ON orders FOR SELECT USING (true);
 
 -- Políticas para escritura (todos pueden escribir - ajustar según necesites)
 CREATE POLICY "Escritura de productos" ON products FOR ALL USING (true);
 CREATE POLICY "Escritura de foods" ON foods FOR ALL USING (true);
 CREATE POLICY "Escritura de servicios" ON services FOR ALL USING (true);
 CREATE POLICY "Escritura de config" ON config FOR ALL USING (true);
+CREATE POLICY "Escritura de orders" ON orders FOR ALL USING (true);
+
+-- Habilitar realtime para la tabla de pedidos
+ALTER PUBLICATION supabase_realtime ADD TABLE orders;
 
 -- ============================================
 -- 3. INSERTAR DATOS INICIALES

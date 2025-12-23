@@ -104,8 +104,8 @@ const ConfigManager = () => {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-          <p className="text-slate-500 font-medium">
+          <div className="w-10 h-10 border-4 border-neutral-200 border-t-primary-500 rounded-full animate-spin"></div>
+          <p className="text-neutral-500 font-medium">
             Cargando configuración...
           </p>
         </div>
@@ -122,7 +122,7 @@ const ConfigManager = () => {
           mb-6 px-5 py-4 rounded-xl flex items-center gap-3
           ${
             message.type === "success"
-              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+              ? "bg-green-50 text-green-700 border border-green-200"
               : "bg-red-50 text-red-700 border border-red-200"
           }
         `}
@@ -162,11 +162,11 @@ const ConfigManager = () => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Horarios */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
               <svg
-                className="w-5 h-5 text-blue-600"
+                className="w-5 h-5 text-primary-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -180,10 +180,10 @@ const ConfigManager = () => {
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-slate-800">
+              <h3 className="text-lg font-bold text-neutral-800">
                 Horarios de Atención
               </h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-neutral-500">
                 Configura los horarios de apertura y cierre
               </p>
             </div>
@@ -191,7 +191,7 @@ const ConfigManager = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-neutral-700 mb-2">
                 Apertura
               </label>
               <input
@@ -200,11 +200,11 @@ const ConfigManager = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, horario_apertura: e.target.value })
                 }
-                className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl text-neutral-800 focus:outline-none focus:border-primary-500 transition-colors"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-neutral-700 mb-2">
                 Cierre
               </label>
               <input
@@ -213,13 +213,13 @@ const ConfigManager = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, horario_cierre: e.target.value })
                 }
-                className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl text-neutral-800 focus:outline-none focus:border-primary-500 transition-colors"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-3">
+            <label className="block text-sm font-medium text-neutral-700 mb-3">
               Días Laborales
             </label>
             <div className="flex flex-wrap gap-2">
@@ -232,8 +232,8 @@ const ConfigManager = () => {
                     px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 border-2 cursor-pointer
                     ${
                       formData.dias_laborales.includes(dia.value)
-                        ? "bg-slate-800 text-white border-slate-800"
-                        : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
+                        ? "bg-primary-500 text-white border-primary-500"
+                        : "bg-white text-neutral-600 border-neutral-200 hover:border-primary-400"
                     }
                   `}
                 >
@@ -246,11 +246,11 @@ const ConfigManager = () => {
         </div>
 
         {/* Tiempo de Preparación */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-accent-100 rounded-xl flex items-center justify-center">
               <svg
-                className="w-5 h-5 text-amber-600"
+                className="w-5 h-5 text-accent-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -264,10 +264,10 @@ const ConfigManager = () => {
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-slate-800">
+              <h3 className="text-lg font-bold text-neutral-800">
                 Tiempo de Preparación
               </h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-neutral-500">
                 Tiempo estimado de preparación de pedidos
               </p>
             </div>
@@ -286,16 +286,16 @@ const ConfigManager = () => {
               min="5"
               max="120"
               step="5"
-              className="flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-800"
+              className="flex-1 h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-500"
             />
             <div className="w-24 text-center">
-              <span className="text-2xl font-bold text-slate-800">
+              <span className="text-2xl font-bold text-neutral-800">
                 {formData.tiempo_demora}
               </span>
-              <span className="text-sm text-slate-500 ml-1">min</span>
+              <span className="text-sm text-neutral-500 ml-1">min</span>
             </div>
           </div>
-          <div className="flex justify-between mt-2 text-xs text-slate-400">
+          <div className="flex justify-between mt-2 text-xs text-neutral-400">
             <span>5 min</span>
             <span>60 min</span>
             <span>120 min</span>
@@ -303,11 +303,11 @@ const ConfigManager = () => {
         </div>
 
         {/* Contacto WhatsApp */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
               <svg
-                className="w-5 h-5 text-emerald-600"
+                className="w-5 h-5 text-green-600"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -315,10 +315,10 @@ const ConfigManager = () => {
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-slate-800">
+              <h3 className="text-lg font-bold text-neutral-800">
                 Contacto WhatsApp
               </h3>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-neutral-500">
                 Número para recibir pedidos
               </p>
             </div>
@@ -326,11 +326,11 @@ const ConfigManager = () => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-neutral-700 mb-2">
                 Número de WhatsApp
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400">
                   +
                 </span>
                 <input
@@ -343,16 +343,16 @@ const ConfigManager = () => {
                     })
                   }
                   placeholder="549111234567"
-                  className="w-full pl-8 pr-4 py-3 border-2 border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full pl-8 pr-4 py-3 border-2 border-neutral-200 rounded-xl text-neutral-800 focus:outline-none focus:border-green-500 transition-colors"
                 />
               </div>
-              <p className="text-xs text-slate-400 mt-1.5">
+              <p className="text-xs text-neutral-400 mt-1.5">
                 Formato internacional sin espacios. Ej: 5491112345678
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
+              <label className="block text-sm font-medium text-neutral-700 mb-2">
                 Mensaje de Bienvenida
               </label>
               <textarea
@@ -365,14 +365,14 @@ const ConfigManager = () => {
                 }
                 rows={3}
                 placeholder="¡Bienvenido a nuestro restaurante!"
-                className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-slate-800 focus:outline-none focus:border-emerald-500 transition-colors resize-none"
+                className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl text-neutral-800 focus:outline-none focus:border-green-500 transition-colors resize-none"
               />
             </div>
           </div>
         </div>
 
         {/* Vista Previa */}
-        <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-6 text-white">
+        <div className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-2xl p-6 text-white">
           <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
             <svg
               className="w-5 h-5"
@@ -397,23 +397,23 @@ const ConfigManager = () => {
           </h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="bg-white/10 rounded-xl p-4">
-              <p className="text-slate-400 text-xs mb-1">Horario</p>
+              <p className="text-neutral-400 text-xs mb-1">Horario</p>
               <p className="font-semibold">
                 {formData.horario_apertura} - {formData.horario_cierre}
               </p>
             </div>
             <div className="bg-white/10 rounded-xl p-4">
-              <p className="text-slate-400 text-xs mb-1">Días</p>
+              <p className="text-neutral-400 text-xs mb-1">Días</p>
               <p className="font-semibold">
                 {formData.dias_laborales.length} días
               </p>
             </div>
             <div className="bg-white/10 rounded-xl p-4">
-              <p className="text-slate-400 text-xs mb-1">Demora</p>
+              <p className="text-neutral-400 text-xs mb-1">Demora</p>
               <p className="font-semibold">{formData.tiempo_demora} min</p>
             </div>
             <div className="bg-white/10 rounded-xl p-4">
-              <p className="text-slate-400 text-xs mb-1">WhatsApp</p>
+              <p className="text-neutral-400 text-xs mb-1">WhatsApp</p>
               <p className="font-semibold truncate">
                 {formData.telefono_whatsapp || "No configurado"}
               </p>
@@ -426,8 +426,8 @@ const ConfigManager = () => {
           <button
             type="submit"
             disabled={saving}
-            className="flex items-center gap-2 px-8 py-3 bg-slate-800 text-white rounded-xl font-semibold
-              hover:bg-slate-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
+            className="flex items-center gap-2 px-8 py-3 bg-primary-500 text-white rounded-xl font-semibold
+              hover:bg-primary-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
               border-none cursor-pointer"
           >
             {saving ? (

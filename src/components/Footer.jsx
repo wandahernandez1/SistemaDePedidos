@@ -16,7 +16,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-secondary-900 text-secondary-100 mt-20">
+    <footer className="bg-secondary-900 dark:bg-secondary-950 text-secondary-100 mt-20 transition-colors duration-300">
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-6 py-16 md:px-4 md:py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-8">
@@ -32,14 +32,14 @@ const Footer = () => {
             <div className="flex gap-3">
               <a
                 href="#"
-                className="w-10 h-10 rounded-xl bg-secondary-800 flex items-center justify-center text-secondary-400 transition-all duration-300 hover:bg-primary-500 hover:text-white hover:-translate-y-1"
+                className="w-10 h-10 rounded-xl bg-secondary-800 dark:bg-secondary-900 flex items-center justify-center text-secondary-400 transition-all duration-300 hover:bg-primary-500 hover:text-white hover:-translate-y-1"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-xl bg-secondary-800 flex items-center justify-center text-secondary-400 transition-all duration-300 hover:bg-green-500 hover:text-white hover:-translate-y-1"
+                className="w-10 h-10 rounded-xl bg-secondary-800 dark:bg-secondary-900 flex items-center justify-center text-secondary-400 transition-all duration-300 hover:bg-green-500 hover:text-white hover:-translate-y-1"
                 aria-label="WhatsApp"
               >
                 <MessageCircle className="h-5 w-5" />

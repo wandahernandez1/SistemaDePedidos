@@ -34,7 +34,7 @@ const EditableProductCard = ({ product, onSave, onDelete, onEdit }) => {
 
   return (
     <div
-      className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 transition-all duration-300 relative group hover:shadow-xl hover:-translate-y-1"
+      className="bg-white rounded-2xl overflow-hidden shadow-sm border border-neutral-200 transition-all duration-300 relative group hover:shadow-xl hover:-translate-y-1"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -51,7 +51,7 @@ const EditableProductCard = ({ product, onSave, onDelete, onEdit }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         {/* Badge de unidad */}
-        <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
+        <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-neutral-700 text-xs font-semibold px-3 py-1.5 rounded-full shadow-sm">
           Por {unitLabels[product.unidad] || product.unidad}
         </span>
 
@@ -126,7 +126,7 @@ const EditableProductCard = ({ product, onSave, onDelete, onEdit }) => {
           ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
         `}
         >
-          <span className="bg-slate-900/90 text-white text-lg font-bold px-4 py-2 rounded-xl backdrop-blur-sm">
+          <span className="bg-neutral-900/90 text-white text-lg font-bold px-4 py-2 rounded-xl backdrop-blur-sm">
             {formatPrice(product.precio)}
           </span>
         </div>
@@ -134,21 +134,21 @@ const EditableProductCard = ({ product, onSave, onDelete, onEdit }) => {
 
       {/* Contenido */}
       <div className="p-4">
-        <h3 className="text-lg font-bold text-slate-800 mb-1 line-clamp-1">
+        <h3 className="text-lg font-bold text-neutral-800 mb-1 line-clamp-1">
           {product.nombre}
         </h3>
-        <p className="text-slate-500 text-sm leading-relaxed line-clamp-2 mb-3">
+        <p className="text-neutral-500 text-sm leading-relaxed line-clamp-2 mb-3">
           {product.descripcion}
         </p>
 
         {/* Footer con precio */}
-        <div className="flex justify-between items-center pt-3 border-t border-slate-100">
-          <span className="text-2xl font-bold text-slate-800">
+        <div className="flex justify-between items-center pt-3 border-t border-neutral-100">
+          <span className="text-2xl font-bold text-neutral-800">
             {formatPrice(product.precio)}
           </span>
           <button
             onClick={handleEdit}
-            className="px-4 py-2 bg-slate-100 hover:bg-slate-800 hover:text-white text-slate-700 text-sm font-medium rounded-xl transition-all duration-200 border-none cursor-pointer"
+            className="px-4 py-2 bg-neutral-100 hover:bg-primary-500 hover:text-white text-neutral-700 text-sm font-medium rounded-xl transition-all duration-200 border-none cursor-pointer"
           >
             Editar
           </button>
@@ -162,7 +162,7 @@ const EditableProductCard = ({ product, onSave, onDelete, onEdit }) => {
         ${
           product.disponible === false
             ? "bg-red-500 opacity-100"
-            : "bg-gradient-to-r from-emerald-400 to-emerald-600 opacity-0 group-hover:opacity-100"
+            : "bg-gradient-to-r from-green-400 to-green-600 opacity-0 group-hover:opacity-100"
         }
       `}
       />

@@ -178,7 +178,7 @@ const EmpanadaCustomizationModal = ({ product, onClose, onAddToCart }) => {
 
                   <div className="flex items-center gap-2">
                     <button
-                      className="w-10 h-10 rounded-lg border-2 border-primary-500 bg-white text-primary-500 font-bold cursor-pointer transition-all duration-200 flex items-center justify-center hover:bg-primary-500 hover:text-white hover:scale-105 active:scale-95 disabled:border-secondary-200 disabled:text-secondary-400 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="w-10 h-10 rounded-lg border-2 border-primary-500 bg-transparent text-primary-500 font-bold cursor-pointer transition-all duration-200 flex items-center justify-center hover:bg-primary-500 hover:text-white hover:scale-105 active:scale-95 disabled:border-secondary-200 disabled:text-secondary-400 disabled:cursor-not-allowed disabled:opacity-50"
                       onClick={() => handleDecrement(type.id)}
                       disabled={quantities[type.id] === 0}
                     >
@@ -186,7 +186,7 @@ const EmpanadaCustomizationModal = ({ product, onClose, onAddToCart }) => {
                     </button>
                     <input
                       type="number"
-                      className="w-16 h-10 text-center border-2 border-secondary-200 rounded-lg text-lg font-bold text-secondary-900 bg-white transition-all duration-200 focus:outline-none focus:border-primary-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      className="w-16 h-10 text-center border-2 border-secondary-200 rounded-lg text-lg font-bold text-secondary-900 bg-transparent transition-all duration-200 focus:outline-none focus:border-primary-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                       value={quantities[type.id]}
                       onChange={(e) =>
                         handleInputChange(type.id, e.target.value)
@@ -195,7 +195,7 @@ const EmpanadaCustomizationModal = ({ product, onClose, onAddToCart }) => {
                       max={TOTAL_EMPANADAS}
                     />
                     <button
-                      className="w-10 h-10 rounded-lg border-2 border-primary-500 bg-white text-primary-500 font-bold cursor-pointer transition-all duration-200 flex items-center justify-center hover:bg-primary-500 hover:text-white hover:scale-105 active:scale-95 disabled:border-secondary-200 disabled:text-secondary-400 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="w-10 h-10 rounded-lg border-2 border-primary-500 bg-transparent text-primary-500 font-bold cursor-pointer transition-all duration-200 flex items-center justify-center hover:bg-primary-500 hover:text-white hover:scale-105 active:scale-95 disabled:border-secondary-200 disabled:text-secondary-400 disabled:cursor-not-allowed disabled:opacity-50"
                       onClick={() => handleIncrement(type.id)}
                       disabled={getTotalCount() >= TOTAL_EMPANADAS}
                     >

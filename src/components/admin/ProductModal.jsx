@@ -113,12 +113,12 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-neutral-200 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-slate-800">
+            <h2 className="text-xl font-bold text-neutral-800">
               {isNew ? "Nuevo Producto" : "Editar Producto"}
             </h2>
-            <p className="text-sm text-slate-500 mt-0.5">
+            <p className="text-sm text-neutral-500 mt-0.5">
               {isNew
                 ? "Completa los datos del nuevo producto"
                 : `Editando: ${product?.nombre}`}
@@ -126,10 +126,10 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-colors border-none cursor-pointer"
+            className="w-10 h-10 rounded-xl bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center transition-colors border-none cursor-pointer"
           >
             <svg
-              className="w-5 h-5 text-slate-600"
+              className="w-5 h-5 text-neutral-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -147,9 +147,8 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
         {/* Body */}
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-140px)]">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Imagen */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 Imagen del producto
               </label>
               <div
@@ -157,8 +156,8 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                   relative border-2 border-dashed rounded-xl p-4 text-center transition-all cursor-pointer
                   ${
                     dragActive
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                      ? "border-primary-500 bg-primary-50"
+                      : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50"
                   }
                   ${errors.imagen ? "border-red-300 bg-red-50" : ""}
                 `}
@@ -184,7 +183,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                 ) : (
                   <div className="py-8">
                     <svg
-                      className="w-12 h-12 mx-auto text-slate-400 mb-3"
+                      className="w-12 h-12 mx-auto text-neutral-400 mb-3"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -196,12 +195,12 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-                    <p className="text-slate-600 font-medium">
+                    <p className="text-neutral-600 font-medium">
                       {uploading
                         ? "Subiendo imagen..."
                         : "Arrastra una imagen o haz clic para seleccionar"}
                     </p>
-                    <p className="text-xs text-slate-400 mt-1">
+                    <p className="text-xs text-neutral-400 mt-1">
                       Soporta: JPG, PNG, WEBP, GIF, SVG, BMP, AVIF, HEIC (máx.
                       10MB)
                     </p>
@@ -222,7 +221,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
 
             {/* Nombre */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 Nombre del producto *
               </label>
               <input
@@ -232,12 +231,12 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                   setFormData({ ...formData, nombre: e.target.value })
                 }
                 className={`
-                  w-full px-4 py-3 rounded-xl border-2 transition-colors text-slate-800 text-base
-                  focus:outline-none focus:border-blue-500
+                  w-full px-4 py-3 rounded-xl border-2 transition-colors text-neutral-800 text-base
+                  focus:outline-none focus:border-primary-500
                   ${
                     errors.nombre
                       ? "border-red-300 bg-red-50"
-                      : "border-slate-200"
+                      : "border-neutral-200"
                   }
                 `}
                 placeholder="Ej: Hamburguesa Clásica"
@@ -249,7 +248,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
 
             {/* Descripción */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 Descripción *
               </label>
               <textarea
@@ -259,12 +258,12 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                 }
                 rows={3}
                 className={`
-                  w-full px-4 py-3 rounded-xl border-2 transition-colors text-slate-800 text-base resize-none
-                  focus:outline-none focus:border-blue-500
+                  w-full px-4 py-3 rounded-xl border-2 transition-colors text-neutral-800 text-base resize-none
+                  focus:outline-none focus:border-primary-500
                   ${
                     errors.descripcion
                       ? "border-red-300 bg-red-50"
-                      : "border-slate-200"
+                      : "border-neutral-200"
                   }
                 `}
                 placeholder="Describe los ingredientes y características del producto"
@@ -279,11 +278,11 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
             {/* Precio y Categoría */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-2">
                   Precio *
                 </label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500 font-medium">
                     $
                   </span>
                   <input
@@ -295,12 +294,12 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                     min="0"
                     step="1"
                     className={`
-                      w-full pl-8 pr-4 py-3 rounded-xl border-2 transition-colors text-slate-800 text-base
-                      focus:outline-none focus:border-blue-500
+                      w-full pl-8 pr-4 py-3 rounded-xl border-2 transition-colors text-neutral-800 text-base
+                      focus:outline-none focus:border-primary-500
                       ${
                         errors.precio
                           ? "border-red-300 bg-red-50"
-                          : "border-slate-200"
+                          : "border-neutral-200"
                       }
                     `}
                     placeholder="0"
@@ -312,7 +311,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                <label className="block text-sm font-semibold text-neutral-700 mb-2">
                   Categoría
                 </label>
                 <select
@@ -320,7 +319,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                   onChange={(e) =>
                     setFormData({ ...formData, categoria: e.target.value })
                   }
-                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 transition-colors text-slate-800 text-base focus:outline-none focus:border-blue-500 bg-white"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-neutral-200 transition-colors text-neutral-800 text-base focus:outline-none focus:border-primary-500 bg-white"
                 >
                   {Object.entries(categoryNames).map(([key, name]) => (
                     <option key={key} value={key}>
@@ -333,7 +332,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
 
             {/* Unidad */}
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 Unidad de venta
               </label>
               <div className="grid grid-cols-4 gap-2">
@@ -356,7 +355,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                         ${
                           formData.unidad === unit.value
                             ? "border-primary-500 bg-primary-50 text-primary-700"
-                            : "border-slate-200 hover:border-slate-300 text-slate-600"
+                            : "border-neutral-200 hover:border-neutral-300 text-neutral-600"
                         }
                       `}
                     >
@@ -365,7 +364,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                           className={`w-5 h-5 ${
                             formData.unidad === unit.value
                               ? "text-primary-600"
-                              : "text-slate-500"
+                              : "text-neutral-500"
                           }`}
                         />
                       </div>
@@ -391,7 +390,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                   <div
                     className={`
                     w-12 h-6 rounded-full transition-colors
-                    ${formData.disponible ? "bg-emerald-500" : "bg-slate-200"}
+                    ${formData.disponible ? "bg-green-500" : "bg-neutral-200"}
                   `}
                   >
                     <div
@@ -407,7 +406,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                     ></div>
                   </div>
                 </div>
-                <span className="text-sm font-medium text-slate-700">
+                <span className="text-sm font-medium text-neutral-700">
                   Disponible
                 </span>
               </label>
@@ -425,7 +424,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                   <div
                     className={`
                     w-12 h-6 rounded-full transition-colors
-                    ${formData.destacado ? "bg-amber-500" : "bg-slate-200"}
+                    ${formData.destacado ? "bg-accent-500" : "bg-neutral-200"}
                   `}
                   >
                     <div
@@ -439,7 +438,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                     ></div>
                   </div>
                 </div>
-                <span className="text-sm font-medium text-slate-700">
+                <span className="text-sm font-medium text-neutral-700">
                   Destacado
                 </span>
               </label>
@@ -448,18 +447,18 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-slate-200 flex justify-end gap-3">
+        <div className="px-6 py-4 border-t border-neutral-200 flex justify-end gap-3">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2.5 rounded-xl text-slate-700 font-medium hover:bg-slate-100 transition-colors border-none cursor-pointer"
+            className="px-5 py-2.5 rounded-xl text-neutral-700 font-medium hover:bg-neutral-100 transition-colors border-none cursor-pointer"
           >
             Cancelar
           </button>
           <button
             onClick={handleSubmit}
             disabled={uploading}
-            className="px-6 py-2.5 rounded-xl bg-slate-800 text-white font-medium hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-none cursor-pointer"
+            className="px-6 py-2.5 rounded-xl bg-primary-500 text-white font-medium hover:bg-primary-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-none cursor-pointer"
           >
             {uploading
               ? "Subiendo..."

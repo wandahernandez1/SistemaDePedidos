@@ -63,20 +63,18 @@ const ProductCard = ({ product, onAddToCart }) => {
 
   return (
     <>
-      <div className="group bg-white rounded-2xl overflow-hidden shadow-sm transition-all duration-300 flex flex-col h-full border border-secondary-100 hover:-translate-y-1 hover:shadow-xl hover:border-primary-200">
+      <div className="group bg-white dark:bg-secondary-900 rounded-2xl overflow-hidden shadow-sm transition-all duration-300 flex flex-col h-full border border-secondary-100 dark:border-secondary-800 hover:-translate-y-1 hover:shadow-xl hover:border-primary-200 dark:hover:border-primary-700">
         {/* Image */}
-        <div className="relative w-full h-52 overflow-hidden bg-secondary-50">
+        <div className="relative w-full h-52 overflow-hidden bg-secondary-50 dark:bg-secondary-800">
           <img
             src={product.imagen}
             alt={product.nombre}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
           />
-          {/* Overlay gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           {/* Unit badge */}
-          <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-semibold text-secondary-600 shadow-sm border border-white/50">
+          <span className="absolute top-3 right-3 bg-white/95 dark:bg-secondary-800/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-semibold text-secondary-600 dark:text-secondary-300 shadow-sm border border-white/50 dark:border-secondary-700/50">
             {product.unidad}
           </span>
 
@@ -90,20 +88,20 @@ const ProductCard = ({ product, onAddToCart }) => {
 
         {/* Info */}
         <div className="p-5 flex flex-col gap-3 flex-grow">
-          <h3 className="text-lg font-bold text-secondary-900 m-0 leading-tight tracking-tight group-hover:text-primary-600 transition-colors duration-200">
+          <h3 className="text-lg font-bold text-secondary-900 dark:text-secondary-50 m-0 leading-tight tracking-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
             {product.nombre}
           </h3>
-          <p className="text-sm text-secondary-500 leading-relaxed m-0 flex-grow line-clamp-2">
+          <p className="text-sm text-secondary-500 dark:text-secondary-400 leading-relaxed m-0 flex-grow line-clamp-2">
             {product.descripcion}
           </p>
 
           {/* Footer */}
-          <div className="flex justify-between items-center mt-auto pt-4 border-t border-secondary-100">
-            <span className="text-xl font-bold text-secondary-900 group-hover:text-primary-600 transition-colors">
+          <div className="flex justify-between items-center mt-auto pt-4 border-t border-secondary-100 dark:border-secondary-800 gap-2">
+            <span className="text-lg sm:text-xl font-bold text-secondary-900 dark:text-secondary-50 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
               {formatPrice(product.precio)}
             </span>
             <button
-              className="bg-primary-500 text-white border-none rounded-xl px-5 py-3 text-sm font-semibold cursor-pointer flex items-center gap-2 transition-all duration-200 shadow-sm hover:bg-primary-600 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0"
+              className="bg-primary-500 text-white border-none rounded-lg px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-semibold cursor-pointer flex items-center gap-1.5 sm:gap-2 transition-all duration-200 shadow-sm hover:bg-primary-600 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0 shrink-0"
               onClick={handleAddClick}
               aria-label={`Agregar ${product.nombre} al carrito`}
             >

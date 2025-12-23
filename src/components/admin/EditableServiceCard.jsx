@@ -147,12 +147,12 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
   if (!isEditing) {
     return (
       <div
-        className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 transition-all duration-300 relative group hover:shadow-xl hover:-translate-y-1"
+        className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200 transition-all duration-300 relative group hover:shadow-xl hover:-translate-y-1"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Icono */}
-        <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center mb-5 text-slate-700 transition-all duration-300 group-hover:bg-slate-800 group-hover:text-white">
+        <div className="w-14 h-14 bg-neutral-100 rounded-2xl flex items-center justify-center mb-5 text-neutral-700 transition-all duration-300 group-hover:bg-primary-500 group-hover:text-white">
           {renderIcon()}
         </div>
 
@@ -166,7 +166,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
         `}
         >
           <button
-            className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border border-slate-200 transition-all duration-200 hover:bg-blue-500 hover:text-white hover:border-blue-500 hover:scale-110"
+            className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border border-neutral-200 transition-all duration-200 hover:bg-primary-500 hover:text-white hover:border-primary-500 hover:scale-110"
             onClick={() => setIsEditing(true)}
             title="Editar"
           >
@@ -185,7 +185,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
             </svg>
           </button>
           <button
-            className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border border-slate-200 transition-all duration-200 hover:bg-red-500 hover:text-white hover:border-red-500 hover:scale-110"
+            className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border border-neutral-200 transition-all duration-200 hover:bg-red-500 hover:text-white hover:border-red-500 hover:scale-110"
             onClick={handleDelete}
             title="Eliminar"
           >
@@ -206,10 +206,10 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
         </div>
 
         {/* Contenido */}
-        <h3 className="text-xl font-bold text-slate-800 mb-2">
+        <h3 className="text-xl font-bold text-neutral-800 mb-2">
           {service.title}
         </h3>
-        <p className="text-slate-500 text-sm leading-relaxed mb-4 line-clamp-2">
+        <p className="text-neutral-500 text-sm leading-relaxed mb-4 line-clamp-2">
           {service.description}
         </p>
 
@@ -219,14 +219,14 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
             {service.features.slice(0, 3).map((feature, index) => (
               <li
                 key={index}
-                className="flex items-center gap-2.5 text-slate-600 text-sm"
+                className="flex items-center gap-2.5 text-neutral-600 text-sm"
               >
-                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full flex-shrink-0"></span>
+                <span className="w-1.5 h-1.5 bg-green-500 rounded-full flex-shrink-0"></span>
                 <span className="line-clamp-1">{feature}</span>
               </li>
             ))}
             {service.features.length > 3 && (
-              <li className="text-slate-400 text-xs pl-4">
+              <li className="text-neutral-400 text-xs pl-4">
                 +{service.features.length - 3} más
               </li>
             )}
@@ -234,18 +234,18 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
         )}
 
         {/* Indicador de estado */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-2xl" />
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-400 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-2xl" />
       </div>
     );
   }
 
   // Modo edición
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-xl border-2 border-blue-500 transition-all duration-300 relative">
+    <div className="bg-white rounded-2xl p-6 shadow-xl border-2 border-primary-500 transition-all duration-300 relative">
       <div className="flex flex-col gap-4">
         {/* Tipo de icono */}
         <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-2 uppercase">
+          <label className="block text-xs font-semibold text-neutral-500 mb-2 uppercase">
             Tipo de icono
           </label>
           <div className="grid grid-cols-3 gap-2">
@@ -258,8 +258,8 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
                   p-3 rounded-xl border-2 transition-all cursor-pointer flex flex-col items-center gap-1
                   ${
                     formData.icon === key
-                      ? "border-blue-500 bg-blue-50 text-blue-600"
-                      : "border-slate-200 text-slate-500 hover:border-slate-300"
+                      ? "border-primary-500 bg-primary-50 text-primary-600"
+                      : "border-neutral-200 text-neutral-500 hover:border-neutral-300"
                   }
                 `}
               >
@@ -272,7 +272,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
 
         {/* Título */}
         <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-2 uppercase">
+          <label className="block text-xs font-semibold text-neutral-500 mb-2 uppercase">
             Título
           </label>
           <input
@@ -281,14 +281,14 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-slate-800 font-medium transition-colors focus:outline-none focus:border-blue-500"
+            className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl text-neutral-800 font-medium transition-colors focus:outline-none focus:border-primary-500"
             placeholder="Título del servicio"
           />
         </div>
 
         {/* Descripción */}
         <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-2 uppercase">
+          <label className="block text-xs font-semibold text-neutral-500 mb-2 uppercase">
             Descripción
           </label>
           <textarea
@@ -296,7 +296,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
-            className="w-full px-4 py-3 border-2 border-slate-200 rounded-xl text-slate-800 transition-colors focus:outline-none focus:border-blue-500 resize-none"
+            className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl text-neutral-800 transition-colors focus:outline-none focus:border-primary-500 resize-none"
             placeholder="Descripción del servicio"
             rows={3}
           />
@@ -304,7 +304,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
 
         {/* Características */}
         <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-2 uppercase">
+          <label className="block text-xs font-semibold text-neutral-500 mb-2 uppercase">
             Características
           </label>
           {formData.features.length > 0 && (
@@ -312,12 +312,12 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
               {formData.features.map((feature, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-700 rounded-full text-sm"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-full text-sm"
                 >
                   {feature}
                   <button
                     onClick={() => removeFeature(feature)}
-                    className="w-4 h-4 rounded-full bg-slate-300 hover:bg-red-500 hover:text-white flex items-center justify-center text-xs border-none cursor-pointer transition-colors"
+                    className="w-4 h-4 rounded-full bg-neutral-300 hover:bg-red-500 hover:text-white flex items-center justify-center text-xs border-none cursor-pointer transition-colors"
                   >
                     ×
                   </button>
@@ -334,12 +334,12 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
                 e.key === "Enter" && (e.preventDefault(), addFeature())
               }
               placeholder="Agregar característica"
-              className="flex-1 px-4 py-2.5 border-2 border-slate-200 rounded-xl text-slate-800 transition-colors focus:outline-none focus:border-blue-500"
+              className="flex-1 px-4 py-2.5 border-2 border-neutral-200 rounded-xl text-neutral-800 transition-colors focus:outline-none focus:border-primary-500"
             />
             <button
               type="button"
               onClick={addFeature}
-              className="px-4 py-2.5 bg-slate-800 text-white rounded-xl font-medium hover:bg-slate-700 transition-colors border-none cursor-pointer"
+              className="px-4 py-2.5 bg-primary-500 text-white rounded-xl font-medium hover:bg-primary-600 transition-colors border-none cursor-pointer"
             >
               +
             </button>
@@ -356,7 +356,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
             />
           </div>
         )}
-        <label className="flex items-center justify-center gap-2 px-4 py-3 bg-slate-100 text-slate-700 rounded-xl cursor-pointer font-medium transition-all hover:bg-slate-200">
+        <label className="flex items-center justify-center gap-2 px-4 py-3 bg-neutral-100 text-neutral-700 rounded-xl cursor-pointer font-medium transition-all hover:bg-neutral-200">
           {uploading ? "Subiendo..." : "📷 Cambiar imagen"}
           <input
             type="file"
@@ -372,13 +372,13 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
           <button
             onClick={handleSave}
             disabled={uploading}
-            className="flex-1 py-3 bg-slate-800 text-white rounded-xl font-semibold hover:bg-slate-700 transition-all border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 py-3 bg-primary-500 text-white rounded-xl font-semibold hover:bg-primary-600 transition-all border-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Guardar
           </button>
           <button
             onClick={handleCancel}
-            className="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-semibold hover:bg-slate-200 transition-all border-none cursor-pointer"
+            className="flex-1 py-3 bg-neutral-100 text-neutral-600 rounded-xl font-semibold hover:bg-neutral-200 transition-all border-none cursor-pointer"
           >
             Cancelar
           </button>

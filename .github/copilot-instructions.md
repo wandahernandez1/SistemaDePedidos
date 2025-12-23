@@ -191,122 +191,134 @@ import {
 
 ## Paleta de Colores Oficial
 
-### Colores Primarios
+> **IMPORTANTE:** Los colores están definidos en `src/styles/globals.css` usando variables CSS.
+> Tailwind está configurado para usar estas variables. NO hardcodear colores hex.
+
+### Colores Primarios (Azules Suaves)
 
 ```css
 :root {
-  /* Primary - Naranja cálido (identidad de marca) */
-  --primary-50: #fff7ed;
-  --primary-100: #ffedd5;
-  --primary-200: #fed7aa;
-  --primary-300: #fdba74;
-  --primary-400: #fb923c;
-  --primary-500: #f97316; /* Principal */
-  --primary-600: #ea580c;
-  --primary-700: #c2410c;
-  --primary-800: #9a3412;
-  --primary-900: #7c2d12;
+  /* Primary - Azul suave (identidad de marca) */
+  --color-primary-50: #f0f7ff;
+  --color-primary-100: #e0efff;
+  --color-primary-200: #baddff;
+  --color-primary-300: #84c5ff;
+  --color-primary-400: #4ba6fd;
+  --color-primary-500: #2389ee; /* Principal */
+  --color-primary-600: #1570cd;
+  --color-primary-700: #1259a6;
+  --color-primary-800: #144b89;
+  --color-primary-900: #163f71;
+  --color-primary-950: #0f2847;
 
-  /* Secondary - Gris neutro */
-  --secondary-50: #fafafa;
-  --secondary-100: #f4f4f5;
-  --secondary-200: #e4e4e7;
-  --secondary-300: #d4d4d8;
-  --secondary-400: #a1a1aa;
-  --secondary-500: #71717a; /* Principal */
-  --secondary-600: #52525b;
-  --secondary-700: #3f3f46;
-  --secondary-800: #27272a;
-  --secondary-900: #18181b;
+  /* Secondary/Neutral - Grises cálidos (Stone) */
+  --color-neutral-50: #fafaf9;
+  --color-neutral-100: #f5f5f4;
+  --color-neutral-200: #e7e5e4;
+  --color-neutral-300: #d6d3d1;
+  --color-neutral-400: #a8a29e;
+  --color-neutral-500: #78716c; /* Principal */
+  --color-neutral-600: #57534e;
+  --color-neutral-700: #44403c;
+  --color-neutral-800: #292524;
+  --color-neutral-900: #1c1917;
+  --color-neutral-950: #0c0a09;
 
-  /* Accent - Verde éxito */
-  --accent-50: #f0fdf4;
-  --accent-100: #dcfce7;
-  --accent-200: #bbf7d0;
-  --accent-300: #86efac;
-  --accent-400: #4ade80;
-  --accent-500: #22c55e; /* Principal */
-  --accent-600: #16a34a;
-  --accent-700: #15803d;
-  --accent-800: #166534;
-  --accent-900: #14532d;
+  /* Accent - Ámbar suave */
+  --color-accent-50: #fffbeb;
+  --color-accent-100: #fef3c7;
+  --color-accent-200: #fde68a;
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b; /* Principal */
+  --color-accent-600: #d97706;
+  --color-accent-700: #b45309;
+  --color-accent-800: #92400e;
+  --color-accent-900: #78350f;
 
   /* Semantic Colors */
-  --success: #22c55e;
-  --warning: #eab308;
-  --error: #ef4444;
-  --info: #3b82f6;
+  --color-success-500: #22c55e;
+  --color-warning-500: #f59e0b;
+  --color-error-500: #ef4444;
+  --color-info-500: #3b82f6;
 
   /* Background */
-  --background: #fafafa;
-  --background-card: #ffffff;
-  --background-elevated: #ffffff;
+  --bg-primary: #ffffff;
+  --bg-secondary: var(--color-neutral-50);
+  --bg-card: #ffffff;
 
   /* Text */
-  --text-primary: #18181b;
-  --text-secondary: #52525b;
-  --text-muted: #a1a1aa;
-  --text-inverse: #ffffff;
+  --text-primary: var(--color-neutral-900);
+  --text-secondary: var(--color-neutral-600);
+  --text-muted: var(--color-neutral-400);
 
   /* Border */
-  --border-light: #e4e4e7;
-  --border-medium: #d4d4d8;
-  --border-focus: #f97316;
+  --border-default: var(--color-neutral-200);
+  --border-focus: var(--color-primary-400);
 }
 ```
 
-### Configuración Tailwind
+### Uso en Tailwind
+
+Los colores se usan mediante las clases de Tailwind que referencian las variables CSS:
+
+```jsx
+// ✅ Correcto - Usar clases de Tailwind
+<button className="bg-primary-500 text-white hover:bg-primary-600">
+  Botón primario
+</button>
+
+<div className="bg-secondary-100 text-secondary-800">
+  Contenedor neutral
+</div>
+
+<span className="text-accent-500">
+  Texto de acento ámbar
+</span>
+
+// ❌ Incorrecto - NO hardcodear colores
+<button className="bg-[#2389ee]">Evitar esto</button>
+```
+
+### Configuración Tailwind (Referencia)
 
 ```javascript
-// tailwind.config.js
+// tailwind.config.js - Los colores usan variables CSS
 module.exports = {
+  darkMode: "class",
   theme: {
     extend: {
       colors: {
         primary: {
-          50: "#fff7ed",
-          100: "#ffedd5",
-          200: "#fed7aa",
-          300: "#fdba74",
-          400: "#fb923c",
-          500: "#f97316",
-          600: "#ea580c",
-          700: "#c2410c",
-          800: "#9a3412",
-          900: "#7c2d12",
+          50: "var(--color-primary-50)",
+          // ... hasta 950
+          500: "var(--color-primary-500)",
         },
         secondary: {
-          50: "#fafafa",
-          100: "#f4f4f5",
-          200: "#e4e4e7",
-          300: "#d4d4d8",
-          400: "#a1a1aa",
-          500: "#71717a",
-          600: "#52525b",
-          700: "#3f3f46",
-          800: "#27272a",
-          900: "#18181b",
+          50: "var(--color-neutral-50)",
+          // ... (alias de neutral)
+          500: "var(--color-neutral-500)",
         },
-      },
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        display: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
-      },
-      boxShadow: {
-        card: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
-        "card-hover":
-          "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
-        elevated:
-          "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
-      },
-      borderRadius: {
-        card: "12px",
-        button: "8px",
-        input: "8px",
+        accent: {
+          50: "var(--color-accent-50)",
+          // ...
+          500: "var(--color-accent-500)",
+        },
       },
     },
   },
 };
+```
+
+### Dark Mode
+
+El proyecto soporta modo oscuro. Las variables se invierten automáticamente en `.dark`:
+
+```jsx
+// Los componentes deben incluir variantes dark:
+<div className="bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-50">
+  Contenido adaptable
+</div>
 ```
 
 ---

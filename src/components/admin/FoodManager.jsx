@@ -169,21 +169,21 @@ const FoodManager = () => {
 
   if (loading) {
     return (
-      <div className="text-center py-10 text-lg text-zinc-500">
+      <div className="text-center py-10 text-lg text-neutral-500">
         Cargando platos destacados...
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-zinc-200">
-      <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-zinc-100">
-        <h2 className="text-2xl font-bold text-zinc-800">
+    <div className="bg-white rounded-xl p-6 shadow-sm border border-neutral-200">
+      <div className="flex justify-between items-center mb-6 pb-4 border-b-2 border-neutral-100">
+        <h2 className="text-2xl font-bold text-neutral-800">
           Gestión de Platos Destacados
         </h2>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-800 text-white hover:bg-zinc-700 hover:-translate-y-0.5"
+          className="px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-primary-500 text-white hover:bg-primary-600 hover:-translate-y-0.5"
         >
           {showForm ? "Cancelar" : "+ Nuevo Plato"}
         </button>
@@ -192,11 +192,11 @@ const FoodManager = () => {
       {showForm && (
         <form
           onSubmit={handleSubmit}
-          className="bg-zinc-50 border-2 border-zinc-200 rounded-xl p-6 mb-8"
+          className="bg-neutral-50 border-2 border-neutral-200 rounded-xl p-6 mb-8"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <div className="flex flex-col gap-2">
-              <label className="font-semibold text-zinc-700 text-sm">
+              <label className="font-semibold text-neutral-700 text-sm">
                 Nombre *
               </label>
               <input
@@ -206,12 +206,12 @@ const FoodManager = () => {
                   setFormData({ ...formData, name: e.target.value })
                 }
                 required
-                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+                className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-primary-500"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="font-semibold text-zinc-700 text-sm">
+              <label className="font-semibold text-neutral-700 text-sm">
                 Categoría *
               </label>
               <input
@@ -222,13 +222,13 @@ const FoodManager = () => {
                 }
                 required
                 placeholder="ej: hamburguesas"
-                className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+                className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-primary-500"
               />
             </div>
           </div>
 
           <div className="flex flex-col gap-2 mb-4">
-            <label className="font-semibold text-zinc-700 text-sm">
+            <label className="font-semibold text-neutral-700 text-sm">
               Descripción *
             </label>
             <textarea
@@ -238,12 +238,12 @@ const FoodManager = () => {
               }
               required
               rows="3"
-              className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm resize-y min-h-[80px] transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+              className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm resize-y min-h-[80px] transition-colors duration-200 focus:outline-none focus:border-primary-500"
             />
           </div>
 
           <div className="flex flex-col gap-2 mb-4">
-            <label className="font-semibold text-zinc-700 text-sm">
+            <label className="font-semibold text-neutral-700 text-sm">
               Etiquetas
             </label>
             <div className="flex gap-2">
@@ -255,12 +255,12 @@ const FoodManager = () => {
                   e.key === "Enter" && (e.preventDefault(), addTag())
                 }
                 placeholder="Agregar etiqueta y presionar Enter"
-                className="flex-1 px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-zinc-800"
+                className="flex-1 px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm transition-colors duration-200 focus:outline-none focus:border-primary-500"
               />
               <button
                 type="button"
                 onClick={addTag}
-                className="px-4 py-3 bg-zinc-800 text-white border-none rounded-lg cursor-pointer font-semibold transition-colors duration-200 hover:bg-zinc-700"
+                className="px-4 py-3 bg-primary-500 text-white border-none rounded-lg cursor-pointer font-semibold transition-colors duration-200 hover:bg-primary-600"
               >
                 Agregar
               </button>
@@ -269,7 +269,7 @@ const FoodManager = () => {
               {formData.tags.map((tag, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center gap-1.5 bg-zinc-800 text-white px-3 py-1.5 rounded-full text-sm font-medium"
+                  className="inline-flex items-center gap-1.5 bg-primary-500 text-white px-3 py-1.5 rounded-full text-sm font-medium"
                 >
                   {tag}
                   <button
@@ -285,7 +285,7 @@ const FoodManager = () => {
           </div>
 
           <div className="flex flex-col gap-2 mb-4">
-            <label className="font-semibold text-zinc-700 text-sm">
+            <label className="font-semibold text-neutral-700 text-sm">
               Imagen {!editingFood && "*"}
             </label>
             <input
@@ -293,9 +293,9 @@ const FoodManager = () => {
               accept="image/*"
               onChange={handleImageChange}
               required={!editingFood}
-              className="px-3 py-3 border-2 border-zinc-200 rounded-lg text-sm"
+              className="px-3 py-3 border-2 border-neutral-200 rounded-lg text-sm"
             />
-            <small className="text-zinc-500 text-xs">
+            <small className="text-neutral-500 text-xs">
               JPG, PNG o WEBP. Máximo 5MB
             </small>
           </div>
@@ -307,15 +307,15 @@ const FoodManager = () => {
                   imageFile ? URL.createObjectURL(imageFile) : formData.image
                 }
                 alt="Preview"
-                className="max-w-[300px] max-h-[200px] rounded-lg border-2 border-zinc-200 object-cover mx-auto"
+                className="max-w-[300px] max-h-[200px] rounded-lg border-2 border-neutral-200 object-cover mx-auto"
               />
             </div>
           )}
 
-          <div className="flex gap-3 mt-6 pt-5 border-t border-zinc-200">
+          <div className="flex gap-3 mt-6 pt-5 border-t border-neutral-200">
             <button
               type="submit"
-              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-800 text-white hover:bg-zinc-700 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-primary-500 text-white hover:bg-primary-600 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed"
               disabled={uploading}
             >
               {uploading
@@ -327,7 +327,7 @@ const FoodManager = () => {
             <button
               type="button"
               onClick={resetForm}
-              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+              className="px-5 py-3 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
             >
               Cancelar
             </button>
@@ -337,14 +337,14 @@ const FoodManager = () => {
 
       <div className="flex flex-col gap-4">
         {foods.length === 0 ? (
-          <p className="text-center py-10 text-zinc-400 text-base">
+          <p className="text-center py-10 text-neutral-400 text-base">
             No hay platos destacados
           </p>
         ) : (
           foods.map((food) => (
             <div
               key={food.firebaseId}
-              className="flex gap-4 p-4 bg-white border-2 border-zinc-200 rounded-xl transition-all duration-200 hover:border-zinc-800 hover:shadow-lg flex-wrap md:flex-nowrap"
+              className="flex gap-4 p-4 bg-white border-2 border-neutral-200 rounded-xl transition-all duration-200 hover:border-primary-500 hover:shadow-lg flex-wrap md:flex-nowrap"
             >
               <img
                 src={food.image}
@@ -352,20 +352,20 @@ const FoodManager = () => {
                 className="w-full md:w-[120px] h-auto md:h-[120px] object-cover rounded-lg shrink-0"
               />
               <div className="flex-1">
-                <h3 className="text-lg font-semibold text-zinc-800 mb-2">
+                <h3 className="text-lg font-semibold text-neutral-800 mb-2">
                   {food.name}
                 </h3>
-                <span className="inline-block bg-zinc-800 text-white px-3 py-1 rounded-xl text-xs font-semibold mb-2 capitalize">
+                <span className="inline-block bg-primary-500 text-white px-3 py-1 rounded-xl text-xs font-semibold mb-2 capitalize">
                   {food.category}
                 </span>
-                <p className="text-zinc-500 text-sm leading-relaxed mb-2">
+                <p className="text-neutral-500 text-sm leading-relaxed mb-2">
                   {food.description}
                 </p>
                 <div className="flex flex-wrap gap-1.5 mt-2">
                   {food.tags?.map((tag, index) => (
                     <span
                       key={index}
-                      className="bg-zinc-100 text-zinc-600 text-xs px-2.5 py-1 rounded-full"
+                      className="bg-neutral-100 text-neutral-600 text-xs px-2.5 py-1 rounded-full"
                     >
                       {tag}
                     </span>
@@ -375,7 +375,7 @@ const FoodManager = () => {
               <div className="flex flex-row md:flex-col gap-2 justify-center w-full md:w-auto">
                 <button
                   onClick={() => handleEdit(food)}
-                  className="flex-1 md:flex-none px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-emerald-500 text-white min-w-[100px] hover:bg-emerald-600"
+                  className="flex-1 md:flex-none px-5 py-2.5 rounded-lg font-semibold cursor-pointer border-none text-sm transition-all duration-200 bg-primary-500 text-white min-w-[100px] hover:bg-primary-600"
                 >
                   Editar
                 </button>

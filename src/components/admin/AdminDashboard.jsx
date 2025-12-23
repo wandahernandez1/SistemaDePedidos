@@ -35,7 +35,9 @@ import {
   Cake,
   Salad,
   Package,
+  ShoppingBag,
 } from "lucide-react";
+import OrdersManager from "./OrdersManager";
 
 // Mapeo de iconos de categoría usando Lucide
 const categoryIconComponents = {
@@ -370,6 +372,7 @@ const AdminDashboard = () => {
 
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "orders", label: "Pedidos", icon: ShoppingBag },
     { id: "foods", label: "Platos Destacados", icon: UtensilsCrossed },
     { id: "hamburguesas", label: "Hamburguesas", icon: Beef },
     { id: "empanadas", label: "Empanadas", icon: Cookie },
@@ -385,17 +388,17 @@ const AdminDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-          <p className="text-slate-600 font-medium">Cargando panel...</p>
+          <div className="w-12 h-12 border-4 border-neutral-200 border-t-primary-500 rounded-full animate-spin"></div>
+          <p className="text-neutral-600 font-medium">Cargando panel...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-neutral-50 flex">
       {/* Overlay móvil */}
       {sidebarOpen && (
         <div
@@ -407,25 +410,25 @@ const AdminDashboard = () => {
       {/* Sidebar */}
       <aside
         className={`
-        fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200 
+        fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white border-r border-neutral-200 
         transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
       `}
       >
         <div className="h-full flex flex-col">
           {/* Logo */}
-          <div className="h-16 flex items-center justify-between px-6 border-b border-slate-200">
+          <div className="h-16 flex items-center justify-between px-6 border-b border-neutral-200">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-500 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center">
                 <UtensilsCrossed className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="font-bold text-slate-800">LA COCINA DE LAU</h1>
-                <span className="text-xs text-slate-500">Panel Admin</span>
+                <h1 className="font-bold text-neutral-800">LA COCINA DE LAU</h1>
+                <span className="text-xs text-neutral-500">Panel Admin</span>
               </div>
             </div>
             <button
-              className="lg:hidden p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg transition-colors"
               onClick={() => setSidebarOpen(false)}
             >
               <CloseIcon className="w-6 h-6" />
@@ -433,16 +436,16 @@ const AdminDashboard = () => {
           </div>
 
           {/* Usuario */}
-          <div className="px-6 py-4 border-b border-slate-100">
+          <div className="px-6 py-4 border-b border-neutral-100">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
                 <Package className="w-5 h-5 text-primary-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-slate-800 truncate">
+                <p className="font-medium text-neutral-800 truncate">
                   {user?.username || "Admin"}
                 </p>
-                <p className="text-xs text-slate-500">Administrador</p>
+                <p className="text-xs text-neutral-500">Administrador</p>
               </div>
             </div>
           </div>
@@ -460,14 +463,14 @@ const AdminDashboard = () => {
                       setActiveSection(item.id);
                       setSidebarOpen(false);
                     }}
-                    style={{
-                      backgroundColor: isActive ? "#f97316" : "transparent",
-                      color: isActive ? "#ffffff" : "#475569",
-                    }}
                     className={`
                       w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium
                       transition-all duration-200 cursor-pointer border-none outline-none
-                      ${isActive ? "shadow-lg" : "hover:bg-slate-100"}
+                      ${
+                        isActive
+                          ? "bg-primary-500 text-white shadow-lg"
+                          : "bg-transparent text-neutral-600 hover:bg-neutral-100"
+                      }
                     `}
                   >
                     <IconComponent className="w-5 h-5" />
@@ -479,12 +482,9 @@ const AdminDashboard = () => {
                       "bebidas",
                     ].includes(item.id) && (
                       <span
-                        style={{
-                          backgroundColor: isActive
-                            ? "rgba(255,255,255,0.2)"
-                            : "#e2e8f0",
-                        }}
-                        className="ml-auto text-xs px-2 py-0.5 rounded-full"
+                        className={`ml-auto text-xs px-2 py-0.5 rounded-full ${
+                          isActive ? "bg-white/20" : "bg-neutral-200"
+                        }`}
                       >
                         {getFilteredProducts(item.id).length}
                       </span>
@@ -496,12 +496,12 @@ const AdminDashboard = () => {
           </nav>
 
           {/* Acciones */}
-          <div className="p-4 border-t border-slate-200 space-y-2">
+          <div className="p-4 border-t border-neutral-200 space-y-2">
             <button
               onClick={() => navigate("/")}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 
-                text-slate-700 rounded-xl text-sm font-medium transition-all duration-200 
-                hover:bg-slate-200 cursor-pointer border-none"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-100 
+                text-neutral-700 rounded-xl text-sm font-medium transition-all duration-200 
+                hover:bg-neutral-200 cursor-pointer border-none"
             >
               <Eye className="w-5 h-5" />
               Ver Tienda
@@ -522,15 +522,15 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
         {/* Header */}
-        <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 sticky top-0 z-30">
+        <header className="h-16 bg-white border-b border-neutral-200 flex items-center justify-between px-6 sticky top-0 z-30">
           <div className="flex items-center gap-4">
             <button
-              className="lg:hidden p-2 hover:bg-slate-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer"
+              className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer"
               onClick={() => setSidebarOpen(true)}
             >
               <MenuIcon className="w-6 h-6" />
             </button>
-            <h2 className="text-xl font-bold text-slate-800 capitalize">
+            <h2 className="text-xl font-bold text-neutral-800 capitalize">
               {activeSection === "dashboard"
                 ? "Dashboard"
                 : activeSection === "config"
@@ -544,37 +544,39 @@ const AdminDashboard = () => {
           </div>
 
           {/* Acciones rápidas */}
-          {activeSection !== "dashboard" && activeSection !== "config" && (
-            <button
-              onClick={() => {
-                if (activeSection === "foods") {
-                  setFoodModal({ open: true, food: null, isNew: true });
-                } else if (activeSection === "services") {
-                  handleCreateService();
-                } else {
-                  setProductModal({
-                    open: true,
-                    product: null,
-                    isNew: true,
-                    category: activeSection,
-                  });
-                }
-              }}
-              className="flex items-center gap-2 px-4 py-2.5 bg-primary-500 text-white 
+          {activeSection !== "dashboard" &&
+            activeSection !== "config" &&
+            activeSection !== "orders" && (
+              <button
+                onClick={() => {
+                  if (activeSection === "foods") {
+                    setFoodModal({ open: true, food: null, isNew: true });
+                  } else if (activeSection === "services") {
+                    handleCreateService();
+                  } else {
+                    setProductModal({
+                      open: true,
+                      product: null,
+                      isNew: true,
+                      category: activeSection,
+                    });
+                  }
+                }}
+                className="flex items-center gap-2 px-4 py-2.5 bg-primary-500 text-white 
                 rounded-xl text-sm font-medium transition-all duration-200 
                 hover:bg-primary-600 hover:shadow-lg cursor-pointer border-none"
-            >
-              <Plus className="w-5 h-5" />
-              <span className="hidden sm:inline">
-                Agregar{" "}
-                {activeSection === "foods"
-                  ? "Plato"
-                  : activeSection === "services"
-                  ? "Servicio"
-                  : "Producto"}
-              </span>
-            </button>
-          )}
+              >
+                <Plus className="w-5 h-5" />
+                <span className="hidden sm:inline">
+                  Agregar{" "}
+                  {activeSection === "foods"
+                    ? "Plato"
+                    : activeSection === "services"
+                    ? "Servicio"
+                    : "Producto"}
+                </span>
+              </button>
+            )}
         </header>
 
         {/* Content */}
@@ -582,6 +584,8 @@ const AdminDashboard = () => {
           {activeSection === "dashboard" && (
             <DashboardView stats={stats} products={products} foods={foods} />
           )}
+
+          {activeSection === "orders" && <OrdersManager />}
 
           {activeSection === "config" && <ConfigManager />}
 
@@ -633,7 +637,7 @@ const AdminDashboard = () => {
           transform transition-all duration-300
           ${
             notification.type === "success"
-              ? "bg-emerald-500 text-white"
+              ? "bg-green-500 text-white"
               : "bg-red-500 text-white"
           }
         `}
@@ -693,19 +697,19 @@ const DashboardView = ({ stats, products, foods }) => {
           title="Total Productos"
           value={stats.totalProducts}
           icon={Package}
-          color="bg-blue-500"
+          color="bg-primary-500"
         />
         <StatCard
           title="Platos Destacados"
           value={stats.totalFoods}
           icon={UtensilsCrossed}
-          color="bg-amber-500"
+          color="bg-accent-500"
         />
         <StatCard
           title="Servicios"
           value={stats.totalServices}
           icon={Briefcase}
-          color="bg-emerald-500"
+          color="bg-green-500"
         />
         <StatCard
           title="Categorías"
@@ -716,8 +720,8 @@ const DashboardView = ({ stats, products, foods }) => {
       </div>
 
       {/* Category Stats */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-        <h3 className="text-lg font-semibold text-slate-800 mb-4">
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
+        <h3 className="text-lg font-semibold text-neutral-800 mb-4">
           Productos por Categoría
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -726,15 +730,15 @@ const DashboardView = ({ stats, products, foods }) => {
             return (
               <div
                 key={key}
-                className="bg-slate-50 rounded-xl p-4 text-center hover:bg-slate-100 transition-colors"
+                className="bg-neutral-50 rounded-xl p-4 text-center hover:bg-neutral-100 transition-colors"
               >
                 <div className="w-12 h-12 mx-auto mb-2 bg-primary-100 rounded-xl flex items-center justify-center">
                   <IconComponent className="w-6 h-6 text-primary-600" />
                 </div>
-                <p className="text-2xl font-bold text-slate-800">
+                <p className="text-2xl font-bold text-neutral-800">
                   {products.filter((p) => p.categoria === key).length}
                 </p>
-                <p className="text-sm text-slate-500">{name}</p>
+                <p className="text-sm text-neutral-500">{name}</p>
               </div>
             );
           })}
@@ -743,15 +747,15 @@ const DashboardView = ({ stats, products, foods }) => {
 
       {/* Recent Items */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <h3 className="text-lg font-semibold text-slate-800 mb-4">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
+          <h3 className="text-lg font-semibold text-neutral-800 mb-4">
             Últimos Productos
           </h3>
           <div className="space-y-3">
             {products.slice(0, 5).map((product) => (
               <div
                 key={product.id}
-                className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl"
+                className="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl"
               >
                 <img
                   src={product.imagen}
@@ -759,14 +763,14 @@ const DashboardView = ({ stats, products, foods }) => {
                   className="w-12 h-12 rounded-lg object-cover"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-slate-800 truncate">
+                  <p className="font-medium text-neutral-800 truncate">
                     {product.nombre}
                   </p>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-neutral-500">
                     {categoryNames[product.categoria]}
                   </p>
                 </div>
-                <span className="text-sm font-semibold text-slate-800">
+                <span className="text-sm font-semibold text-neutral-800">
                   ${product.precio?.toLocaleString()}
                 </span>
               </div>
@@ -774,15 +778,15 @@ const DashboardView = ({ stats, products, foods }) => {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <h3 className="text-lg font-semibold text-slate-800 mb-4">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
+          <h3 className="text-lg font-semibold text-neutral-800 mb-4">
             Platos Destacados
           </h3>
           <div className="space-y-3">
             {foods.map((food) => (
               <div
                 key={food.id}
-                className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl"
+                className="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl"
               >
                 <img
                   src={food.image}
@@ -790,10 +794,10 @@ const DashboardView = ({ stats, products, foods }) => {
                   className="w-12 h-12 rounded-lg object-cover"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-slate-800 truncate">
+                  <p className="font-medium text-neutral-800 truncate">
                     {food.name}
                   </p>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-neutral-500">
                     {categoryNames[food.category]}
                   </p>
                 </div>
@@ -801,7 +805,7 @@ const DashboardView = ({ stats, products, foods }) => {
                   {food.tags?.slice(0, 2).map((tag, i) => (
                     <span
                       key={i}
-                      className="text-xs bg-slate-200 px-2 py-1 rounded-full"
+                      className="text-xs bg-neutral-200 px-2 py-1 rounded-full"
                     >
                       {tag}
                     </span>
@@ -818,11 +822,11 @@ const DashboardView = ({ stats, products, foods }) => {
 
 // Stat Card Component
 const StatCard = ({ title, value, icon: IconComponent, color }) => (
-  <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+  <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
     <div className="flex items-center justify-between">
       <div>
-        <p className="text-sm text-slate-500 mb-1">{title}</p>
-        <p className="text-3xl font-bold text-slate-800">{value}</p>
+        <p className="text-sm text-neutral-500 mb-1">{title}</p>
+        <p className="text-3xl font-bold text-neutral-800">{value}</p>
       </div>
       <div
         className={`w-12 h-12 ${color} rounded-xl flex items-center justify-center`}
@@ -855,13 +859,13 @@ const ProductsSection = ({ products, category, onSave, onDelete, onEdit }) => {
   if (products.length === 0) {
     return (
       <div className="text-center py-16">
-        <div className="w-20 h-20 mx-auto mb-4 bg-secondary-100 rounded-2xl flex items-center justify-center">
-          <IconComponent className="w-10 h-10 text-secondary-500" />
+        <div className="w-20 h-20 mx-auto mb-4 bg-neutral-100 rounded-2xl flex items-center justify-center">
+          <IconComponent className="w-10 h-10 text-neutral-500" />
         </div>
-        <h3 className="text-xl font-semibold text-slate-800 mb-2">
+        <h3 className="text-xl font-semibold text-neutral-800 mb-2">
           No hay productos en {categoryNames[category]}
         </h3>
-        <p className="text-slate-500">
+        <p className="text-neutral-500">
           Haz clic en "Agregar Producto" para crear el primero
         </p>
       </div>
