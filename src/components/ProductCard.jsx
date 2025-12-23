@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { Settings, ChevronRight, Plus } from "lucide-react";
+import { Settings, ChevronRight, Plus, ShoppingCart } from "lucide-react";
 import { formatPrice } from "../utils/formatPrice";
 import BurgerCustomizationModal from "./BurgerCustomizationModal";
 import EmpanadaCustomizationModal from "./EmpanadaCustomizationModal";
 
 /**
  * Componente ProductCard - Tarjeta de producto individual
- * Muestra información del producto y botón para agregar al carrito
+ * Diseño profesional y minimalista con efectos hover elegantes
  */
 const ProductCard = ({ product, onAddToCart }) => {
   const [showCustomization, setShowCustomization] = useState(false);
@@ -38,7 +38,7 @@ const ProductCard = ({ product, onAddToCart }) => {
       return (
         <>
           <Settings className="h-4 w-4" />
-          Personalizar
+          <span>Personalizar</span>
         </>
       );
     }
@@ -49,51 +49,63 @@ const ProductCard = ({ product, onAddToCart }) => {
       return (
         <>
           <ChevronRight className="h-4 w-4" />
-          Elegir
+          <span>Elegir</span>
         </>
       );
     }
     return (
       <>
-        <Plus className="h-4 w-4" />
-        Agregar
+        <ShoppingCart className="h-4 w-4" />
+        <span>Agregar</span>
       </>
     );
   };
 
   return (
     <>
-      <div className="bg-white rounded-card overflow-hidden shadow-card transition-all duration-200 flex flex-col h-full border border-secondary-200 hover:-translate-y-0.5 hover:shadow-card-hover hover:border-primary-300">
+      <div className="group bg-white rounded-2xl overflow-hidden shadow-sm transition-all duration-300 flex flex-col h-full border border-secondary-100 hover:-translate-y-1 hover:shadow-xl hover:border-primary-200">
         {/* Image */}
-        <div className="relative w-full h-48 overflow-hidden bg-secondary-50">
+        <div className="relative w-full h-52 overflow-hidden bg-secondary-50">
           <img
             src={product.imagen}
             alt={product.nombre}
-            className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
           />
-          <span className="absolute top-3 right-3 bg-white/95 px-3 py-1.5 rounded text-xs font-medium text-secondary-500 border border-secondary-200">
+          {/* Overlay gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+          {/* Unit badge */}
+          <span className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-semibold text-secondary-600 shadow-sm border border-white/50">
             {product.unidad}
           </span>
+
+          {/* Price overlay on hover */}
+          <div className="absolute bottom-3 left-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+            <span className="bg-primary-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+              {formatPrice(product.precio)}
+            </span>
+          </div>
         </div>
 
         {/* Info */}
         <div className="p-5 flex flex-col gap-3 flex-grow">
-          <h3 className="text-lg font-bold text-secondary-800 m-0 leading-tight tracking-tight">
+          <h3 className="text-lg font-bold text-secondary-900 m-0 leading-tight tracking-tight group-hover:text-primary-600 transition-colors duration-200">
             {product.nombre}
           </h3>
-          <p className="text-sm text-secondary-500 leading-relaxed m-0 flex-grow">
+          <p className="text-sm text-secondary-500 leading-relaxed m-0 flex-grow line-clamp-2">
             {product.descripcion}
           </p>
 
           {/* Footer */}
-          <div className="flex justify-between items-center mt-auto pt-4 border-t-2 border-secondary-100">
-            <span className="text-xl font-bold text-primary-600">
+          <div className="flex justify-between items-center mt-auto pt-4 border-t border-secondary-100">
+            <span className="text-xl font-bold text-secondary-900 group-hover:text-primary-600 transition-colors">
               {formatPrice(product.precio)}
             </span>
             <button
-              className="bg-primary-500 text-white border-none rounded-button px-4 py-2.5 text-sm font-semibold cursor-pointer flex items-center gap-1.5 transition-all duration-200 hover:bg-primary-600 hover:shadow-md active:scale-[0.98]"
+              className="bg-primary-500 text-white border-none rounded-xl px-5 py-3 text-sm font-semibold cursor-pointer flex items-center gap-2 transition-all duration-200 shadow-sm hover:bg-primary-600 hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0"
               onClick={handleAddClick}
+              aria-label={`Agregar ${product.nombre} al carrito`}
             >
               {getButtonContent()}
             </button>

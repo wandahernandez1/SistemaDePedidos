@@ -184,11 +184,39 @@ const AdminDashboard = () => {
   // CRUD Productos
   const handleSaveProduct = async (id, productData) => {
     try {
-      await update(COLLECTIONS.PRODUCTS, id, productData);
+      // Preparar datos limpios para enviar
+      const cleanProductData = {
+        nombre: productData.nombre,
+        descripcion: productData.descripcion,
+        precio: Number(productData.precio),
+        imagen: productData.imagen,
+        categoria: productData.categoria,
+        unidad: productData.unidad,
+        disponible: productData.disponible !== false,
+        destacado: productData.destacado || false,
+      };
+
+      // Solo agregar campos opcionales si existen
+      if (productData.tipoEspecial || productData.tipo_especial) {
+        cleanProductData.tipo_especial =
+          productData.tipoEspecial || productData.tipo_especial;
+      }
+      if (productData.sabores) {
+        cleanProductData.sabores = productData.sabores;
+      }
+      if (productData.ingredientes) {
+        cleanProductData.ingredientes = productData.ingredientes;
+      }
+      if (productData.extras) {
+        cleanProductData.extras = productData.extras;
+      }
+
+      await update(COLLECTIONS.PRODUCTS, id, cleanProductData);
       await loadProducts();
       showNotification("Producto actualizado correctamente");
     } catch (error) {
-      showNotification("Error al actualizar producto", "error");
+      console.error("Error completo:", error);
+      showNotification(`Error al actualizar: ${error.message}`, "error");
     }
   };
 
@@ -223,12 +251,26 @@ const AdminDashboard = () => {
   // CRUD Foods
   const handleSaveFood = async (id, foodData) => {
     try {
-      await update(COLLECTIONS.FOODS, id, foodData);
+      // Preparar datos limpios para enviar
+      const cleanFoodData = {
+        name: foodData.name,
+        description: foodData.description,
+        image: foodData.image,
+        category: foodData.category,
+      };
+
+      // Solo agregar tags si existen
+      if (foodData.tags && Array.isArray(foodData.tags)) {
+        cleanFoodData.tags = foodData.tags;
+      }
+
+      await update(COLLECTIONS.FOODS, id, cleanFoodData);
       await loadFoods();
       showNotification("Plato actualizado correctamente");
       setFoodModal({ open: false, food: null, isNew: false });
     } catch (error) {
-      showNotification("Error al actualizar plato", "error");
+      console.error("Error completo:", error);
+      showNotification(`Error al actualizar: ${error.message}`, "error");
     }
   };
 
@@ -263,11 +305,27 @@ const AdminDashboard = () => {
   // CRUD Services
   const handleSaveService = async (id, serviceData) => {
     try {
-      await update(COLLECTIONS.SERVICES, id, serviceData);
+      // Preparar datos limpios para enviar
+      const cleanServiceData = {
+        title: serviceData.title,
+        description: serviceData.description,
+        icon: serviceData.icon,
+      };
+
+      // Solo agregar campos opcionales si existen
+      if (serviceData.image) {
+        cleanServiceData.image = serviceData.image;
+      }
+      if (serviceData.features && Array.isArray(serviceData.features)) {
+        cleanServiceData.features = serviceData.features;
+      }
+
+      await update(COLLECTIONS.SERVICES, id, cleanServiceData);
       await loadServices();
       showNotification("Servicio actualizado correctamente");
     } catch (error) {
-      showNotification("Error al actualizar servicio", "error");
+      console.error("Error completo:", error);
+      showNotification(`Error al actualizar: ${error.message}`, "error");
     }
   };
 
@@ -362,7 +420,7 @@ const AdminDashboard = () => {
                 <UtensilsCrossed className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="font-bold text-slate-800">TakeAway</h1>
+                <h1 className="font-bold text-slate-800">LA COCINA DE LAU</h1>
                 <span className="text-xs text-slate-500">Panel Admin</span>
               </div>
             </div>
@@ -394,6 +452,7 @@ const AdminDashboard = () => {
             <div className="space-y-1">
               {menuItems.map((item) => {
                 const IconComponent = item.icon;
+                const isActive = activeSection === item.id;
                 return (
                   <button
                     key={item.id}
@@ -401,14 +460,14 @@ const AdminDashboard = () => {
                       setActiveSection(item.id);
                       setSidebarOpen(false);
                     }}
+                    style={{
+                      backgroundColor: isActive ? "#f97316" : "transparent",
+                      color: isActive ? "#ffffff" : "#475569",
+                    }}
                     className={`
                       w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium
-                      transition-all duration-200 cursor-pointer border-none
-                      ${
-                        activeSection === item.id
-                          ? "bg-primary-500 text-white shadow-lg shadow-primary-500/20"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-800"
-                      }
+                      transition-all duration-200 cursor-pointer border-none outline-none
+                      ${isActive ? "shadow-lg" : "hover:bg-slate-100"}
                     `}
                   >
                     <IconComponent className="w-5 h-5" />
@@ -420,14 +479,12 @@ const AdminDashboard = () => {
                       "bebidas",
                     ].includes(item.id) && (
                       <span
-                        className={`
-                        ml-auto text-xs px-2 py-0.5 rounded-full
-                        ${
-                          activeSection === item.id
-                            ? "bg-white/20"
-                            : "bg-slate-200"
-                        }
-                      `}
+                        style={{
+                          backgroundColor: isActive
+                            ? "rgba(255,255,255,0.2)"
+                            : "#e2e8f0",
+                        }}
+                        className="ml-auto text-xs px-2 py-0.5 rounded-full"
                       >
                         {getFilteredProducts(item.id).length}
                       </span>

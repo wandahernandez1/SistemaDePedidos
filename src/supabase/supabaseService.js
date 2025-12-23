@@ -70,17 +70,37 @@ export const create = async (tableName, data) => {
 
 /**
  * Actualizar un registro
+ * Limpia campos no deseados antes de enviar
  */
 export const update = async (tableName, id, data) => {
   try {
+    // Limpiar datos: eliminar campos undefined, null o que Supabase no debe recibir
+    const cleanData = {};
+    for (const [key, value] of Object.entries(data)) {
+      // Excluir campos de sistema y valores undefined
+      if (
+        value !== undefined &&
+        key !== "id" &&
+        key !== "created_at" &&
+        key !== "updated_at"
+      ) {
+        cleanData[key] = value;
+      }
+    }
+
+    console.log(`Actualizando ${tableName} con ID ${id}:`, cleanData);
+
     const { data: result, error } = await supabase
       .from(tableName)
-      .update(data)
+      .update(cleanData)
       .eq("id", id)
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error(`Error de Supabase al actualizar:`, error);
+      throw error;
+    }
     return result;
   } catch (error) {
     console.error(`Error al actualizar registro:`, error);

@@ -5,8 +5,8 @@ import {
   Truck,
   Clock,
   Trash2,
-  Sparkles,
   MessageCircle,
+  Send,
 } from "lucide-react";
 import CartItem from "./CartItem";
 import { formatPrice } from "../utils/formatPrice";
@@ -320,8 +320,8 @@ const Cart = ({
               </div>
 
               {/* Total */}
-              <div className="flex justify-between items-center p-3 mb-3 bg-secondary-100 rounded-lg border border-secondary-200">
-                <span className="text-xs font-bold text-secondary-500 uppercase tracking-wide">
+              <div className="flex justify-between items-center p-4 mb-4 bg-gradient-to-r from-secondary-100 to-secondary-50 rounded-xl border border-secondary-200">
+                <span className="text-sm font-bold text-secondary-500 uppercase tracking-wide">
                   Total
                 </span>
                 <span className="text-2xl font-bold text-secondary-900 tracking-tight">
@@ -330,20 +330,22 @@ const Cart = ({
               </div>
 
               {/* Actions */}
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <button
-                  className="py-3 px-3 border border-secondary-200 rounded-lg text-xs font-bold cursor-pointer transition-all duration-200 flex items-center justify-center gap-1.5 bg-white text-secondary-500 hover:bg-red-50 hover:border-red-300 hover:text-red-600"
+                  className="py-3.5 px-4 border-2 border-secondary-200 rounded-xl text-sm font-bold cursor-pointer transition-all duration-300 flex items-center justify-center gap-2 bg-white text-secondary-600 hover:bg-red-50 hover:border-red-400 hover:text-red-600 hover:-translate-y-0.5 active:scale-[0.98]"
                   onClick={onClearCart}
+                  aria-label="Vaciar carrito"
                 >
                   <Trash2 className="h-4 w-4" />
-                  Vaciar
+                  <span>Vaciar</span>
                 </button>
                 <button
-                  className="flex-1 py-3 px-4 border-none rounded-lg text-sm font-bold cursor-pointer transition-all duration-200 flex items-center justify-center gap-1.5 bg-primary-500 text-white shadow-sm hover:bg-primary-600 hover:shadow-md hover:-translate-y-0.5 active:translate-y-0"
+                  className="flex-1 py-3.5 px-5 border-none rounded-xl text-sm font-bold cursor-pointer transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 hover:-translate-y-0.5 active:scale-[0.98] active:translate-y-0"
                   onClick={handleFinishOrder}
+                  aria-label="Finalizar pedido por WhatsApp"
                 >
-                  <Sparkles className="h-4 w-4" />
-                  Finalizar Pedido
+                  <MessageCircle className="h-4 w-4" />
+                  <span>Enviar a WhatsApp</span>
                 </button>
               </div>
             </div>
@@ -366,15 +368,16 @@ const Cart = ({
             </p>
             <div className="flex gap-3">
               <button
-                className="flex-1 py-3.5 border border-secondary-200 rounded-xl text-base font-bold cursor-pointer transition-all duration-200 bg-secondary-100 text-secondary-500 hover:bg-secondary-200 hover:text-secondary-800 hover:-translate-y-0.5"
+                className="flex-1 py-3.5 border-2 border-secondary-200 rounded-xl text-base font-bold cursor-pointer transition-all duration-300 bg-white text-secondary-600 hover:bg-secondary-100 hover:border-secondary-300 hover:-translate-y-0.5 active:scale-[0.98]"
                 onClick={() => setShowConfirmation(false)}
               >
                 Cancelar
               </button>
               <button
-                className="flex-1 py-3.5 border-none rounded-xl text-base font-bold cursor-pointer transition-all duration-200 bg-primary-500 text-white shadow-md hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-lg"
+                className="flex-1 py-3.5 border-none rounded-xl text-base font-bold cursor-pointer transition-all duration-300 bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg shadow-primary-500/25 hover:shadow-xl hover:shadow-primary-500/30 hover:-translate-y-0.5 flex items-center justify-center gap-2 active:scale-[0.98]"
                 onClick={handleConfirmOrder}
               >
+                <Send className="h-4 w-4" />
                 Confirmar
               </button>
             </div>
