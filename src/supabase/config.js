@@ -1,18 +1,28 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = "https://dgjsluhwvhpwizvaujzu.supabase.co";
-const supabaseAnonKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRnanNsdWh3dmhwd2l6dmF1anp1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NTkwNjQ1OCwiZXhwIjoyMDgxNDgyNDU4fQ.5K-e47uS2oA4FuPppxRo-8UMKno92mpg0CqpMurRt78";
+// Cargar variables de entorno
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+// Validar que las variables de entorno estén configuradas
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error("❌ Error de configuración:");
+  console.error("VITE_SUPABASE_URL:", supabaseUrl);
+  console.error(
+    "VITE_SUPABASE_ANON_KEY:",
+    supabaseAnonKey ? "Configurada" : "Faltante"
+  );
+  throw new Error(
+    "Faltan variables de entorno. Asegúrate de tener un archivo .env con VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY"
+  );
+}
 
 // Crear cliente de Supabase
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Validar configuración
 export const isConfigured = () => {
-  return (
-    supabaseUrl !== "TU_SUPABASE_URL" &&
-    supabaseAnonKey !== "TU_SUPABASE_ANON_KEY"
-  );
+  return !!supabaseUrl && !!supabaseAnonKey;
 };
 
 export default supabase;

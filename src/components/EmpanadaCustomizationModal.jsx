@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { formatPrice } from "../utils/formatPrice";
 import { X, Minus, Plus, Beef, Cookie, CircleDot, Wheat } from "lucide-react";
+import { useToast } from "../context/ToastContext";
 
 // Mapeo de iconos para cada tipo de empanada (usando iconos disponibles)
 const empanadaIcons = {
@@ -22,6 +23,7 @@ const PRECIO_DOCENA = 22000;
 
 const EmpanadaCustomizationModal = ({ product, onClose, onAddToCart }) => {
   const TOTAL_EMPANADAS = 12;
+  const { warning } = useToast();
 
   const [quantities, setQuantities] = useState({
     carne: 0,
@@ -69,7 +71,7 @@ const EmpanadaCustomizationModal = ({ product, onClose, onAddToCart }) => {
     const total = getTotalCount();
 
     if (total !== TOTAL_EMPANADAS) {
-      alert(
+      warning(
         `Debes seleccionar exactamente 12 empanadas. Seleccionadas: ${total}/12`
       );
       return;

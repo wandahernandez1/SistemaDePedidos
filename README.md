@@ -147,13 +147,27 @@ src/
      - `foods` (público)
      - `services` (público)
 
-4. **Configurar credenciales**
+4. **Configurar variables de entorno**
 
-   Editar `src/supabase/config.js`:
+   Crear archivo `.env` en la raíz del proyecto:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Editar `.env` con tus credenciales:
+
+   ```env
+   VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+   VITE_SUPABASE_ANON_KEY=tu_anon_key_aqui
+   VITE_WHATSAPP_NUMBER=5491122334455
+   ```
+
+   Actualizar `src/supabase/config.js` para usar variables de entorno:
 
    ```javascript
-   const supabaseUrl = "TU_SUPABASE_URL";
-   const supabaseAnonKey = "TU_SUPABASE_ANON_KEY";
+   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+   const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
    ```
 
 5. **Iniciar servidor de desarrollo**
@@ -170,13 +184,26 @@ src/
 
 ## Variables de Entorno
 
-El proyecto actualmente utiliza configuración directa en `src/supabase/config.js`. Para producción, se recomienda migrar a variables de entorno:
+El proyecto utiliza variables de entorno para configuración sensible. Todas las variables deben tener el prefijo `VITE_` para ser accesibles en el cliente.
+
+**Archivo `.env`** (crear en la raíz):
 
 ```env
-VITE_SUPABASE_URL=tu_url_supabase
-VITE_SUPABASE_ANON_KEY=tu_anon_key
+# Supabase
+VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# WhatsApp Business
+# Formato: código país + código área + número (sin espacios)
+# Ejemplo Argentina: 5491122334455
 VITE_WHATSAPP_NUMBER=542284445588
 ```
+
+**Notas importantes:**
+
+- NO commitear el archivo `.env` al repositorio (incluido en `.gitignore`)
+- El archivo `.env.example` contiene el template con valores placeholder
+- En producción (Vercel/Netlify), configurar las variables en el dashboard del servicio
 
 ---
 
