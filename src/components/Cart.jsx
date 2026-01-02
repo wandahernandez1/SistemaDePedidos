@@ -39,7 +39,7 @@ const Cart = ({
   const [deliveryType, setDeliveryType] = useState("pickup");
   const [deliveryAddress, setDeliveryAddress] = useState("");
 
-  const WHATSAPP_NUMBER = "542284229601";
+  const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
 
   // Generar opciones de horarios cada 30 minutos
   const generateTimeOptions = () => {
