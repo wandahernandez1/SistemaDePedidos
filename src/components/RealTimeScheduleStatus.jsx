@@ -129,7 +129,7 @@ const RealTimeScheduleStatus = ({ compact = true, className = "" }) => {
       className={`bg-white dark:bg-secondary-900 rounded-xl shadow-sm border border-secondary-200 dark:border-secondary-700 overflow-hidden ${className}`}
     >
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary-500 to-primary-600 p-6 text-white">
+      <div className="bg-linear-to-r from-primary-500 to-primary-600 p-6 text-white">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">

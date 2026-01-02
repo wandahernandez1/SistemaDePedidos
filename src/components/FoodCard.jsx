@@ -1,13 +1,14 @@
+import { memo, useMemo, useCallback } from "react";
 import { ArrowRight, Clock, AlertCircle } from "lucide-react";
 
 /**
  * Componente FoodCard - Tarjeta de plato destacado
  * Diseño profesional y minimalista con efectos hover elegantes
- * Completamente responsivo
+ * Completamente responsivo y optimizado para rendimiento
  */
-const FoodCard = ({ food, onClick, schedule, isAvailable }) => {
-  // Formatear horario para mostrar
-  const formatSchedule = () => {
+const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
+  // Formatear horario para mostrar - memoizado
+  const scheduleText = useMemo(() => {
     if (!schedule) return null;
     const dias = schedule.dias || [];
     const inicio = schedule.horario_pedidos_inicio || "19:00";
@@ -26,24 +27,27 @@ const FoodCard = ({ food, onClick, schedule, isAvailable }) => {
     else daysText = dias.map((d) => d.slice(0, 3)).join(", ");
 
     return `${daysText} ${inicio}-${fin}`;
-  };
+  }, [schedule]);
 
-  const scheduleText = formatSchedule();
+  const handleClick = useCallback(() => {
+    onClick?.();
+  }, [onClick]);
 
   return (
     <div
-      className={`group bg-white dark:bg-secondary-900 rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-300 h-full flex flex-col cursor-pointer border border-secondary-200 dark:border-secondary-700 shadow-sm hover:shadow-xl hover:-translate-y-1 hover:border-primary-400 dark:hover:border-primary-500 ${
+      className={`group bg-white dark:bg-secondary-900 rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-200 h-full flex flex-col cursor-pointer border border-secondary-200 dark:border-secondary-700 shadow-sm hover:shadow-lg hover:-translate-y-1 hover:border-primary-400 dark:hover:border-primary-500 gpu-accelerated ${
         isAvailable === false ? "opacity-75" : ""
       }`}
-      onClick={onClick}
+      onClick={handleClick}
     >
       {/* Image Container */}
       <div className="relative w-full h-40 sm:h-52 overflow-hidden bg-secondary-100 dark:bg-secondary-700">
         <img
           src={food.image}
           alt={food.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
+          decoding="async"
         />
 
         {/* Tags */}
@@ -52,7 +56,7 @@ const FoodCard = ({ food, onClick, schedule, isAvailable }) => {
             {food.tags.map((tag, index) => (
               <span
                 key={index}
-                className="inline-flex items-center bg-white/95 text-secondary-700 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold shadow-sm backdrop-blur-sm border border-white/50"
+                className="inline-flex items-center bg-white/95 text-secondary-700 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-semibold shadow-sm border border-white/50"
               >
                 {tag}
               </span>
@@ -61,7 +65,7 @@ const FoodCard = ({ food, onClick, schedule, isAvailable }) => {
         )}
 
         {/* Ver más indicator */}
-        <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+        <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <div className="flex items-center gap-1 sm:gap-1.5 bg-white dark:bg-secondary-800 px-2 sm:px-3 py-1.5 sm:py-2 rounded-full shadow-lg text-primary-600 dark:text-primary-400 text-[10px] sm:text-xs font-semibold border border-secondary-200 dark:border-secondary-700">
             Ver más
             <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
@@ -71,7 +75,7 @@ const FoodCard = ({ food, onClick, schedule, isAvailable }) => {
 
       {/* Content */}
       <div className="p-4 sm:p-5 flex flex-col gap-2 sm:gap-3 flex-1">
-        <h3 className="text-base sm:text-lg font-bold text-secondary-900 dark:text-secondary-50 m-0 tracking-tight leading-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
+        <h3 className="text-base sm:text-lg font-bold text-secondary-900 dark:text-secondary-50 m-0 tracking-tight leading-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-150">
           {food.name}
         </h3>
         <p className="text-xs sm:text-sm text-secondary-500 dark:text-secondary-400 leading-relaxed m-0 line-clamp-2 flex-1">
@@ -103,6 +107,8 @@ const FoodCard = ({ food, onClick, schedule, isAvailable }) => {
       </div>
     </div>
   );
-};
+});
+
+FoodCard.displayName = "FoodCard";
 
 export default FoodCard;
