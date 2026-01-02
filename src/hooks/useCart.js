@@ -1,19 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 
 /**
  * Hook personalizado para gestionar el carrito de compras
  * Maneja el estado del carrito y la persistencia en localStorage
+ * Optimizado con useCallback y useMemo para evitar re-renders
  */
 export const useCart = () => {
   const [cartItems, setCartItems] = useState(() => {
     // Inicializar desde localStorage si existe
-    const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
+    try {
+      const savedCart = localStorage.getItem("cart");
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch {
+      return [];
+    }
   });
 
-  // Sincronizar con localStorage cada vez que cambia el carrito
+  // Sincronizar con localStorage cada vez que cambia el carrito (debounced)
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cartItems));
+    const timeoutId = setTimeout(() => {
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+    }, 100);
+    return () => clearTimeout(timeoutId);
   }, [cartItems]);
 
   /**
@@ -21,7 +29,7 @@ export const useCart = () => {
    * Si ya existe y no tiene personalización, incrementa la cantidad
    * Si tiene personalización, se agrega como nuevo item
    */
-  const addToCart = (product) => {
+  const addToCart = useCallback((product) => {
     setCartItems((prevItems) => {
       // Crear un ID único para productos personalizados
       const itemId = product.customization
@@ -50,12 +58,12 @@ export const useCart = () => {
 
       return [...prevItems, { ...productWithId, quantity: 1 }];
     });
-  };
+  }, []);
 
   /**
    * Incrementar cantidad de un producto
    */
-  const incrementQuantity = (itemIdentifier) => {
+  const incrementQuantity = useCallback((itemIdentifier) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         item.cartItemId === itemIdentifier || item.id === itemIdentifier
@@ -63,13 +71,13 @@ export const useCart = () => {
           : item
       )
     );
-  };
+  }, []);
 
   /**
    * Decrementar cantidad de un producto
    * No permite cantidades menores a 1
    */
-  const decrementQuantity = (itemIdentifier) => {
+  const decrementQuantity = useCallback((itemIdentifier) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
         (item.cartItemId === itemIdentifier || item.id === itemIdentifier) &&
@@ -78,43 +86,43 @@ export const useCart = () => {
           : item
       )
     );
-  };
+  }, []);
 
   /**
    * Eliminar producto del carrito
    */
-  const removeFromCart = (itemIdentifier) => {
+  const removeFromCart = useCallback((itemIdentifier) => {
     setCartItems((prevItems) =>
       prevItems.filter(
         (item) =>
           item.cartItemId !== itemIdentifier && item.id !== itemIdentifier
       )
     );
-  };
+  }, []);
 
   /**
    * Vaciar todo el carrito
    */
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     setCartItems([]);
-  };
+  }, []);
 
   /**
-   * Calcular el total del carrito
+   * Calcular el total del carrito - memoizado
    */
-  const getTotal = () => {
+  const getTotal = useCallback(() => {
     return cartItems.reduce(
       (total, item) => total + item.precio * item.quantity,
       0
     );
-  };
+  }, [cartItems]);
 
   /**
-   * Obtener la cantidad total de items en el carrito
+   * Obtener la cantidad total de items en el carrito - memoizado
    */
-  const getTotalItems = () => {
+  const getTotalItems = useCallback(() => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
-  };
+  }, [cartItems]);
 
   return {
     cartItems,

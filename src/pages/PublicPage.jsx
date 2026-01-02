@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { RefreshCw } from "lucide-react";
 import Navbar from "../components/Navbar";
 import ProductList from "../components/ProductList";
@@ -12,6 +12,7 @@ import { getAll, TABLES as COLLECTIONS } from "../supabase/supabaseService";
 
 /**
  * Página pública de la tienda
+ * Optimizada para rendimiento en móviles
  */
 function PublicPage() {
   const {
@@ -29,7 +30,6 @@ function PublicPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]);
   const [foods, setFoods] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showMenuView, setShowMenuView] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -86,7 +86,8 @@ function PublicPage() {
     }
   };
 
-  useEffect(() => {
+  // Filtrar productos - memoizado para mejor rendimiento
+  const filteredProducts = useMemo(() => {
     let filtered = products;
 
     if (selectedCategory !== "todas") {
@@ -96,56 +97,74 @@ function PublicPage() {
     }
 
     if (searchTerm.trim() !== "") {
+      const searchLower = searchTerm.toLowerCase();
       filtered = filtered.filter((product) =>
-        product.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+        product.nombre.toLowerCase().includes(searchLower)
       );
     }
 
-    setFilteredProducts(filtered);
+    return filtered;
   }, [selectedCategory, searchTerm, products]);
 
-  const handleAddToCart = (product) => {
-    addToCart(product);
-  };
+  const handleAddToCart = useCallback(
+    (product) => {
+      addToCart(product);
+    },
+    [addToCart]
+  );
 
-  const handleMenuClick = (category) => {
-    // Verificar si la categoría está disponible ahora
-    const isAvailable = isCategoryAvailable(category);
+  const handleMenuClick = useCallback(
+    (category) => {
+      // Verificar si la categoría está disponible ahora
+      const isAvailable = isCategoryAvailable(category);
 
-    if (!isAvailable) {
-      // Mostrar modal de notificación con información detallada
-      setSelectedUnavailableCategory(category);
-      setScheduleModalOpen(true);
-      return;
-    }
+      if (!isAvailable) {
+        // Mostrar modal de notificación con información detallada
+        setSelectedUnavailableCategory(category);
+        setScheduleModalOpen(true);
+        return;
+      }
 
-    setSelectedCategory(category);
-    setShowMenuView(false);
-    setSearchTerm("");
-  };
+      setSelectedCategory(category);
+      setShowMenuView(false);
+      setSearchTerm("");
+    },
+    [isCategoryAvailable]
+  );
 
-  const handleCloseScheduleModal = () => {
+  const handleCloseScheduleModal = useCallback(() => {
     setScheduleModalOpen(false);
     setSelectedUnavailableCategory(null);
-  };
+  }, []);
 
-  const handleBackToMenu = () => {
+  const handleBackToMenu = useCallback(() => {
     setSelectedCategory("todas");
     setShowMenuView(true);
     setSearchTerm("");
-  };
+  }, []);
 
-  const handleCartToggle = () => {
-    setIsCartOpen(!isCartOpen);
-  };
+  const handleCartToggle = useCallback(() => {
+    setIsCartOpen((prev) => !prev);
+  }, []);
 
-  const handleCartClose = () => {
+  const handleCartClose = useCallback(() => {
     setIsCartOpen(false);
-  };
+  }, []);
+
+  // Memoizar datos del modal
+  const unavailabilityInfo = useMemo(() => {
+    return selectedUnavailableCategory
+      ? getUnavailabilityInfo(selectedUnavailableCategory)
+      : null;
+  }, [selectedUnavailableCategory, getUnavailabilityInfo]);
+
+  const availableCategories = useMemo(() => {
+    return getMainCategoriesAvailable();
+  }, [getMainCategoriesAvailable]);
 
   if (loading || schedulesLoading) {
     return (
-      <div className="min-h-screen bg-secondary-50 dark:bg-secondary-900 flex flex-col transition-colors duration-300">
+      <div className="min-h-screen bg-secondary-50 dark:bg-secondary-900 flex flex-col transition-colors duration-200">
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="text-xl text-secondary-600 dark:text-secondary-300 font-medium mb-2">
@@ -168,7 +187,7 @@ function PublicPage() {
   }
 
   return (
-    <div className="min-h-screen bg-secondary-50 dark:bg-secondary-900 flex flex-col transition-colors duration-300">
+    <div className="min-h-screen bg-secondary-50 dark:bg-secondary-900 flex flex-col transition-colors duration-200">
       <Navbar totalItems={getTotalItems()} onCartClick={handleCartToggle} />
 
       <ProductList
@@ -203,12 +222,8 @@ function PublicPage() {
         isOpen={scheduleModalOpen}
         onClose={handleCloseScheduleModal}
         category={selectedUnavailableCategory}
-        unavailabilityInfo={
-          selectedUnavailableCategory
-            ? getUnavailabilityInfo(selectedUnavailableCategory)
-            : null
-        }
-        availableCategories={getMainCategoriesAvailable()}
+        unavailabilityInfo={unavailabilityInfo}
+        availableCategories={availableCategories}
         allSchedules={schedules}
         isRealTimeActive={isRealTimeActive}
       />

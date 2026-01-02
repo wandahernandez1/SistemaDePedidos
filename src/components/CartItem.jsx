@@ -1,22 +1,41 @@
+import { memo, useCallback, useMemo } from "react";
 import { Minus, Plus, X } from "lucide-react";
 import { formatPrice } from "../utils/formatPrice";
 
 /**
  * Componente CartItem - Item individual dentro del carrito
  * Muestra producto con controles de cantidad y opción de eliminar
+ * Optimizado con React.memo para evitar re-renders innecesarios
  */
-const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
-  const subtotal = item.precio * item.quantity;
+const CartItem = memo(({ item, onIncrement, onDecrement, onRemove }) => {
+  const subtotal = useMemo(
+    () => item.precio * item.quantity,
+    [item.precio, item.quantity]
+  );
   const unidadText = item.unidad === "docena" ? "docena(s)" : "unidad(es)";
 
+  const handleIncrement = useCallback(() => {
+    onIncrement(item.id);
+  }, [onIncrement, item.id]);
+
+  const handleDecrement = useCallback(() => {
+    onDecrement(item.id);
+  }, [onDecrement, item.id]);
+
+  const handleRemove = useCallback(() => {
+    onRemove(item.id);
+  }, [onRemove, item.id]);
+
   return (
-    <div className="flex gap-3 p-3 bg-secondary-50 dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 transition-all duration-200 hover:border-secondary-300 dark:hover:border-secondary-600 hover:shadow-sm">
+    <div className="flex gap-3 p-3 bg-secondary-50 dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 transition-colors duration-150 hover:border-secondary-300 dark:hover:border-secondary-600">
       {/* Image */}
       <div className="shrink-0 w-14 h-14 rounded-lg overflow-hidden bg-secondary-100 dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700">
         <img
           src={item.imagen}
           alt={item.nombre}
           className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
         />
       </div>
 
@@ -40,8 +59,8 @@ const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
         <div className="flex items-center justify-between gap-3 mt-1">
           <div className="flex items-center gap-2 bg-secondary-100 dark:bg-secondary-800 rounded-lg p-1 border border-secondary-200 dark:border-secondary-700">
             <button
-              className="w-7 h-7 border-none bg-primary-500 text-white rounded-md text-base font-semibold cursor-pointer flex items-center justify-center transition-all duration-200 hover:bg-primary-600 hover:scale-105 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
-              onClick={() => onDecrement(item.id)}
+              className="w-7 h-7 border-none bg-primary-500 text-white rounded-md text-base font-semibold cursor-pointer flex items-center justify-center transition-colors duration-150 hover:bg-primary-600 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
+              onClick={handleDecrement}
               disabled={item.quantity <= 1}
               aria-label="Disminuir cantidad"
             >
@@ -51,8 +70,8 @@ const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
               {item.quantity} {unidadText}
             </span>
             <button
-              className="w-7 h-7 border-none bg-primary-500 text-white rounded-md text-base font-semibold cursor-pointer flex items-center justify-center transition-all duration-200 hover:bg-primary-600 hover:scale-105 active:scale-95"
-              onClick={() => onIncrement(item.id)}
+              className="w-7 h-7 border-none bg-primary-500 text-white rounded-md text-base font-semibold cursor-pointer flex items-center justify-center transition-colors duration-150 hover:bg-primary-600 active:scale-95"
+              onClick={handleIncrement}
               aria-label="Aumentar cantidad"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -60,8 +79,8 @@ const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
           </div>
 
           <button
-            className="bg-transparent border border-secondary-300 dark:border-secondary-700 rounded-md w-7 h-7 cursor-pointer flex items-center justify-center transition-all duration-200 text-secondary-500 dark:text-secondary-400 hover:bg-error-500 hover:border-error-500 hover:text-white hover:scale-105"
-            onClick={() => onRemove(item.id)}
+            className="bg-transparent border border-secondary-300 dark:border-secondary-700 rounded-md w-7 h-7 cursor-pointer flex items-center justify-center transition-colors duration-150 text-secondary-500 dark:text-secondary-400 hover:bg-error-500 hover:border-error-500 hover:text-white"
+            onClick={handleRemove}
             aria-label="Eliminar del carrito"
           >
             <X className="h-4 w-4" />
@@ -77,6 +96,8 @@ const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
       </div>
     </div>
   );
-};
+});
+
+CartItem.displayName = "CartItem";
 
 export default CartItem;
