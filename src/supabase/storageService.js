@@ -82,23 +82,59 @@ export const deleteImage = async (imageUrl) => {
 
 /**
  * Validar que el archivo sea una imagen válida
+ * Soporta múltiples formatos de imagen
  */
 export const validateImage = (file) => {
-  const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-  const maxSize = 5 * 1024 * 1024; // 5MB
+  const validTypes = [
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+    "image/svg+xml",
+    "image/bmp",
+    "image/avif",
+    "image/tiff",
+    "image/heic",
+    "image/heif",
+    "image/ico",
+    "image/x-icon",
+  ];
+  const maxSize = 10 * 1024 * 1024; // 10MB
 
   if (!file) {
     throw new Error("No se seleccionó ningún archivo");
   }
 
-  if (!validTypes.includes(file.type)) {
+  // Verificar si es una imagen por el tipo o la extensión
+  const fileExtension = file.name.split(".").pop().toLowerCase();
+  const validExtensions = [
+    "jpg",
+    "jpeg",
+    "png",
+    "webp",
+    "gif",
+    "svg",
+    "bmp",
+    "avif",
+    "tiff",
+    "tif",
+    "heic",
+    "heif",
+    "ico",
+  ];
+
+  const isValidType = validTypes.includes(file.type);
+  const isValidExtension = validExtensions.includes(fileExtension);
+
+  if (!isValidType && !isValidExtension) {
     throw new Error(
-      "Tipo de archivo no válido. Solo se permiten: JPG, PNG, WEBP"
+      "Tipo de archivo no válido. Formatos permitidos: JPG, PNG, WEBP, GIF, SVG, BMP, AVIF, TIFF, HEIC, ICO"
     );
   }
 
   if (file.size > maxSize) {
-    throw new Error("La imagen es demasiado grande. Tamaño máximo: 5MB");
+    throw new Error("La imagen es demasiado grande. Tamaño máximo: 10MB");
   }
 
   return true;

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import "./AdminLogin.css";
 
 /**
  * Componente de Login para el administrador
@@ -26,7 +25,6 @@ const AdminLogin = () => {
     } catch (error) {
       console.error("Error en login:", error);
 
-      // Mensaje de error personalizado
       if (error.message === "Credenciales inválidas") {
         setError("Usuario o contraseña incorrectos");
       } else {
@@ -38,25 +36,37 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="admin-login">
-      <div className="login-container">
-        <div className="login-header">
-          <h1>Panel de Administración</h1>
-          <p>LA COCINA DE LAU</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-800 to-neutral-900 p-5">
+      <div className="bg-white rounded-2xl shadow-2xl p-10 w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-neutral-800 mb-2">
+            Panel de Administración
+          </h1>
+          <p className="text-neutral-500 font-medium">LA COCINA DE LAU</p>
         </div>
 
-        <div className="credentials-info">
-          <p>
-            <strong>Usuario:</strong> useradmin
+        {/* Credenciales de prueba */}
+        <div className="bg-neutral-100 border-2 border-neutral-300 rounded-lg p-4 mb-6 text-center">
+          <p className="text-neutral-700 text-sm mb-1">
+            <span className="font-semibold text-neutral-800">Usuario:</span>{" "}
+            useradmin
           </p>
-          <p>
-            <strong>Contraseña:</strong> 123456
+          <p className="text-neutral-700 text-sm">
+            <span className="font-semibold text-neutral-800">Contraseña:</span>{" "}
+            123456
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group">
-            <label htmlFor="username">Usuario</label>
+        {/* Formulario */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="username"
+              className="font-semibold text-neutral-700 text-sm"
+            >
+              Usuario
+            </label>
             <input
               type="text"
               id="username"
@@ -66,11 +76,17 @@ const AdminLogin = () => {
               placeholder="useradmin"
               disabled={loading}
               autoComplete="username"
+              className="px-4 py-3 border-2 border-neutral-200 rounded-lg text-base transition-all duration-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 disabled:bg-neutral-100 disabled:cursor-not-allowed"
             />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Contraseña</label>
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="password"
+              className="font-semibold text-neutral-700 text-sm"
+            >
+              Contraseña
+            </label>
             <input
               type="password"
               id="password"
@@ -80,18 +96,31 @@ const AdminLogin = () => {
               placeholder="••••••••"
               disabled={loading}
               autoComplete="current-password"
+              className="px-4 py-3 border-2 border-neutral-200 rounded-lg text-base transition-all duration-200 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 disabled:bg-neutral-100 disabled:cursor-not-allowed"
             />
           </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {error && (
+            <div className="bg-red-50 text-red-600 py-3 px-4 rounded-lg text-sm text-center border border-red-200">
+              {error}
+            </div>
+          )}
 
-          <button type="submit" className="login-button" disabled={loading}>
+          <button
+            type="submit"
+            className="bg-primary-500 text-white border-none py-3.5 rounded-lg text-base font-semibold cursor-pointer transition-all duration-200 mt-2 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+            disabled={loading}
+          >
             {loading ? "Iniciando sesión..." : "Iniciar Sesión"}
           </button>
         </form>
 
-        <div className="login-footer">
-          <button onClick={() => navigate("/")} className="back-button">
+        {/* Footer */}
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => navigate("/")}
+            className="bg-transparent border-none text-neutral-500 text-sm cursor-pointer underline transition-colors duration-200 hover:text-primary-600"
+          >
             Volver a la tienda
           </button>
         </div>

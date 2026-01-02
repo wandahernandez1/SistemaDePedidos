@@ -10,6 +10,7 @@ export const TABLES = {
   FOODS: "foods",
   SERVICES: "services",
   CONFIG: "config",
+  ORDERS: "orders",
 };
 
 /**
@@ -70,17 +71,37 @@ export const create = async (tableName, data) => {
 
 /**
  * Actualizar un registro
+ * Limpia campos no deseados antes de enviar
  */
 export const update = async (tableName, id, data) => {
   try {
+    // Limpiar datos: eliminar campos undefined, null o que Supabase no debe recibir
+    const cleanData = {};
+    for (const [key, value] of Object.entries(data)) {
+      // Excluir campos de sistema y valores undefined
+      if (
+        value !== undefined &&
+        key !== "id" &&
+        key !== "created_at" &&
+        key !== "updated_at"
+      ) {
+        cleanData[key] = value;
+      }
+    }
+
+    console.log(`Actualizando ${tableName} con ID ${id}:`, cleanData);
+
     const { data: result, error } = await supabase
       .from(tableName)
-      .update(data)
+      .update(cleanData)
       .eq("id", id)
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error(`Error de Supabase al actualizar:`, error);
+      throw error;
+    }
     return result;
   } catch (error) {
     console.error(`Error al actualizar registro:`, error);
@@ -191,6 +212,104 @@ export const updateConfig = async (config) => {
     return data;
   } catch (error) {
     console.error("Error al actualizar configuración:", error);
+    throw error;
+  }
+};
+
+// ==========================================
+// FUNCIONES DE PEDIDOS
+// ==========================================
+
+/**
+ * Crear un nuevo pedido
+ */
+export const createOrder = async (orderData) => {
+  try {
+    const { data, error } = await supabase
+      .from(TABLES.ORDERS)
+      .insert([orderData])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error al crear pedido:", error);
+    throw error;
+  }
+};
+
+/**
+ * Obtener todos los pedidos
+ */
+export const getOrders = async (limit = 50) => {
+  try {
+    const { data, error } = await supabase
+      .from(TABLES.ORDERS)
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error("Error al obtener pedidos:", error);
+    throw error;
+  }
+};
+
+/**
+ * Obtener pedidos en tiempo real con suscripción
+ */
+export const subscribeToOrders = (callback) => {
+  const subscription = supabase
+    .channel("orders-channel")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: TABLES.ORDERS },
+      (payload) => {
+        callback(payload);
+      }
+    )
+    .subscribe();
+
+  return subscription;
+};
+
+/**
+ * Actualizar estado de un pedido
+ */
+export const updateOrderStatus = async (orderId, status) => {
+  try {
+    const { data, error } = await supabase
+      .from(TABLES.ORDERS)
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq("id", orderId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error al actualizar estado del pedido:", error);
+    throw error;
+  }
+};
+
+/**
+ * Eliminar un pedido
+ */
+export const deleteOrder = async (orderId) => {
+  try {
+    const { error } = await supabase
+      .from(TABLES.ORDERS)
+      .delete()
+      .eq("id", orderId);
+
+    if (error) throw error;
+    return true;
+  } catch (error) {
+    console.error("Error al eliminar pedido:", error);
     throw error;
   }
 };

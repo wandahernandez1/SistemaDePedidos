@@ -1,242 +1,142 @@
 import { useState } from "react";
-import { uploadImage, validateImage } from "../../supabase/storageService";
-import "../FoodCard.css";
-import "./EditableCard.css";
 
 /**
- * Componente EditableFoodCard - Tarjeta de plato destacado editable
+ * Componente EditableFoodCard - Tarjeta de plato destacado editable (minimalista)
  */
-const EditableFoodCard = ({ food, onSave, onDelete, onOpen }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [formData, setFormData] = useState({
-    name: food.name,
-    description: food.description,
-    category: food.category,
-    image: food.image,
-    tags: food.tags || [],
-  });
-  const [tagInput, setTagInput] = useState("");
+const EditableFoodCard = ({ food, onSave, onDelete, onEdit }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      try {
-        validateImage(file);
-        setUploading(true);
-        const imageUrl = await uploadImage(file, "foods");
-        setFormData({ ...formData, image: imageUrl });
-        setUploading(false);
-      } catch (error) {
-        alert(error.message);
-        setUploading(false);
-        e.target.value = "";
-      }
-    }
-  };
-
-  const handleSave = async () => {
-    try {
-      await onSave(food.id, formData);
-      setIsEditing(false);
-      alert("Plato actualizado correctamente");
-    } catch (error) {
-      console.error("Error al guardar:", error);
-      alert("Error al guardar los cambios");
-    }
-  };
-
-  const handleCancel = () => {
-    setFormData({
-      name: food.name,
-      description: food.description,
-      category: food.category,
-      image: food.image,
-      tags: food.tags || [],
-    });
-    setIsEditing(false);
-  };
-
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
+    e.stopPropagation();
     if (window.confirm(`¿Eliminar "${food.name}"?`)) {
       try {
         await onDelete(food);
-        alert("Plato eliminado correctamente");
       } catch (error) {
         console.error("Error al eliminar:", error);
-        alert("Error al eliminar el plato");
       }
     }
   };
 
-  const addTag = () => {
-    if (tagInput.trim() && !formData.tags.includes(tagInput.trim())) {
-      setFormData({
-        ...formData,
-        tags: [...formData.tags, tagInput.trim()],
-      });
-      setTagInput("");
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    if (onEdit) {
+      onEdit(food);
     }
   };
 
-  const removeTag = (tagToRemove) => {
-    setFormData({
-      ...formData,
-      tags: formData.tags.filter((tag) => tag !== tagToRemove),
-    });
+  const categoryNames = {
+    hamburguesas: "Hamburguesas",
+    empanadas: "Empanadas",
+    pizzas: "Pizzas",
+    bebidas: "Bebidas",
+    postres: "Postres",
+    ensaladas: "Ensaladas",
   };
-
-  if (!isEditing) {
-    return (
-      <div className="food-card editable-card">
-        <div className="food-image-container">
-          <img
-            src={food.image}
-            alt={food.name}
-            className="food-image"
-            loading="lazy"
-          />
-          {food.tags && food.tags.length > 0 && (
-            <div className="food-tags">
-              {food.tags.map((tag, index) => (
-                <span key={index} className="food-tag">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-          <div className="card-actions">
-            <button
-              className="btn-edit"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsEditing(true);
-              }}
-              title="Editar"
-            >
-              Editar
-            </button>
-            <button
-              className="btn-delete"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDelete();
-              }}
-              title="Eliminar"
-            >
-              Eliminar
-            </button>
-          </div>
-        </div>
-
-        <div className="food-content">
-          <h3 className="food-name">{food.name}</h3>
-          <p className="food-description">{food.description}</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
-      className="food-card editable-card editing"
-      onClick={() => onOpen && onOpen(food.category)}
-      style={{ cursor: onOpen ? "pointer" : "default" }}
+      className="bg-white rounded-2xl overflow-hidden shadow-sm border border-neutral-200 transition-all duration-300 relative group hover:shadow-xl hover:-translate-y-1"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="food-image-container">
+      {/* Imagen */}
+      <div className="relative aspect-[4/3] overflow-hidden">
         <img
-          src={formData.image}
-          alt={formData.name}
-          className="food-image"
+          src={food.image}
+          alt={food.name}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
         />
-        <div className="image-upload-overlay">
-          <label className="upload-label">
-            {uploading ? "Subiendo..." : "📷 Cambiar imagen"}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              disabled={uploading}
-              style={{ display: "none" }}
-            />
-          </label>
-        </div>
-      </div>
 
-      <div className="food-content edit-form">
-        <input
-          type="text"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          className="edit-input edit-title"
-          placeholder="Nombre del plato"
-        />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-        <textarea
-          value={formData.description}
-          onChange={(e) =>
-            setFormData({ ...formData, description: e.target.value })
-          }
-          className="edit-textarea"
-          placeholder="Descripción"
-          rows="3"
-        />
-
-        <select
-          value={formData.category}
-          onChange={(e) =>
-            setFormData({ ...formData, category: e.target.value })
-          }
-          className="edit-select"
-        >
-          <option value="hamburguesas">Hamburguesas</option>
-          <option value="empanadas">Empanadas</option>
-          <option value="pizzas">Pizzas</option>
-          <option value="bebidas">Bebidas</option>
-          <option value="postres">Postres</option>
-          <option value="ensaladas">Ensaladas</option>
-        </select>
-
-        <div className="tags-editor">
-          <div className="tags-list">
-            {formData.tags.map((tag, index) => (
-              <span key={index} className="tag-item">
+        {/* Tags */}
+        {food.tags && food.tags.length > 0 && (
+          <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 max-w-[calc(100%-60px)]">
+            {food.tags.slice(0, 2).map((tag, index) => (
+              <span
+                key={index}
+                className="bg-white/95 backdrop-blur-sm text-neutral-700 text-xs font-medium px-2.5 py-1 rounded-full shadow-sm"
+              >
                 {tag}
-                <button onClick={() => removeTag(tag)}>×</button>
               </span>
             ))}
+            {food.tags.length > 2 && (
+              <span className="bg-neutral-800/90 text-white text-xs font-medium px-2.5 py-1 rounded-full">
+                +{food.tags.length - 2}
+              </span>
+            )}
           </div>
-          <div className="tag-input-group">
-            <input
-              type="text"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyPress={(e) =>
-                e.key === "Enter" && (e.preventDefault(), addTag())
-              }
-              placeholder="Agregar etiqueta"
-              className="tag-input"
-            />
-            <button type="button" onClick={addTag} className="btn-add-tag">
-              +
-            </button>
-          </div>
+        )}
+
+        {/* Categoría badge */}
+        <div className="absolute top-3 right-3">
+          <span className="bg-neutral-800/90 text-white text-xs font-medium px-2.5 py-1 rounded-full backdrop-blur-sm">
+            {categoryNames[food.category] || food.category}
+          </span>
         </div>
 
-        <div className="edit-actions">
+        {/* Botones de acción */}
+        <div
+          className={`
+          absolute bottom-3 right-3 flex gap-2 transition-all duration-300
+          ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}
+        `}
+        >
           <button
-            onClick={handleSave}
-            className="btn-save"
-            disabled={uploading}
+            className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border-none transition-all duration-200 hover:bg-blue-500 hover:text-white hover:scale-110"
+            onClick={handleEdit}
+            title="Editar"
           >
-            ✓ Guardar
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+              />
+            </svg>
           </button>
-          <button onClick={handleCancel} className="btn-cancel">
-            ✕ Cancelar
+          <button
+            className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border-none transition-all duration-200 hover:bg-red-500 hover:text-white hover:scale-110"
+            onClick={handleDelete}
+            title="Eliminar"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
           </button>
         </div>
       </div>
+
+      {/* Contenido */}
+      <div className="p-5">
+        <h3 className="text-lg font-bold text-neutral-800 mb-2 line-clamp-1">
+          {food.name}
+        </h3>
+        <p className="text-neutral-500 text-sm leading-relaxed line-clamp-2">
+          {food.description}
+        </p>
+      </div>
+
+      {/* Indicador de estado */}
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-green-400 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
     </div>
   );
 };

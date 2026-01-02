@@ -10,10 +10,9 @@ import {
   getConfig,
   TABLES as COLLECTIONS,
 } from "../supabase/supabaseService";
-import "../App.css";
 
 /**
- * Página pública de la tienda (anteriormente App.jsx)
+ * Página pública de la tienda
  */
 function PublicPage() {
   const {
@@ -40,7 +39,6 @@ function PublicPage() {
     horario_cierre: "21:00",
   });
 
-  // Cargar productos, foods y configuración desde Supabase
   useEffect(() => {
     loadAllData();
   }, []);
@@ -88,7 +86,6 @@ function PublicPage() {
     }
   };
 
-  // Filtrar productos
   useEffect(() => {
     let filtered = products;
 
@@ -111,15 +108,6 @@ function PublicPage() {
     addToCart(product);
   };
 
-  const handleCategoryChange = (category) => {
-    setSelectedCategory(category);
-    if (category === "todas") {
-      setShowMenuView(true);
-    } else {
-      setShowMenuView(false);
-    }
-  };
-
   const handleMenuClick = (category) => {
     setSelectedCategory(category);
     setShowMenuView(false);
@@ -132,10 +120,6 @@ function PublicPage() {
     setSearchTerm("");
   };
 
-  const handleSearchChange = (term) => {
-    setSearchTerm(term);
-  };
-
   const handleCartToggle = () => {
     setIsCartOpen(!isCartOpen);
   };
@@ -146,17 +130,8 @@ function PublicPage() {
 
   if (loading) {
     return (
-      <div className="app">
-        <div
-          style={{
-            minHeight: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: "20px",
-            color: "#666",
-          }}
-        >
+      <div className="min-h-screen bg-secondary-50 dark:bg-secondary-950 flex flex-col transition-colors duration-300">
+        <div className="min-h-screen flex items-center justify-center text-xl text-secondary-500 dark:text-secondary-400 font-medium">
           Cargando productos...
         </div>
       </div>
@@ -164,7 +139,7 @@ function PublicPage() {
   }
 
   return (
-    <div className="app">
+    <div className="min-h-screen bg-secondary-50 dark:bg-secondary-950 flex flex-col transition-colors duration-300">
       <Navbar totalItems={getTotalItems()} onCartClick={handleCartToggle} />
 
       <ProductList
