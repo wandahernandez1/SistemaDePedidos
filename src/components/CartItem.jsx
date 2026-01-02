@@ -10,9 +10,9 @@ const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
   const unidadText = item.unidad === "docena" ? "docena(s)" : "unidad(es)";
 
   return (
-    <div className="flex gap-3 p-3 bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 transition-all duration-200 hover:border-secondary-300 dark:hover:border-secondary-600 hover:shadow-sm">
+    <div className="flex gap-3 p-3 bg-secondary-50 dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700 transition-all duration-200 hover:border-secondary-300 dark:hover:border-secondary-600 hover:shadow-sm">
       {/* Image */}
-      <div className="shrink-0 w-14 h-14 rounded-lg overflow-hidden bg-secondary-100 dark:bg-secondary-700 border border-secondary-200 dark:border-secondary-600">
+      <div className="shrink-0 w-14 h-14 rounded-lg overflow-hidden bg-secondary-100 dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700">
         <img
           src={item.imagen}
           alt={item.nombre}
@@ -38,7 +38,7 @@ const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
 
         {/* Controls */}
         <div className="flex items-center justify-between gap-3 mt-1">
-          <div className="flex items-center gap-2 bg-secondary-100 dark:bg-secondary-700 rounded-lg p-1 border border-secondary-200 dark:border-secondary-600">
+          <div className="flex items-center gap-2 bg-secondary-100 dark:bg-secondary-800 rounded-lg p-1 border border-secondary-200 dark:border-secondary-700">
             <button
               className="w-7 h-7 border-none bg-primary-500 text-white rounded-md text-base font-semibold cursor-pointer flex items-center justify-center transition-all duration-200 hover:bg-primary-600 hover:scale-105 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
               onClick={() => onDecrement(item.id)}
@@ -60,7 +60,7 @@ const CartItem = ({ item, onIncrement, onDecrement, onRemove }) => {
           </div>
 
           <button
-            className="bg-transparent border border-secondary-200 dark:border-secondary-600 rounded-md w-7 h-7 cursor-pointer flex items-center justify-center transition-all duration-200 text-secondary-500 dark:text-secondary-400 hover:bg-red-500 hover:border-red-500 hover:text-white hover:scale-105"
+            className="bg-transparent border border-secondary-300 dark:border-secondary-700 rounded-md w-7 h-7 cursor-pointer flex items-center justify-center transition-all duration-200 text-secondary-500 dark:text-secondary-400 hover:bg-error-500 hover:border-error-500 hover:text-white hover:scale-105"
             onClick={() => onRemove(item.id)}
             aria-label="Eliminar del carrito"
           >

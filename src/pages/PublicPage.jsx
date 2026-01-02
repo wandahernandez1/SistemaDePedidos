@@ -1,15 +1,14 @@
 import { useState, useEffect } from "react";
+import { RefreshCw } from "lucide-react";
 import Navbar from "../components/Navbar";
 import ProductList from "../components/ProductList";
 import ServicesSection from "../components/ServicesSection";
 import Cart from "../components/Cart";
 import Footer from "../components/Footer";
+import ScheduleNotificationModal from "../components/ScheduleNotificationModal";
 import { useCart } from "../hooks/useCart";
-import {
-  getAll,
-  getConfig,
-  TABLES as COLLECTIONS,
-} from "../supabase/supabaseService";
+import { useRealTimeSchedules } from "../shared/hooks/useRealTimeSchedules";
+import { getAll, TABLES as COLLECTIONS } from "../supabase/supabaseService";
 
 /**
  * Página pública de la tienda
@@ -34,10 +33,25 @@ function PublicPage() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showMenuView, setShowMenuView] = useState(true);
   const [loading, setLoading] = useState(true);
-  const [config, setConfig] = useState({
-    horario_apertura: "09:00",
-    horario_cierre: "21:00",
-  });
+
+  // Estado para el modal de notificación de horarios
+  const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
+  const [selectedUnavailableCategory, setSelectedUnavailableCategory] =
+    useState(null);
+
+  // Hook de horarios en tiempo real
+  const {
+    schedules,
+    config,
+    loading: schedulesLoading,
+    currentDay,
+    currentTimeString,
+    isCategoryAvailable,
+    getMainCategoriesAvailable,
+    hasAvailableMainCategories,
+    getUnavailabilityInfo,
+    isRealTimeActive,
+  } = useRealTimeSchedules();
 
   useEffect(() => {
     loadAllData();
@@ -46,25 +60,11 @@ function PublicPage() {
   const loadAllData = async () => {
     try {
       setLoading(true);
-      await Promise.all([loadProducts(), loadFoods(), loadConfig()]);
+      await Promise.all([loadProducts(), loadFoods()]);
     } catch (error) {
       console.error("Error al cargar datos:", error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const loadConfig = async () => {
-    try {
-      const data = await getConfig();
-      if (data) {
-        setConfig({
-          horario_apertura: data.horario_apertura || "09:00",
-          horario_cierre: data.horario_cierre || "21:00",
-        });
-      }
-    } catch (error) {
-      console.error("Error al cargar configuración:", error);
     }
   };
 
@@ -109,9 +109,24 @@ function PublicPage() {
   };
 
   const handleMenuClick = (category) => {
+    // Verificar si la categoría está disponible ahora
+    const isAvailable = isCategoryAvailable(category);
+
+    if (!isAvailable) {
+      // Mostrar modal de notificación con información detallada
+      setSelectedUnavailableCategory(category);
+      setScheduleModalOpen(true);
+      return;
+    }
+
     setSelectedCategory(category);
     setShowMenuView(false);
     setSearchTerm("");
+  };
+
+  const handleCloseScheduleModal = () => {
+    setScheduleModalOpen(false);
+    setSelectedUnavailableCategory(null);
   };
 
   const handleBackToMenu = () => {
@@ -128,18 +143,32 @@ function PublicPage() {
     setIsCartOpen(false);
   };
 
-  if (loading) {
+  if (loading || schedulesLoading) {
     return (
-      <div className="min-h-screen bg-secondary-50 dark:bg-secondary-950 flex flex-col transition-colors duration-300">
-        <div className="min-h-screen flex items-center justify-center text-xl text-secondary-500 dark:text-secondary-400 font-medium">
-          Cargando productos...
+      <div className="min-h-screen bg-secondary-50 dark:bg-secondary-900 flex flex-col transition-colors duration-300">
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-xl text-secondary-600 dark:text-secondary-300 font-medium mb-2">
+              {loading && schedulesLoading
+                ? "Cargando aplicación..."
+                : loading
+                ? "Cargando productos..."
+                : "Configurando horarios..."}
+            </div>
+            {isRealTimeActive && (
+              <div className="text-sm text-green-600 dark:text-green-400 flex items-center justify-center gap-1">
+                <RefreshCw className="w-4 h-4" />
+                <span>Conectado en tiempo real</span>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-secondary-50 dark:bg-secondary-950 flex flex-col transition-colors duration-300">
+    <div className="min-h-screen bg-secondary-50 dark:bg-secondary-900 flex flex-col transition-colors duration-300">
       <Navbar totalItems={getTotalItems()} onCartClick={handleCartToggle} />
 
       <ProductList
@@ -150,6 +179,8 @@ function PublicPage() {
         onMenuClick={handleMenuClick}
         onBackToMenu={handleBackToMenu}
         selectedCategory={selectedCategory}
+        categorySchedules={schedules}
+        isCategoryAvailable={isCategoryAvailable}
       />
 
       {showMenuView && <ServicesSection />}
@@ -163,8 +194,23 @@ function PublicPage() {
         onDecrement={decrementQuantity}
         onRemove={removeFromCart}
         onClearCart={clearCart}
-        horarioApertura={config.horario_apertura}
-        horarioCierre={config.horario_cierre}
+        horarioApertura={config?.horario_apertura || "09:00"}
+        horarioCierre={config?.horario_cierre || "21:00"}
+      />
+
+      {/* Modal de notificación de horarios */}
+      <ScheduleNotificationModal
+        isOpen={scheduleModalOpen}
+        onClose={handleCloseScheduleModal}
+        category={selectedUnavailableCategory}
+        unavailabilityInfo={
+          selectedUnavailableCategory
+            ? getUnavailabilityInfo(selectedUnavailableCategory)
+            : null
+        }
+        availableCategories={getMainCategoriesAvailable()}
+        allSchedules={schedules}
+        isRealTimeActive={isRealTimeActive}
       />
 
       <Footer />

@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
+import { ToastProvider } from "./context/ToastContext";
 import PublicPage from "./pages/PublicPage";
 import AdminLogin from "./components/admin/AdminLogin";
 import AdminDashboard from "./components/admin/AdminDashboard";
@@ -19,46 +20,48 @@ import ProtectedRoute from "./components/admin/ProtectedRoute";
 function App() {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <Router>
-          <Routes>
-            {/* Ruta pública - Tienda */}
-            <Route path="/" element={<PublicPage />} />
+      <ToastProvider>
+        <AuthProvider>
+          <Router>
+            <Routes>
+              {/* Ruta pública - Tienda */}
+              <Route path="/" element={<PublicPage />} />
 
-            {/* Ruta de login del admin */}
-            <Route path="/admin/login" element={<AdminLogin />} />
+              {/* Ruta de login del admin */}
+              <Route path="/admin/login" element={<AdminLogin />} />
 
-            {/* Ruta protegida - Dashboard del admin */}
-            <Route
-              path="/admin/dashboard"
-              element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
-            />
+              {/* Ruta protegida - Dashboard del admin */}
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Ruta protegida - ProductManager por categoría */}
-            <Route
-              path="/admin/productos/:categoria"
-              element={
-                <ProtectedRoute>
-                  <ProductManager />
-                </ProtectedRoute>
-              }
-            />
+              {/* Ruta protegida - ProductManager por categoría */}
+              <Route
+                path="/admin/productos/:categoria"
+                element={
+                  <ProtectedRoute>
+                    <ProductManager />
+                  </ProtectedRoute>
+                }
+              />
 
-            {/* Redirigir /admin a /admin/dashboard */}
-            <Route
-              path="/admin"
-              element={<Navigate to="/admin/dashboard" replace />}
-            />
+              {/* Redirigir /admin a /admin/dashboard */}
+              <Route
+                path="/admin"
+                element={<Navigate to="/admin/dashboard" replace />}
+              />
 
-            {/* Cualquier otra ruta redirige a la página principal */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Router>
-      </AuthProvider>
+              {/* Cualquier otra ruta redirige a la página principal */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Router>
+        </AuthProvider>
+      </ToastProvider>
     </ThemeProvider>
   );
 }

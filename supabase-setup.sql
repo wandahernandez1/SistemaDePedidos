@@ -63,6 +63,7 @@ CREATE TABLE config (
   telefono_whatsapp TEXT,
   mensaje_bienvenida TEXT,
   dias_laborales TEXT[],
+  horarios_categorias JSONB,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -157,8 +158,44 @@ INSERT INTO services (id, title, description, icon, features) VALUES
   (3, 'Catering Personalizado', 'Diseñamos el menú perfecto para tu evento. Adaptamos cada detalle a tus necesidades y preferencias.', '🎉', ARRAY['Menú a medida', 'Coordinación completa', 'Atención profesional']);
 
 -- Insertar configuración inicial
-INSERT INTO config (id, whatsapp_number, store_name, store_description, horario_apertura, horario_cierre, tiempo_demora, telefono_whatsapp, mensaje_bienvenida, dias_laborales) VALUES
-  (1, '5491112345678', 'LA COCINA DE LAU', 'Comida casera con el sabor de siempre', '09:00', '21:00', 30, '5491112345678', 'Bienvenido a La Cocina de Lau', ARRAY['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']);
+INSERT INTO config (id, whatsapp_number, store_name, store_description, horario_apertura, horario_cierre, tiempo_demora, telefono_whatsapp, mensaje_bienvenida, dias_laborales, horarios_categorias) VALUES
+  (1, '5491112345678', 'LA COCINA DE LAU', 'Comida casera con el sabor de siempre', '09:00', '21:00', 30, '5491112345678', 'Bienvenido a La Cocina de Lau', ARRAY['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'], '{
+    "empanadas": {
+      "dias": ["lunes", "martes", "miércoles", "jueves", "viernes"],
+      "horario_pedidos_inicio": "19:00",
+      "horario_pedidos_fin": "22:00",
+      "horario_entrega_fin": "22:30",
+      "habilitado": true
+    },
+    "pizzas": {
+      "dias": ["lunes", "martes", "miércoles", "jueves", "viernes"],
+      "horario_pedidos_inicio": "19:00",
+      "horario_pedidos_fin": "22:00",
+      "horario_entrega_fin": "22:30",
+      "habilitado": true
+    },
+    "hamburguesas": {
+      "dias": ["viernes", "sábado", "domingo"],
+      "horario_pedidos_inicio": "19:00",
+      "horario_pedidos_fin": "21:00",
+      "horario_entrega_fin": "23:00",
+      "habilitado": true
+    },
+    "bebidas": {
+      "dias": ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"],
+      "horario_pedidos_inicio": "19:00",
+      "horario_pedidos_fin": "22:00",
+      "horario_entrega_fin": "23:00",
+      "habilitado": true
+    },
+    "postres": {
+      "dias": ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"],
+      "horario_pedidos_inicio": "19:00",
+      "horario_pedidos_fin": "22:00",
+      "horario_entrega_fin": "23:00",
+      "habilitado": true
+    }
+  }'::jsonb);
 
 -- ============================================
 -- 4. ACTUALIZAR SECUENCIAS

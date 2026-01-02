@@ -3,43 +3,42 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/shared/utils/cn";
 
 const cardVariants = cva(
-  "rounded-2xl bg-white dark:bg-secondary-800 transition-all duration-200",
+  "rounded-lg bg-card border border-primary transition-all duration-300 ease-in-out",
   {
     variants: {
       variant: {
-        default:
-          "border border-secondary-200 dark:border-secondary-700 shadow-sm",
-        elevated:
-          "shadow-lg border border-secondary-100 dark:border-secondary-700",
-        outline: "border-2 border-secondary-200 dark:border-secondary-600",
+        default: "shadow-sm hover:shadow-md",
+        elevated: "shadow-md hover:shadow-lg",
+        outline:
+          "border-2 border-secondary-300 dark:border-secondary-600 shadow-none",
         ghost:
-          "bg-secondary-100 dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700",
-      },
-      hover: {
-        true: "hover:shadow-card-hover hover:-translate-y-0.5",
-        false: "",
+          "bg-secondary-50 dark:bg-secondary-800/50 border-secondary-200 dark:border-secondary-700",
+        interactive:
+          "cursor-pointer hover:shadow-lg hover:-translate-y-0.5 hover:border-accent-300 dark:hover:border-accent-600",
+        minimal: "border-none shadow-none bg-transparent",
       },
       padding: {
         none: "p-0",
+        xs: "p-2",
         sm: "p-4",
         md: "p-6",
         lg: "p-8",
+        xl: "p-10",
       },
     },
     defaultVariants: {
       variant: "default",
-      hover: false,
       padding: "md",
     },
   }
 );
 
 const Card = forwardRef(
-  ({ className, variant, hover, padding, children, ...props }, ref) => {
+  ({ className, variant, padding, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
-        className={cn(cardVariants({ variant, hover, padding }), className)}
+        className={cn(cardVariants({ variant, padding }), className)}
         {...props}
       >
         {children}

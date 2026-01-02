@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { getConfig, updateConfig } from "../../supabase/supabaseService";
+import ScheduleConfigManager from "./ScheduleConfigManager";
+import { DEFAULT_CATEGORY_SCHEDULES } from "../../shared/constants/schedules";
 
 /**
  * Gestor de Configuración del Negocio - Diseño Profesional
@@ -17,6 +19,7 @@ const ConfigManager = () => {
     telefono_whatsapp: "",
     mensaje_bienvenida: "",
     dias_laborales: [],
+    horarios_categorias: DEFAULT_CATEGORY_SCHEDULES,
   });
 
   const diasSemana = [
@@ -45,6 +48,8 @@ const ConfigManager = () => {
         telefono_whatsapp: data.telefono_whatsapp || "",
         mensaje_bienvenida: data.mensaje_bienvenida || "",
         dias_laborales: data.dias_laborales || [],
+        horarios_categorias:
+          data.horarios_categorias || DEFAULT_CATEGORY_SCHEDULES,
       });
     } catch (error) {
       console.error("Error al cargar configuración:", error);
@@ -243,6 +248,43 @@ const ConfigManager = () => {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Horarios por Categoría */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+              <svg
+                className="w-5 h-5 text-purple-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-neutral-800">
+                Horarios por Categoría
+              </h3>
+              <p className="text-sm text-neutral-500">
+                Define disponibilidad específica para cada tipo de producto
+              </p>
+            </div>
+          </div>
+
+          <ScheduleConfigManager
+            schedules={formData.horarios_categorias}
+            onChange={(newSchedules) =>
+              setFormData({ ...formData, horarios_categorias: newSchedules })
+            }
+            disabled={saving}
+          />
         </div>
 
         {/* Tiempo de Preparación */}

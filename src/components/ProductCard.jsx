@@ -63,9 +63,9 @@ const ProductCard = ({ product, onAddToCart }) => {
 
   return (
     <>
-      <div className="group bg-white dark:bg-secondary-900 rounded-2xl overflow-hidden shadow-sm transition-all duration-300 flex flex-col h-full border border-secondary-100 dark:border-secondary-800 hover:-translate-y-1 hover:shadow-xl hover:border-primary-200 dark:hover:border-primary-700">
+      <div className="group bg-white dark:bg-secondary-900 rounded-2xl overflow-hidden shadow-sm transition-all duration-300 flex flex-col h-full border border-secondary-200 dark:border-secondary-700 hover:-translate-y-1 hover:shadow-xl hover:border-primary-400 dark:hover:border-primary-500">
         {/* Image */}
-        <div className="relative w-full h-52 overflow-hidden bg-secondary-50 dark:bg-secondary-800">
+        <div className="relative w-full h-52 overflow-hidden bg-secondary-100 dark:bg-secondary-700">
           <img
             src={product.imagen}
             alt={product.nombre}
@@ -74,7 +74,7 @@ const ProductCard = ({ product, onAddToCart }) => {
           />
 
           {/* Unit badge */}
-          <span className="absolute top-3 right-3 bg-white/95 dark:bg-secondary-800/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-semibold text-secondary-600 dark:text-secondary-300 shadow-sm border border-white/50 dark:border-secondary-700/50">
+          <span className="absolute top-3 right-3 bg-white/95 dark:bg-secondary-800/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-semibold text-secondary-700 dark:text-secondary-300 shadow-sm border border-secondary-200 dark:border-secondary-600">
             {product.unidad}
           </span>
 
@@ -87,16 +87,16 @@ const ProductCard = ({ product, onAddToCart }) => {
         </div>
 
         {/* Info */}
-        <div className="p-5 flex flex-col gap-3 flex-grow">
+        <div className="p-5 flex flex-col gap-3 grow">
           <h3 className="text-lg font-bold text-secondary-900 dark:text-secondary-50 m-0 leading-tight tracking-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
             {product.nombre}
           </h3>
-          <p className="text-sm text-secondary-500 dark:text-secondary-400 leading-relaxed m-0 flex-grow line-clamp-2">
+          <p className="text-sm text-secondary-500 dark:text-secondary-400 leading-relaxed m-0 grow line-clamp-2">
             {product.descripcion}
           </p>
 
           {/* Footer */}
-          <div className="flex justify-between items-center mt-auto pt-4 border-t border-secondary-100 dark:border-secondary-800 gap-2">
+          <div className="flex justify-between items-center mt-auto pt-4 border-t border-secondary-200 dark:border-secondary-700 gap-2">
             <span className="text-lg sm:text-xl font-bold text-secondary-900 dark:text-secondary-50 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
               {formatPrice(product.precio)}
             </span>

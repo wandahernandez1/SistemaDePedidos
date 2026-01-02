@@ -4,23 +4,25 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/shared/utils/cn";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-semibold transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] select-none",
   {
     variants: {
       variant: {
         default:
-          "bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-500 shadow-sm hover:shadow-md",
+          "bg-accent-500 text-white hover:bg-accent-600 focus:ring-accent-500 shadow-sm hover:shadow-md border border-accent-500 dark:border-accent-600",
         secondary:
-          "bg-secondary-200 text-secondary-800 border border-secondary-300 hover:bg-secondary-300 hover:text-secondary-900 focus:ring-secondary-500 dark:bg-secondary-700 dark:text-secondary-100 dark:border-secondary-600 dark:hover:bg-secondary-600",
+          "bg-secondary-100 text-secondary-800 border border-secondary-300 hover:bg-secondary-200 hover:text-secondary-900 focus:ring-accent-500 dark:bg-secondary-700 dark:text-secondary-100 dark:border-secondary-600 dark:hover:bg-secondary-600",
         outline:
-          "border-2 border-secondary-300 bg-white text-secondary-700 hover:bg-secondary-100 hover:border-secondary-400 focus:ring-secondary-500 dark:bg-secondary-800 dark:text-secondary-200 dark:border-secondary-600 dark:hover:bg-secondary-700",
+          "border-2 border-accent-300 bg-white text-accent-700 hover:bg-accent-50 hover:border-accent-400 focus:ring-accent-500 dark:bg-secondary-900 dark:text-accent-300 dark:border-accent-700 dark:hover:bg-secondary-800",
         ghost:
-          "bg-secondary-100 text-secondary-700 hover:bg-secondary-200 focus:ring-secondary-500 dark:bg-secondary-800 dark:text-secondary-200 dark:hover:bg-secondary-700",
+          "bg-transparent text-secondary-700 hover:bg-secondary-100 focus:ring-accent-500 dark:text-secondary-200 dark:hover:bg-secondary-800",
         destructive:
-          "bg-red-500 text-white hover:bg-red-600 focus:ring-red-500 shadow-sm hover:shadow-md",
+          "bg-error-500 text-white hover:bg-error-600 focus:ring-error-500 shadow-sm hover:shadow-md border border-error-500",
         success:
-          "bg-green-500 text-white hover:bg-green-600 focus:ring-green-500 shadow-sm hover:shadow-md",
-        link: "text-primary-600 underline-offset-4 hover:underline focus:ring-primary-500 font-semibold",
+          "bg-success-500 text-white hover:bg-success-600 focus:ring-success-500 shadow-sm hover:shadow-md border border-success-500",
+        warning:
+          "bg-warning-500 text-white hover:bg-warning-600 focus:ring-warning-500 shadow-sm hover:shadow-md border border-warning-500",
+        link: "text-accent-600 underline-offset-4 hover:underline focus:ring-accent-500 font-medium dark:text-accent-400",
       },
       size: {
         sm: "h-8 px-3 text-xs",

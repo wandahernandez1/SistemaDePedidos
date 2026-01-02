@@ -26,15 +26,27 @@ export const ThemeProvider = ({ children }) => {
 
   const isDark = theme === "dark";
 
-  // Sincronizar clase dark en <html> y localStorage inmediatamente
+  // Sincronizar clase dark en <html> y localStorage con transición suave
   useLayoutEffect(() => {
     const root = window.document.documentElement;
+
+    // Agregar clase de transición antes del cambio
+    root.classList.add("theme-transition");
+
+    // Aplicar el tema
     if (isDark) {
       root.classList.add("dark");
     } else {
       root.classList.remove("dark");
     }
     localStorage.setItem("theme", theme);
+
+    // Remover clase de transición después de que termine la animación
+    const timeout = setTimeout(() => {
+      root.classList.remove("theme-transition");
+    }, 350);
+
+    return () => clearTimeout(timeout);
   }, [theme, isDark]);
 
   // Escuchar cambios en la preferencia del sistema solo si no hay preferencia guardada

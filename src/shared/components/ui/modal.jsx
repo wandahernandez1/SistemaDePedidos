@@ -1,40 +1,43 @@
-import { forwardRef, useEffect, useCallback } from 'react';
-import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
-import { cva } from 'class-variance-authority';
-import { cn } from '@/shared/utils/cn';
-import { Button } from './button';
+import { forwardRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
+import { cva } from "class-variance-authority";
+import { cn } from "@/shared/utils/cn";
+import { Button } from "./button";
 
 const modalOverlayVariants = cva(
-  'fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity duration-200',
+  "fixed inset-0 z-50 bg-overlay backdrop-blur-sm transition-all duration-300 ease-in-out",
   {
     variants: {
       isOpen: {
-        true: 'opacity-100',
-        false: 'opacity-0 pointer-events-none',
+        true: "opacity-100",
+        false: "opacity-0 pointer-events-none",
       },
     },
   }
 );
 
 const modalContentVariants = cva(
-  'fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 bg-white rounded-card shadow-elevated transition-all duration-200 max-h-[90vh] overflow-auto',
+  "fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 bg-card border border-primary rounded-lg shadow-xl transition-all duration-300 ease-in-out max-h-[90vh] overflow-hidden flex flex-col",
   {
     variants: {
       isOpen: {
-        true: 'opacity-100 scale-100',
-        false: 'opacity-0 scale-95 pointer-events-none',
+        true: "opacity-100 scale-100",
+        false: "opacity-0 scale-95 pointer-events-none",
       },
       size: {
-        sm: 'w-full max-w-sm',
-        md: 'w-full max-w-md',
-        lg: 'w-full max-w-lg',
-        xl: 'w-full max-w-xl',
-        full: 'w-full max-w-4xl',
+        xs: "w-full max-w-xs",
+        sm: "w-full max-w-sm",
+        md: "w-full max-w-md",
+        lg: "w-full max-w-lg",
+        xl: "w-full max-w-xl",
+        "2xl": "w-full max-w-2xl",
+        "3xl": "w-full max-w-3xl",
+        full: "w-full max-w-4xl",
       },
     },
     defaultVariants: {
-      size: 'md',
+      size: "md",
     },
   }
 );
@@ -56,7 +59,7 @@ const Modal = forwardRef(
   ) => {
     const handleEscape = useCallback(
       (event) => {
-        if (closeOnEscape && event.key === 'Escape') {
+        if (closeOnEscape && event.key === "Escape") {
           onClose?.();
         }
       },
@@ -65,13 +68,13 @@ const Modal = forwardRef(
 
     useEffect(() => {
       if (isOpen) {
-        document.addEventListener('keydown', handleEscape);
-        document.body.style.overflow = 'hidden';
+        document.addEventListener("keydown", handleEscape);
+        document.body.style.overflow = "hidden";
       }
 
       return () => {
-        document.removeEventListener('keydown', handleEscape);
-        document.body.style.overflow = '';
+        document.removeEventListener("keydown", handleEscape);
+        document.body.style.overflow = "";
       };
     }, [isOpen, handleEscape]);
 
@@ -81,7 +84,7 @@ const Modal = forwardRef(
       }
     };
 
-    if (typeof window === 'undefined') return null;
+    if (typeof window === "undefined") return null;
 
     return createPortal(
       <>
@@ -119,28 +122,24 @@ const Modal = forwardRef(
   }
 );
 
-Modal.displayName = 'Modal';
+Modal.displayName = "Modal";
 
 const ModalHeader = forwardRef(({ className, children, ...props }, ref) => {
   return (
-    <div
-      ref={ref}
-      className={cn('px-6 pt-6 pb-4', className)}
-      {...props}
-    >
+    <div ref={ref} className={cn("px-6 pt-6 pb-4", className)} {...props}>
       {children}
     </div>
   );
 });
 
-ModalHeader.displayName = 'ModalHeader';
+ModalHeader.displayName = "ModalHeader";
 
 const ModalTitle = forwardRef(({ className, children, ...props }, ref) => {
   return (
     <h2
       ref={ref}
       className={cn(
-        'font-display text-xl font-semibold text-secondary-900',
+        "font-display text-xl font-semibold text-secondary-900",
         className
       )}
       {...props}
@@ -150,14 +149,14 @@ const ModalTitle = forwardRef(({ className, children, ...props }, ref) => {
   );
 });
 
-ModalTitle.displayName = 'ModalTitle';
+ModalTitle.displayName = "ModalTitle";
 
 const ModalDescription = forwardRef(
   ({ className, children, ...props }, ref) => {
     return (
       <p
         ref={ref}
-        className={cn('mt-1 text-sm text-secondary-500', className)}
+        className={cn("mt-1 text-sm text-secondary-500", className)}
         {...props}
       >
         {children}
@@ -166,28 +165,24 @@ const ModalDescription = forwardRef(
   }
 );
 
-ModalDescription.displayName = 'ModalDescription';
+ModalDescription.displayName = "ModalDescription";
 
 const ModalBody = forwardRef(({ className, children, ...props }, ref) => {
   return (
-    <div
-      ref={ref}
-      className={cn('px-6 py-4', className)}
-      {...props}
-    >
+    <div ref={ref} className={cn("px-6 py-4", className)} {...props}>
       {children}
     </div>
   );
 });
 
-ModalBody.displayName = 'ModalBody';
+ModalBody.displayName = "ModalBody";
 
 const ModalFooter = forwardRef(({ className, children, ...props }, ref) => {
   return (
     <div
       ref={ref}
       className={cn(
-        'flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200',
+        "flex items-center justify-end gap-3 px-6 py-4 border-t border-secondary-200",
         className
       )}
       {...props}
@@ -197,7 +192,7 @@ const ModalFooter = forwardRef(({ className, children, ...props }, ref) => {
   );
 });
 
-ModalFooter.displayName = 'ModalFooter';
+ModalFooter.displayName = "ModalFooter";
 
 export {
   Modal,
