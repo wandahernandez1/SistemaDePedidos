@@ -26,7 +26,6 @@ export const getAll = async (tableName) => {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.error(`Error al obtener ${tableName}:`, error);
     throw error;
   }
 };
@@ -45,7 +44,6 @@ export const getById = async (tableName, id) => {
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error(`Error al obtener registro:`, error);
     throw error;
   }
 };
@@ -64,7 +62,6 @@ export const create = async (tableName, data) => {
     if (error) throw error;
     return result;
   } catch (error) {
-    console.error(`Error al crear registro:`, error);
     throw error;
   }
 };
@@ -89,8 +86,6 @@ export const update = async (tableName, id, data) => {
       }
     }
 
-    console.log(`Actualizando ${tableName} con ID ${id}:`, cleanData);
-
     const { data: result, error } = await supabase
       .from(tableName)
       .update(cleanData)
@@ -99,12 +94,10 @@ export const update = async (tableName, id, data) => {
       .single();
 
     if (error) {
-      console.error(`Error de Supabase al actualizar:`, error);
       throw error;
     }
     return result;
   } catch (error) {
-    console.error(`Error al actualizar registro:`, error);
     throw error;
   }
 };
@@ -119,7 +112,6 @@ export const remove = async (tableName, id) => {
     if (error) throw error;
     return true;
   } catch (error) {
-    console.error(`Error al eliminar registro:`, error);
     throw error;
   }
 };
@@ -135,14 +127,11 @@ export const initializeData = async (tableName, data) => {
       const { error } = await supabase.from(tableName).insert(data);
 
       if (error) throw error;
-      console.log(`✅ ${tableName} inicializada con éxito`);
       return true;
     }
 
-    console.log(`ℹ️ ${tableName} ya tiene datos`);
     return false;
   } catch (error) {
-    console.error(`Error al inicializar ${tableName}:`, error);
     throw error;
   }
 };
@@ -191,7 +180,6 @@ export const getConfig = async () => {
 
     return data;
   } catch (error) {
-    console.error("Error al obtener configuración:", error);
     throw error;
   }
 };
@@ -211,7 +199,6 @@ export const updateConfig = async (config) => {
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error("Error al actualizar configuración:", error);
     throw error;
   }
 };
@@ -234,7 +221,6 @@ export const createOrder = async (orderData) => {
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error("Error al crear pedido:", error);
     throw error;
   }
 };
@@ -253,7 +239,6 @@ export const getOrders = async (limit = 50) => {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.error("Error al obtener pedidos:", error);
     throw error;
   }
 };
@@ -291,7 +276,6 @@ export const updateOrderStatus = async (orderId, status) => {
     if (error) throw error;
     return data;
   } catch (error) {
-    console.error("Error al actualizar estado del pedido:", error);
     throw error;
   }
 };
@@ -309,7 +293,6 @@ export const deleteOrder = async (orderId) => {
     if (error) throw error;
     return true;
   } catch (error) {
-    console.error("Error al eliminar pedido:", error);
     throw error;
   }
 };

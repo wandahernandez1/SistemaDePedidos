@@ -7,6 +7,7 @@ import {
   Trash2,
   MessageCircle,
   Send,
+  AlertCircle,
 } from "lucide-react";
 import CartItem from "./CartItem";
 import { formatPrice } from "../utils/formatPrice";
@@ -17,6 +18,22 @@ import {
 } from "../utils/generateWhatsAppMessage";
 import { createOrder } from "../supabase/supabaseService";
 import { useToast } from "../context/ToastContext";
+
+/**
+ * Mapeo de categorías de items a categorías de horarios
+ */
+const CATEGORY_MAPPING = {
+  hamburguesas: "hamburguesas",
+  hamburguesa: "hamburguesas",
+  empanadas: "empanadas",
+  empanada: "empanadas",
+  pizzas: "pizzas",
+  pizza: "pizzas",
+  bebidas: "bebidas",
+  bebida: "bebidas",
+  postres: "postres",
+  postre: "postres",
+};
 
 /**
  * Componente Cart - Carrito de compras lateral
@@ -35,6 +52,7 @@ const Cart = memo(
     onClearCart,
     horarioApertura = "09:00",
     horarioCierre = "21:00",
+    categorySchedules = null,
   }) => {
     const [deliveryTime, setDeliveryTime] = useState("");
     const [showConfirmation, setShowConfirmation] = useState(false);
@@ -46,11 +64,101 @@ const Cart = memo(
 
     const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
 
+    /**
+     * Detectar categorías únicas de los items en el carrito
+     */
+    const cartCategories = useMemo(() => {
+      const categories = new Set();
+      cartItems.forEach((item) => {
+        const itemCategory = item.categoria?.toLowerCase() || "";
+        const mappedCategory = CATEGORY_MAPPING[itemCategory];
+        if (mappedCategory) {
+          categories.add(mappedCategory);
+        }
+      });
+      return Array.from(categories);
+    }, [cartItems]);
+
+    /**
+     * Calcular el rango de horarios válidos basado en las categorías del carrito
+     * El horario de inicio es el MÁS TARDÍO de todas las categorías
+     * El horario de fin es el MÁS TEMPRANO de todas las categorías
+     */
+    const effectiveSchedule = useMemo(() => {
+      // Si no hay schedules de categorías o no hay items, usar horarios generales
+      if (!categorySchedules || cartCategories.length === 0) {
+        return {
+          start: horarioApertura,
+          end: horarioCierre,
+          categories: [],
+          restrictiveCategory: null,
+        };
+      }
+
+      // Filtrar solo categorías principales (excluir bebidas y postres que siempre están disponibles)
+      const mainCategories = cartCategories.filter(
+        (cat) => !["bebidas", "postres"].includes(cat)
+      );
+
+      // Si solo hay bebidas/postres, usar horarios generales
+      if (mainCategories.length === 0) {
+        return {
+          start: horarioApertura,
+          end: horarioCierre,
+          categories: cartCategories,
+          restrictiveCategory: null,
+        };
+      }
+
+      let latestStart = "00:00";
+      let earliestEnd = "23:59";
+      let restrictiveCategory = null;
+
+      mainCategories.forEach((cat) => {
+        const schedule = categorySchedules[cat];
+        if (schedule && schedule.habilitado) {
+          const catStart = schedule.horario_pedidos_inicio || "19:00";
+          const catEnd =
+            schedule.horario_entrega_fin ||
+            schedule.horario_pedidos_fin ||
+            "22:00";
+
+          // Comparar horarios
+          if (catStart > latestStart) {
+            latestStart = catStart;
+            restrictiveCategory = cat;
+          }
+          if (catEnd < earliestEnd) {
+            earliestEnd = catEnd;
+          }
+        }
+      });
+
+      // Si no se encontraron horarios válidos, usar generales
+      if (latestStart === "00:00" || earliestEnd === "23:59") {
+        return {
+          start: horarioApertura,
+          end: horarioCierre,
+          categories: cartCategories,
+          restrictiveCategory: null,
+        };
+      }
+
+      return {
+        start: latestStart,
+        end: earliestEnd,
+        categories: cartCategories,
+        restrictiveCategory,
+      };
+    }, [categorySchedules, cartCategories, horarioApertura, horarioCierre]);
+
     // Generar opciones de horarios cada 30 minutos - memoizado
     const timeOptions = useMemo(() => {
       const options = [];
-      const [startHour, startMin] = horarioApertura.split(":").map(Number);
-      const [endHour, endMin] = horarioCierre.split(":").map(Number);
+      const [startHour, startMin] = effectiveSchedule.start
+        .split(":")
+        .map(Number);
+      const [endHour, endMin] = effectiveSchedule.end.split(":").map(Number);
 
       let currentHour = startHour;
       let currentMin = startMin;
@@ -72,7 +180,7 @@ const Cart = memo(
       }
 
       return options;
-    }, [horarioApertura, horarioCierre]);
+    }, [effectiveSchedule]);
 
     const estimatedTime = useMemo(
       () => (deliveryTime ? calculateEstimatedTime(deliveryTime) : ""),
@@ -168,7 +276,6 @@ const Cart = memo(
         // Guardar el pedido en Supabase
         await createOrder(orderData);
       } catch (error) {
-        console.error("Error al guardar el pedido:", error);
         // Continuamos con WhatsApp aunque falle el guardado
       }
 
@@ -340,12 +447,25 @@ const Cart = memo(
                   <div className="flex items-center justify-between mb-2">
                     <label className="flex items-center gap-1.5 text-xs font-bold text-secondary-800 dark:text-secondary-200">
                       <Clock className="h-4 w-4 text-primary-500" />
-                      Horario
+                      Horario de entrega
                     </label>
                     <span className="text-[10px] text-secondary-400">
-                      {horarioApertura} - {horarioCierre} hs
+                      {effectiveSchedule.start} - {effectiveSchedule.end} hs
                     </span>
                   </div>
+
+                  {/* Info de horario restrictivo */}
+                  {effectiveSchedule.restrictiveCategory && (
+                    <div className="flex items-start gap-2 p-2 mb-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700">
+                      <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                      <p className="text-xs text-amber-700 dark:text-amber-300">
+                        Horario según disponibilidad de{" "}
+                        <span className="font-semibold capitalize">
+                          {effectiveSchedule.restrictiveCategory}
+                        </span>
+                      </p>
+                    </div>
+                  )}
 
                   <button
                     type="button"

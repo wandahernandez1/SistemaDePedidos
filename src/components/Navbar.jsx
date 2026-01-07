@@ -15,24 +15,24 @@ const Navbar = memo(({ totalItems, onCartClick }) => {
   }, [onCartClick]);
 
   return (
-    <nav className="bg-secondary-50 dark:bg-secondary-900 shadow-sm border-b border-secondary-200 dark:border-secondary-700 sticky top-0 z-50 py-3 transition-colors duration-200">
+    <nav className="bg-white dark:bg-secondary-900 shadow-[0_1px_3px_rgba(0,0,0,0.1)] border-b border-secondary-200/80 dark:border-secondary-700 sticky top-0 z-50 py-3 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center gap-4 sm:gap-8">
         {/* Brand */}
         <div className="flex items-center gap-2.5 sm:gap-3.5 flex-1 min-w-0">
-          <div className="bg-white dark:bg-secondary-800 p-0.5 rounded-full flex items-center justify-center border-2 border-secondary-300 dark:border-secondary-600 shadow-md transition-colors duration-200 shrink-0">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white dark:bg-secondary-800 rounded-full flex items-center justify-center border-2 border-secondary-300 dark:border-secondary-600 shadow-md transition-colors duration-200 shrink-0 overflow-hidden">
             <img
               src={logo}
               alt="Comidas Caseras Lau"
-              className="w-11 h-11 sm:w-13 sm:h-13 object-cover rounded-full block"
+              className="w-full h-full object-contain"
               loading="eager"
               decoding="async"
             />
           </div>
           <div className="min-w-0">
-            <h1 className="text-base sm:text-xl font-bold text-secondary-900 dark:text-secondary-50 m-0 tracking-tight leading-tight truncate">
+            <h1 className="text-base sm:text-xl font-bold text-secondary-800 dark:text-secondary-50 m-0 tracking-tight leading-tight truncate">
               LA COCINA DE LAU
             </h1>
-            <p className="text-[10px] sm:text-xs font-medium text-secondary-600 dark:text-secondary-400 m-0 mt-0.5 tracking-wide truncate">
+            <p className="text-[10px] sm:text-xs font-medium text-secondary-500 dark:text-secondary-400 m-0 mt-0.5 tracking-wide truncate">
               Sabor casero en cada pedido
             </p>
           </div>
@@ -50,7 +50,7 @@ const Navbar = memo(({ totalItems, onCartClick }) => {
 
           {/* Cart Button */}
           <button
-            className="group relative bg-primary-500 border-none rounded-lg sm:rounded-xl px-3 sm:px-5 py-2 sm:py-3 cursor-pointer flex items-center gap-2 sm:gap-2.5 transition-colors duration-200 shadow-md hover:bg-primary-600 active:scale-[0.98]"
+            className="group relative bg-primary-600 hover:bg-primary-700 border-none rounded-lg sm:rounded-xl px-3 sm:px-5 py-2 sm:py-3 cursor-pointer flex items-center gap-2 sm:gap-2.5 transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98]"
             onClick={handleCartClick}
             aria-label="Ver carrito"
           >

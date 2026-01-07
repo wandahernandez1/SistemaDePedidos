@@ -39,7 +39,6 @@ export const useRealTimeSchedules = () => {
         setSchedules(DEFAULT_CATEGORY_SCHEDULES);
       }
     } catch (err) {
-      console.error("Error al cargar configuración de horarios:", err);
       setError(err);
       // En caso de error, usar horarios por defecto
       setSchedules(DEFAULT_CATEGORY_SCHEDULES);
@@ -52,8 +51,6 @@ export const useRealTimeSchedules = () => {
    * Manejar cambios en la configuración en tiempo real
    */
   const handleConfigChange = useCallback((payload) => {
-    console.log("📅 Cambio en configuración de horarios detectado:", payload);
-
     if (payload.eventType === "UPDATE" && payload.new) {
       const newConfig = payload.new;
       setConfig(newConfig);
@@ -62,8 +59,6 @@ export const useRealTimeSchedules = () => {
       const newSchedules =
         newConfig.horarios_categorias || DEFAULT_CATEGORY_SCHEDULES;
       setSchedules(newSchedules);
-
-      console.log("📅 Horarios actualizados en tiempo real:", newSchedules);
     }
   }, []);
 
@@ -86,13 +81,10 @@ export const useRealTimeSchedules = () => {
         },
         handleConfigChange
       )
-      .subscribe((status) => {
-        console.log("📅 Estado de suscripción a horarios:", status);
-      });
+      .subscribe();
 
     // Cleanup: cancelar suscripción al desmontar
     return () => {
-      console.log("📅 Limpiando suscripción a horarios");
       supabase.removeChannel(subscription);
     };
   }, [loadInitialConfig, handleConfigChange]);

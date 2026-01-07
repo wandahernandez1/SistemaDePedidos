@@ -6,13 +6,12 @@ import {
   Beef,
   Pizza,
   CircleDot,
-  CheckCircle,
-  RefreshCw,
+  ArrowRight,
 } from "lucide-react";
 
 /**
  * Modal que muestra cuando una categoría no está disponible
- * Informa al usuario sobre los horarios de disponibilidad usando datos en tiempo real
+ * Diseño minimalista y profesional con información clara
  */
 const ScheduleNotificationModal = ({
   isOpen,
@@ -21,7 +20,6 @@ const ScheduleNotificationModal = ({
   unavailabilityInfo = null,
   availableCategories = [],
   allSchedules = {},
-  isRealTimeActive = false,
 }) => {
   if (!isOpen) return null;
 
@@ -31,34 +29,13 @@ const ScheduleNotificationModal = ({
     pizzas: Pizza,
   };
 
-  const categoryColors = {
-    hamburguesas: {
-      bg: "bg-amber-50",
-      icon: "text-amber-500",
-      border: "border-amber-200",
-      accent: "bg-amber-100",
-    },
-    empanadas: {
-      bg: "bg-orange-50",
-      icon: "text-orange-500",
-      border: "border-orange-200",
-      accent: "bg-orange-100",
-    },
-    pizzas: {
-      bg: "bg-red-50",
-      icon: "text-red-500",
-      border: "border-red-200",
-      accent: "bg-red-100",
-    },
-  };
-
   const categoryNames = {
     hamburguesas: "Hamburguesas",
     empanadas: "Empanadas",
     pizzas: "Pizzas",
   };
 
-  // Extraer información de unavailabilityInfo o usar valores por defecto
+  // Extraer información
   const schedule = unavailabilityInfo?.schedule || allSchedules[category];
   const currentDay =
     unavailabilityInfo?.currentDay ||
@@ -70,15 +47,8 @@ const ScheduleNotificationModal = ({
       minute: "2-digit",
     });
   const isWrongDay = unavailabilityInfo?.isWrongDay || false;
-  const isWrongTime = unavailabilityInfo?.isWrongTime || false;
 
   const Icon = categoryIcons[category] || AlertCircle;
-  const colors = categoryColors[category] || {
-    bg: "bg-secondary-50",
-    icon: "text-secondary-500",
-    border: "border-secondary-200",
-    accent: "bg-secondary-100",
-  };
   const categoryName = categoryNames[category] || category;
 
   // Formatear los días disponibles
@@ -93,167 +63,122 @@ const ScheduleNotificationModal = ({
       days.length === 3;
 
     if (isWeekdays) return "Lunes a Viernes";
-    if (isFriToSun) return "Viernes, Sábados y Domingos";
+    if (isFriToSun) return "Viernes a Domingo";
 
     return days.map((d) => d.charAt(0).toUpperCase() + d.slice(1)).join(", ");
   };
+
+  // Filtrar categorías disponibles
+  const otherAvailableCategories = availableCategories.filter(
+    (cat) =>
+      cat !== category && ["hamburguesas", "empanadas", "pizzas"].includes(cat)
+  );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Overlay */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative bg-white dark:bg-secondary-900 rounded-2xl shadow-xl max-w-md w-full overflow-hidden animate-in fade-in zoom-in duration-200">
-        {/* Header con icono */}
-        <div
-          className={`${colors.bg} dark:bg-secondary-800 p-6 text-center relative`}
+      <div className="relative bg-white dark:bg-secondary-800 rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-1.5 rounded-full text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 hover:bg-secondary-100 dark:hover:bg-secondary-700 transition-colors z-10"
+          aria-label="Cerrar"
         >
-          <div
-            className={`w-16 h-16 ${colors.accent} dark:bg-secondary-700 rounded-full mx-auto flex items-center justify-center mb-4`}
-          >
-            <Icon className={`w-8 h-8 ${colors.icon}`} />
-          </div>
-          <h2 className="text-xl font-bold text-secondary-800 dark:text-secondary-100">
-            {categoryName} no disponible
-          </h2>
-          <p className="text-secondary-500 dark:text-secondary-400 mt-1">
-            {isWrongDay
-              ? `Esta sección no está disponible los ${currentDay}s`
-              : "Fuera del horario de pedidos"}
-          </p>
-        </div>
+          <X className="w-5 h-5" />
+        </button>
 
-        {/* Contenido */}
-        <div className="p-6 space-y-4">
-          {/* Información del horario */}
-          <div
-            className={`${colors.bg} dark:bg-secondary-800 rounded-xl p-4 border ${colors.border} dark:border-secondary-700`}
-          >
-            <div className="flex items-center gap-2 mb-3">
-              <Calendar className={`w-5 h-5 ${colors.icon}`} />
-              <span className="font-medium text-secondary-700 dark:text-secondary-200">
-                Disponibilidad de {categoryName}
-              </span>
+        {/* Content */}
+        <div className="p-6 sm:p-8">
+          {/* Icon & Title */}
+          <div className="text-center mb-6">
+            <div className="w-14 h-14 bg-amber-100 dark:bg-amber-900/30 rounded-full mx-auto flex items-center justify-center mb-4">
+              <Icon className="w-7 h-7 text-amber-600 dark:text-amber-400" />
             </div>
+            <h2 className="text-xl font-semibold text-secondary-900 dark:text-white mb-1">
+              {categoryName} no disponible
+            </h2>
+            <p className="text-sm text-secondary-500 dark:text-secondary-400">
+              {isWrongDay
+                ? `No disponible los ${currentDay}`
+                : "Fuera del horario de pedidos"}
+            </p>
+          </div>
 
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center gap-2 text-secondary-600 dark:text-secondary-300">
-                <span className="font-medium">Días:</span>
-                <span>{formatAvailableDays(schedule?.dias)}</span>
+          {/* Schedule Info */}
+          <div className="bg-secondary-50 dark:bg-secondary-900/50 rounded-xl p-4 mb-4">
+            <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">
+              Horario de disponibilidad
+            </p>
+
+            <div className="space-y-2.5">
+              <div className="flex items-center gap-3">
+                <Calendar className="w-4 h-4 text-secondary-400 shrink-0" />
+                <span className="text-sm text-secondary-700 dark:text-secondary-300">
+                  {formatAvailableDays(schedule?.dias)}
+                </span>
               </div>
-              <div className="flex items-center gap-2 text-secondary-600 dark:text-secondary-300">
-                <Clock className="w-4 h-4" />
-                <span className="font-medium">Horario de pedidos:</span>
-                <span>
-                  {schedule?.horario_pedidos_inicio || "19:00"} a{" "}
+              <div className="flex items-center gap-3">
+                <Clock className="w-4 h-4 text-secondary-400 shrink-0" />
+                <span className="text-sm text-secondary-700 dark:text-secondary-300">
+                  {schedule?.horario_pedidos_inicio || "19:00"} -{" "}
                   {schedule?.horario_pedidos_fin || "21:00"} hs
                 </span>
               </div>
-              {schedule?.horario_entrega_fin && (
-                <div className="flex items-center gap-2 text-secondary-600 dark:text-secondary-300">
-                  <span className="font-medium">Entregas hasta:</span>
-                  <span>{schedule.horario_entrega_fin} hs</span>
-                </div>
-              )}
             </div>
           </div>
 
-          {/* Mensaje de alternativa - muestra categorías disponibles ahora */}
-          {availableCategories.length > 0 ? (
-            <div className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-              <CheckCircle className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
-              <div className="text-sm text-green-700 dark:text-green-300">
-                <p className="font-medium mb-2">
-                  ¡Estas opciones están disponibles ahora!
-                </p>
-                <div className="space-y-1">
-                  {availableCategories
-                    .filter(
-                      (cat) =>
-                        cat !== category &&
-                        ["hamburguesas", "empanadas", "pizzas"].includes(cat)
-                    )
-                    .map((cat) => {
-                      const catSchedule = allSchedules[cat];
-                      const CatIcon = categoryIcons[cat];
-                      return (
-                        <div key={cat} className="flex items-center gap-2">
-                          {CatIcon && <CatIcon className="w-4 h-4" />}
-                          <span className="font-medium">
-                            {categoryNames[cat]}:
-                          </span>
-                          <span>
-                            {catSchedule?.horario_pedidos_inicio || "19:00"} a{" "}
-                            {catSchedule?.horario_pedidos_fin || "22:00"} hs
-                          </span>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex items-start gap-3 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-              <AlertCircle className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
-              <div className="text-sm text-amber-700 dark:text-amber-300">
-                <p className="font-medium mb-1">
-                  La cocina está cerrada en este momento
-                </p>
-                <p>
-                  Consultá los horarios de cada categoría para saber cuándo
-                  podés hacer tu pedido.
-                </p>
+          {/* Alternative options */}
+          {otherAvailableCategories.length > 0 && (
+            <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 mb-4 border border-green-100 dark:border-green-800/30">
+              <p className="text-sm font-medium text-green-800 dark:text-green-300 mb-2">
+                Disponible ahora:
+              </p>
+              <div className="space-y-1.5">
+                {otherAvailableCategories.map((cat) => {
+                  const catSchedule = allSchedules[cat];
+                  const CatIcon = categoryIcons[cat];
+                  return (
+                    <div
+                      key={cat}
+                      className="flex items-center gap-2 text-sm text-green-700 dark:text-green-400"
+                    >
+                      {CatIcon && <CatIcon className="w-4 h-4" />}
+                      <span className="font-medium">{categoryNames[cat]}</span>
+                      <span className="text-green-600/70 dark:text-green-400/70">
+                        ({catSchedule?.horario_pedidos_inicio || "19:00"} -{" "}
+                        {catSchedule?.horario_pedidos_fin || "22:00"})
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
 
-          {/* Hora actual y estado de actualización */}
-          <div className="flex items-center justify-center gap-4 text-xs text-secondary-400 dark:text-secondary-500">
-            <div className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
-              <span>Hora actual: {currentTime}</span>
-            </div>
-            <span>•</span>
-            <div className="flex items-center gap-1">
-              <Calendar className="w-3 h-3" />
-              <span>
-                {currentDay.charAt(0).toUpperCase() + currentDay.slice(1)}
-              </span>
-            </div>
-            {isRealTimeActive && (
-              <>
-                <span>•</span>
-                <div className="flex items-center gap-1 text-green-500">
-                  <RefreshCw className="w-3 h-3" />
-                  <span>Actualizado automáticamente</span>
-                </div>
-              </>
-            )}
+          {/* Current time */}
+          <div className="flex items-center justify-center gap-2 text-xs text-secondary-400 dark:text-secondary-500 mb-6">
+            <Clock className="w-3 h-3" />
+            <span>
+              {currentDay.charAt(0).toUpperCase() + currentDay.slice(1)},{" "}
+              {currentTime}
+            </span>
           </div>
-        </div>
 
-        {/* Footer */}
-        <div className="px-6 pb-6">
+          {/* Action button */}
           <button
             onClick={onClose}
-            className="w-full py-3 px-4 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-xl transition-colors duration-200 flex items-center justify-center gap-2"
+            className="w-full py-3 bg-secondary-900 dark:bg-white hover:bg-secondary-800 dark:hover:bg-secondary-100 text-white dark:text-secondary-900 font-medium rounded-xl transition-colors duration-200 flex items-center justify-center gap-2"
           >
-            Entendido
+            <span>Entendido</span>
+            <ArrowRight className="w-4 h-4" />
           </button>
         </div>
-
-        {/* Botón de cerrar */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full bg-white/80 dark:bg-secondary-700/80 hover:bg-white dark:hover:bg-secondary-600 transition-colors"
-          aria-label="Cerrar"
-        >
-          <X className="w-5 h-5 text-secondary-500 dark:text-secondary-400" />
-        </button>
       </div>
     </div>
   );

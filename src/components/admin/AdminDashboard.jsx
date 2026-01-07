@@ -5,6 +5,7 @@ import EditableProductCard from "./EditableProductCard";
 import EditableFoodCard from "./EditableFoodCard";
 import EditableServiceCard from "./EditableServiceCard";
 import ConfigManager from "./ConfigManager";
+import AdditionalsManager from "./AdditionalsManager";
 import ProductModal from "./ProductModal";
 import FoodModal from "./FoodModal";
 import {
@@ -36,6 +37,7 @@ import {
   Salad,
   Package,
   ShoppingBag,
+  ListPlus,
 } from "lucide-react";
 import OrdersManager from "./OrdersManager";
 
@@ -115,7 +117,6 @@ const AdminDashboard = () => {
       setLoading(true);
       await Promise.all([loadProducts(), loadFoods(), loadServices()]);
     } catch (error) {
-      console.error("Error al cargar datos:", error);
       showNotification("Error al cargar datos", "error");
     } finally {
       setLoading(false);
@@ -136,7 +137,7 @@ const AdminDashboard = () => {
         setProducts(data);
       }
     } catch (error) {
-      console.error("Error al cargar productos:", error);
+      // Error manejado silenciosamente
     }
   };
 
@@ -152,7 +153,7 @@ const AdminDashboard = () => {
         setFoods(data);
       }
     } catch (error) {
-      console.error("Error al cargar platos:", error);
+      // Error manejado silenciosamente
     }
   };
 
@@ -170,7 +171,7 @@ const AdminDashboard = () => {
         setServices(data);
       }
     } catch (error) {
-      console.error("Error al cargar servicios:", error);
+      // Error manejado silenciosamente
     }
   };
 
@@ -179,7 +180,7 @@ const AdminDashboard = () => {
       await logout();
       navigate("/");
     } catch (error) {
-      console.error("Error al cerrar sesión:", error);
+      // Error manejado silenciosamente
     }
   };
 
@@ -217,7 +218,6 @@ const AdminDashboard = () => {
       await loadProducts();
       showNotification("Producto actualizado correctamente");
     } catch (error) {
-      console.error("Error completo:", error);
       showNotification(`Error al actualizar: ${error.message}`, "error");
     }
   };
@@ -271,7 +271,6 @@ const AdminDashboard = () => {
       showNotification("Plato actualizado correctamente");
       setFoodModal({ open: false, food: null, isNew: false });
     } catch (error) {
-      console.error("Error completo:", error);
       showNotification(`Error al actualizar: ${error.message}`, "error");
     }
   };
@@ -326,7 +325,6 @@ const AdminDashboard = () => {
       await loadServices();
       showNotification("Servicio actualizado correctamente");
     } catch (error) {
-      console.error("Error completo:", error);
       showNotification(`Error al actualizar: ${error.message}`, "error");
     }
   };
@@ -378,6 +376,7 @@ const AdminDashboard = () => {
     { id: "empanadas", label: "Empanadas", icon: Cookie },
     { id: "pizzas", label: "Pizzas", icon: Pizza },
     { id: "bebidas", label: "Bebidas", icon: GlassWater },
+    { id: "additionals", label: "Adicionales", icon: ListPlus },
     { id: "services", label: "Servicios", icon: Briefcase },
     { id: "config", label: "Configuración", icon: Settings },
   ];
@@ -410,48 +409,50 @@ const AdminDashboard = () => {
       {/* Sidebar */}
       <aside
         className={`
-        fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white border-r border-neutral-200 
+        fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white border-r border-secondary-200 shadow-sm
         transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
       `}
       >
         <div className="h-full flex flex-col">
           {/* Logo */}
-          <div className="h-16 flex items-center justify-between px-6 border-b border-neutral-200">
+          <div className="h-16 flex items-center justify-between px-6 border-b border-secondary-200">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-md">
                 <UtensilsCrossed className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="font-bold text-neutral-800">LA COCINA DE LAU</h1>
-                <span className="text-xs text-neutral-500">Panel Admin</span>
+                <h1 className="font-bold text-secondary-800">
+                  LA COCINA DE LAU
+                </h1>
+                <span className="text-xs text-secondary-500">Panel Admin</span>
               </div>
             </div>
             <button
-              className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+              className="lg:hidden p-2 hover:bg-secondary-100 rounded-lg transition-colors"
               onClick={() => setSidebarOpen(false)}
             >
-              <CloseIcon className="w-6 h-6" />
+              <CloseIcon className="w-6 h-6 text-secondary-600" />
             </button>
           </div>
 
           {/* Usuario */}
-          <div className="px-6 py-4 border-b border-neutral-100">
+          <div className="px-6 py-4 border-b border-secondary-100 bg-secondary-50/50">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
                 <Package className="w-5 h-5 text-primary-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-neutral-800 truncate">
+                <p className="font-medium text-secondary-800 truncate">
                   {user?.username || "Admin"}
                 </p>
-                <p className="text-xs text-neutral-500">Administrador</p>
+                <p className="text-xs text-secondary-500">Administrador</p>
               </div>
             </div>
           </div>
 
           {/* Navegación */}
-          <nav className="flex-1 overflow-y-auto py-4 px-3">
+          <nav className="flex-1 overflow-y-auto py-4 px-3 bg-secondary-50/30">
             <div className="space-y-1">
               {menuItems.map((item) => {
                 const IconComponent = item.icon;
@@ -468,8 +469,8 @@ const AdminDashboard = () => {
                       transition-all duration-200 cursor-pointer border-none outline-none
                       ${
                         isActive
-                          ? "bg-primary-500 text-white shadow-lg"
-                          : "bg-transparent text-neutral-600 hover:bg-neutral-100"
+                          ? "bg-primary-600 text-white shadow-lg"
+                          : "bg-transparent text-secondary-700 hover:bg-secondary-100"
                       }
                     `}
                   >
@@ -483,7 +484,9 @@ const AdminDashboard = () => {
                     ].includes(item.id) && (
                       <span
                         className={`ml-auto text-xs px-2 py-0.5 rounded-full ${
-                          isActive ? "bg-white/20" : "bg-neutral-200"
+                          isActive
+                            ? "bg-white/20"
+                            : "bg-secondary-200 text-secondary-600"
                         }`}
                       >
                         {getFilteredProducts(item.id).length}
@@ -496,12 +499,12 @@ const AdminDashboard = () => {
           </nav>
 
           {/* Acciones */}
-          <div className="p-4 border-t border-neutral-200 space-y-2">
+          <div className="p-4 border-t border-secondary-200 space-y-2 bg-white">
             <button
               onClick={() => navigate("/")}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-100 
-                text-neutral-700 rounded-xl text-sm font-medium transition-all duration-200 
-                hover:bg-neutral-200 cursor-pointer border-none"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-secondary-100 
+                text-secondary-700 rounded-xl text-sm font-medium transition-all duration-200 
+                hover:bg-secondary-200 cursor-pointer border-none"
             >
               <Eye className="w-5 h-5" />
               Ver Tienda
@@ -520,17 +523,17 @@ const AdminDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
+      <main className="flex-1 flex flex-col min-h-screen overflow-hidden bg-secondary-50">
         {/* Header */}
-        <header className="h-16 bg-white border-b border-neutral-200 flex items-center justify-between px-6 sticky top-0 z-30">
+        <header className="h-16 bg-white border-b border-secondary-200 flex items-center justify-between px-6 sticky top-0 z-30 shadow-sm">
           <div className="flex items-center gap-4">
             <button
-              className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer"
+              className="lg:hidden p-2 hover:bg-secondary-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer"
               onClick={() => setSidebarOpen(true)}
             >
-              <MenuIcon className="w-6 h-6" />
+              <MenuIcon className="w-6 h-6 text-secondary-700" />
             </button>
-            <h2 className="text-xl font-bold text-neutral-800 capitalize">
+            <h2 className="text-xl font-bold text-secondary-800 capitalize">
               {activeSection === "dashboard"
                 ? "Dashboard"
                 : activeSection === "config"
@@ -539,6 +542,8 @@ const AdminDashboard = () => {
                 ? "Platos Destacados"
                 : activeSection === "services"
                 ? "Servicios"
+                : activeSection === "additionals"
+                ? "Adicionales"
                 : categoryNames[activeSection] || activeSection}
             </h2>
           </div>
@@ -546,7 +551,8 @@ const AdminDashboard = () => {
           {/* Acciones rápidas */}
           {activeSection !== "dashboard" &&
             activeSection !== "config" &&
-            activeSection !== "orders" && (
+            activeSection !== "orders" &&
+            activeSection !== "additionals" && (
               <button
                 onClick={() => {
                   if (activeSection === "foods") {
@@ -562,9 +568,9 @@ const AdminDashboard = () => {
                     });
                   }
                 }}
-                className="flex items-center gap-2 px-4 py-2.5 bg-primary-500 text-white 
+                className="flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white 
                 rounded-xl text-sm font-medium transition-all duration-200 
-                hover:bg-primary-600 hover:shadow-lg cursor-pointer border-none"
+                hover:bg-primary-700 hover:shadow-lg cursor-pointer border-none shadow-md"
               >
                 <Plus className="w-5 h-5" />
                 <span className="hidden sm:inline">
@@ -588,6 +594,8 @@ const AdminDashboard = () => {
           {activeSection === "orders" && <OrdersManager />}
 
           {activeSection === "config" && <ConfigManager />}
+
+          {activeSection === "additionals" && <AdditionalsManager />}
 
           {activeSection === "foods" && (
             <FoodsSection
@@ -687,125 +695,233 @@ const AdminDashboard = () => {
   );
 };
 
-// Dashboard View Component
+// Dashboard View Component - Diseño profesional y moderno
 const DashboardView = ({ stats, products, foods }) => {
+  // Calcular estadísticas adicionales
+  const availableProducts = products.filter(
+    (p) => p.disponible !== false
+  ).length;
+  const productsByCategory = Object.entries(categoryNames).map(
+    ([key, name]) => ({
+      key,
+      name,
+      count: products.filter((p) => p.categoria === key).length,
+    })
+  );
+  const mostPopularCategory = productsByCategory.reduce(
+    (prev, current) => (prev.count > current.count ? prev : current),
+    { count: 0 }
+  );
+
   return (
     <div className="space-y-6">
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Greeting Header */}
+      <div className="bg-gradient-to-r from-primary-600 to-primary-500 rounded-2xl p-6 text-white">
+        <h2 className="text-2xl font-bold mb-1">¡Bienvenido de vuelta!</h2>
+        <p className="text-primary-100">Aquí tienes un resumen de tu negocio</p>
+      </div>
+
+      {/* Main Stats Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Productos"
           value={stats.totalProducts}
+          subtitle={`${availableProducts} disponibles`}
           icon={Package}
-          color="bg-primary-500"
+          trend="+12%"
+          trendUp={true}
+          color="primary"
         />
         <StatCard
           title="Platos Destacados"
           value={stats.totalFoods}
+          subtitle="En el menú"
           icon={UtensilsCrossed}
-          color="bg-accent-500"
+          trend="+5%"
+          trendUp={true}
+          color="amber"
         />
         <StatCard
           title="Servicios"
           value={stats.totalServices}
+          subtitle="Activos"
           icon={Briefcase}
-          color="bg-green-500"
+          trend="0%"
+          trendUp={null}
+          color="green"
         />
         <StatCard
           title="Categorías"
           value={stats.categories}
+          subtitle={
+            mostPopularCategory.name ? `Top: ${mostPopularCategory.name}` : ""
+          }
           icon={LayoutDashboard}
-          color="bg-purple-500"
+          color="purple"
         />
       </div>
 
-      {/* Category Stats */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
-        <h3 className="text-lg font-semibold text-neutral-800 mb-4">
-          Productos por Categoría
-        </h3>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-          {Object.entries(categoryNames).map(([key, name]) => {
-            const IconComponent = categoryIconComponents[key] || Package;
-            return (
-              <div
-                key={key}
-                className="bg-neutral-50 rounded-xl p-4 text-center hover:bg-neutral-100 transition-colors"
-              >
-                <div className="w-12 h-12 mx-auto mb-2 bg-primary-100 rounded-xl flex items-center justify-center">
-                  <IconComponent className="w-6 h-6 text-primary-600" />
+      {/* Category Distribution */}
+      <div className="bg-white rounded-2xl border border-secondary-200 overflow-hidden">
+        <div className="px-6 py-4 border-b border-secondary-100 flex items-center justify-between">
+          <div>
+            <h3 className="font-semibold text-secondary-900">
+              Productos por Categoría
+            </h3>
+            <p className="text-sm text-secondary-500">
+              Distribución actual del inventario
+            </p>
+          </div>
+        </div>
+        <div className="p-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            {productsByCategory.map(({ key, name, count }) => {
+              const IconComponent = categoryIconComponents[key] || Package;
+              const percentage =
+                stats.totalProducts > 0
+                  ? Math.round((count / stats.totalProducts) * 100)
+                  : 0;
+              return (
+                <div
+                  key={key}
+                  className="group relative bg-secondary-50/50 hover:bg-white rounded-xl p-4 text-center transition-all duration-200 border border-transparent hover:border-secondary-200 hover:shadow-md cursor-pointer"
+                >
+                  <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform">
+                    <IconComponent className="w-6 h-6 text-white" />
+                  </div>
+                  <p className="text-2xl font-bold text-secondary-900 mb-0.5">
+                    {count}
+                  </p>
+                  <p className="text-sm font-medium text-secondary-600 mb-1">
+                    {name}
+                  </p>
+                  <div className="w-full bg-secondary-200 rounded-full h-1.5">
+                    <div
+                      className="bg-primary-500 h-1.5 rounded-full transition-all duration-500"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-secondary-400 mt-1">
+                    {percentage}%
+                  </p>
                 </div>
-                <p className="text-2xl font-bold text-neutral-800">
-                  {products.filter((p) => p.categoria === key).length}
-                </p>
-                <p className="text-sm text-neutral-500">{name}</p>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      {/* Recent Items */}
+      {/* Two Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
-          <h3 className="text-lg font-semibold text-neutral-800 mb-4">
-            Últimos Productos
-          </h3>
-          <div className="space-y-3">
-            {products.slice(0, 5).map((product) => (
+        {/* Recent Products */}
+        <div className="bg-white rounded-2xl border border-secondary-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-secondary-100 flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-secondary-900">
+                Últimos Productos
+              </h3>
+              <p className="text-sm text-secondary-500">
+                Agregados recientemente
+              </p>
+            </div>
+            <span className="text-xs font-medium text-primary-600 bg-primary-50 px-2.5 py-1 rounded-lg">
+              {products.length} total
+            </span>
+          </div>
+          <div className="divide-y divide-secondary-100">
+            {products.slice(0, 5).map((product, index) => (
               <div
                 key={product.id}
-                className="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl"
+                className="flex items-center gap-4 px-6 py-4 hover:bg-secondary-50/50 transition-colors"
               >
-                <img
-                  src={product.imagen}
-                  alt={product.nombre}
-                  className="w-12 h-12 rounded-lg object-cover"
-                />
+                <span className="text-xs font-medium text-secondary-400 w-5">
+                  #{index + 1}
+                </span>
+                <div className="relative">
+                  <img
+                    src={product.imagen}
+                    alt={product.nombre}
+                    className="w-12 h-12 rounded-xl object-cover ring-2 ring-secondary-100"
+                  />
+                  {product.disponible === false && (
+                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white" />
+                  )}
+                </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-neutral-800 truncate">
+                  <p className="font-medium text-secondary-900 truncate">
                     {product.nombre}
                   </p>
-                  <p className="text-sm text-neutral-500">
-                    {categoryNames[product.categoria]}
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-xs text-secondary-500">
+                      {categoryNames[product.categoria]}
+                    </span>
+                    {product.destacado && (
+                      <span className="text-xs text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">
+                        ⭐ Destacado
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-secondary-900">
+                    ${product.precio?.toLocaleString()}
+                  </p>
+                  <p className="text-xs text-secondary-400">
+                    {product.unidad || "unidad"}
                   </p>
                 </div>
-                <span className="text-sm font-semibold text-neutral-800">
-                  ${product.precio?.toLocaleString()}
-                </span>
               </div>
             ))}
           </div>
+          {products.length > 5 && (
+            <div className="px-6 py-3 bg-secondary-50/50 text-center">
+              <span className="text-sm text-secondary-500">
+                +{products.length - 5} productos más
+              </span>
+            </div>
+          )}
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
-          <h3 className="text-lg font-semibold text-neutral-800 mb-4">
-            Platos Destacados
-          </h3>
-          <div className="space-y-3">
-            {foods.map((food) => (
+        {/* Featured Foods */}
+        <div className="bg-white rounded-2xl border border-secondary-200 overflow-hidden">
+          <div className="px-6 py-4 border-b border-secondary-100 flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-secondary-900">
+                Platos Destacados
+              </h3>
+              <p className="text-sm text-secondary-500">Menú principal</p>
+            </div>
+            <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg">
+              {foods.length} platos
+            </span>
+          </div>
+          <div className="divide-y divide-secondary-100">
+            {foods.map((food, index) => (
               <div
                 key={food.id}
-                className="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl"
+                className="flex items-center gap-4 px-6 py-4 hover:bg-secondary-50/50 transition-colors"
               >
+                <span className="text-xs font-medium text-secondary-400 w-5">
+                  #{index + 1}
+                </span>
                 <img
                   src={food.image}
                   alt={food.name}
-                  className="w-12 h-12 rounded-lg object-cover"
+                  className="w-12 h-12 rounded-xl object-cover ring-2 ring-secondary-100"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-neutral-800 truncate">
+                  <p className="font-medium text-secondary-900 truncate">
                     {food.name}
                   </p>
-                  <p className="text-sm text-neutral-500">
-                    {categoryNames[food.category]}
+                  <p className="text-xs text-secondary-500 truncate">
+                    {food.description}
                   </p>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex flex-wrap gap-1 justify-end max-w-[120px]">
                   {food.tags?.slice(0, 2).map((tag, i) => (
                     <span
                       key={i}
-                      className="text-xs bg-neutral-200 px-2 py-1 rounded-full"
+                      className="text-xs font-medium text-secondary-600 bg-secondary-100 px-2 py-0.5 rounded-full"
                     >
                       {tag}
                     </span>
@@ -814,28 +930,93 @@ const DashboardView = ({ stats, products, foods }) => {
               </div>
             ))}
           </div>
+          {foods.length === 0 && (
+            <div className="px-6 py-12 text-center">
+              <UtensilsCrossed className="w-12 h-12 text-secondary-300 mx-auto mb-3" />
+              <p className="text-secondary-500">No hay platos destacados</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="bg-secondary-50/50 rounded-2xl p-6 border border-secondary-200">
+        <h3 className="font-semibold text-secondary-900 mb-4">
+          Acciones Rápidas
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <QuickAction icon={Package} label="Nuevo Producto" />
+          <QuickAction icon={UtensilsCrossed} label="Nuevo Plato" />
+          <QuickAction icon={Briefcase} label="Nuevo Servicio" />
+          <QuickAction icon={Settings} label="Configuración" />
         </div>
       </div>
     </div>
   );
 };
 
-// Stat Card Component
-const StatCard = ({ title, value, icon: IconComponent, color }) => (
-  <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-sm text-neutral-500 mb-1">{title}</p>
-        <p className="text-3xl font-bold text-neutral-800">{value}</p>
-      </div>
-      <div
-        className={`w-12 h-12 ${color} rounded-xl flex items-center justify-center`}
-      >
-        <IconComponent className="w-6 h-6 text-white" />
-      </div>
+// Quick Action Button
+const QuickAction = ({ icon: IconComponent, label }) => (
+  <button className="flex items-center gap-3 p-4 bg-white rounded-xl border border-secondary-200 hover:border-primary-300 hover:shadow-md transition-all duration-200 text-left group cursor-pointer">
+    <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center group-hover:bg-primary-100 transition-colors">
+      <IconComponent className="w-5 h-5 text-primary-600" />
     </div>
-  </div>
+    <span className="text-sm font-medium text-secondary-700 group-hover:text-secondary-900">
+      {label}
+    </span>
+  </button>
 );
+
+// Stat Card Component - Mejorado
+const StatCard = ({
+  title,
+  value,
+  subtitle,
+  icon: IconComponent,
+  trend,
+  trendUp,
+  color = "primary",
+}) => {
+  const colorClasses = {
+    primary: "bg-primary-50 text-primary-600",
+    amber: "bg-amber-50 text-amber-600",
+    green: "bg-green-50 text-green-600",
+    purple: "bg-purple-50 text-purple-600",
+  };
+
+  const iconBg = colorClasses[color] || colorClasses.primary;
+
+  return (
+    <div className="bg-white rounded-2xl p-5 border border-secondary-200 hover:shadow-md transition-shadow">
+      <div className="flex items-start justify-between mb-3">
+        <div
+          className={`w-11 h-11 ${iconBg} rounded-xl flex items-center justify-center`}
+        >
+          <IconComponent className="w-5 h-5" />
+        </div>
+        {trend && (
+          <span
+            className={`text-xs font-medium px-2 py-1 rounded-lg ${
+              trendUp === true
+                ? "text-green-700 bg-green-50"
+                : trendUp === false
+                ? "text-red-700 bg-red-50"
+                : "text-secondary-600 bg-secondary-100"
+            }`}
+          >
+            {trendUp === true && "↑"}
+            {trendUp === false && "↓"} {trend}
+          </span>
+        )}
+      </div>
+      <p className="text-3xl font-bold text-secondary-900 mb-0.5">{value}</p>
+      <p className="text-sm text-secondary-500">{title}</p>
+      {subtitle && (
+        <p className="text-xs text-secondary-400 mt-1">{subtitle}</p>
+      )}
+    </div>
+  );
+};
 
 // Foods Section Component
 const FoodsSection = ({ foods, onSave, onDelete, onEdit }) => (

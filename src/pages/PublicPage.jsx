@@ -62,7 +62,7 @@ function PublicPage() {
       setLoading(true);
       await Promise.all([loadProducts(), loadFoods()]);
     } catch (error) {
-      console.error("Error al cargar datos:", error);
+      // Error manejado silenciosamente
     } finally {
       setLoading(false);
     }
@@ -73,7 +73,7 @@ function PublicPage() {
       const data = await getAll(COLLECTIONS.PRODUCTS);
       setProducts(data);
     } catch (error) {
-      console.error("Error al cargar productos:", error);
+      // Error manejado silenciosamente
     }
   };
 
@@ -82,7 +82,7 @@ function PublicPage() {
       const data = await getAll(COLLECTIONS.FOODS);
       setFoods(data);
     } catch (error) {
-      console.error("Error al cargar platos:", error);
+      // Error manejado silenciosamente
     }
   };
 
@@ -215,6 +215,7 @@ function PublicPage() {
         onClearCart={clearCart}
         horarioApertura={config?.horario_apertura || "09:00"}
         horarioCierre={config?.horario_cierre || "21:00"}
+        categorySchedules={schedules}
       />
 
       {/* Modal de notificación de horarios */}
@@ -225,7 +226,6 @@ function PublicPage() {
         unavailabilityInfo={unavailabilityInfo}
         availableCategories={availableCategories}
         allSchedules={schedules}
-        isRealTimeActive={isRealTimeActive}
       />
 
       <Footer />

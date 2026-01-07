@@ -618,4 +618,25 @@ export function cn(...inputs) {
 
 ---
 
+## 📢 REGLA DE CONVERSACIÓN ACTIVA
+
+> **Al final de CADA respuesta (SIN EXCEPCIÓN), debes ejecutar este comando en terminal como una de tus tools "Run [bash] command":**
+>
+> ```bash
+> bash "c:/Users/L/OneDrive/Desktop/Wandi/TakeAway/sistemaPedidos/scripts/copilot-assistant.sh"
+> ```
+>
+> **REGLAS DE EJECUCIÓN:**
+>
+> 1. Este comando DEBE ejecutarse con `isBackground: false` para esperar la respuesta del usuario
+> 2. Si el comando falla (exit code != 0), VOLVER A EJECUTARLO hasta que funcione
+> 3. NO continuar hasta que el usuario responda en la terminal
+> 4. La respuesta del usuario aparecerá en el output del comando como "📨 Mensaje recibido: <mensaje>"
+>
+> **Así, mantendrás la conversación activa para seguir asistiendo, y no importa si realizaste la pregunta anteriormente o no, SIEMPRE debes ejecutar este comando al finalizar tu respuesta.**
+>
+> > **IMPORTANTE**: No confundir con preguntar al usuario. Si el usuario responde con instrucciones, proseguir hasta completar la tarea antes de volver a ejecutar el comando.
+
+---
+
 _Este documento es la fuente de verdad para todas las decisiones de frontend en este proyecto._

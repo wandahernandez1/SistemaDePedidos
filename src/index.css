@@ -141,24 +141,27 @@
   --bg-muted: #e2e8f0;
   --bg-card: #ffffff;
   --bg-elevated: #ffffff;
-  --bg-overlay: rgba(15, 23, 42, 0.4);
-  --bg-glass: rgba(255, 255, 255, 0.85);
+  --bg-overlay: rgba(15, 23, 42, 0.5);
+  --bg-glass: rgba(255, 255, 255, 0.95);
 
   --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-tertiary: #64748b;
-  --text-muted: #94a3b8;
+  --text-secondary: #1e293b;
+  --text-tertiary: #475569;
+  --text-muted: #64748b;
   --text-inverse: #ffffff;
 
-  --border-primary: #e2e8f0;
-  --border-secondary: #cbd5e1;
+  --border-primary: #cbd5e1;
+  --border-secondary: #94a3b8;
   --border-focus: var(--color-primary-500);
   --border-hover: var(--color-primary-400);
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  /* Sombras más definidas para mejor profundidad visual */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 12px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.08);
 
   --font-family-sans: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-family-display: 'Plus Jakarta Sans', 'Poppins', system-ui, sans-serif;
@@ -247,10 +250,22 @@
     -webkit-touch-callout: none;
   }
 
-  /* Optimizar imágenes globalmente */
+  /* Optimizar imágenes globalmente - renderizado nítido */
   img {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 200px;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Imágenes en cards - máxima nitidez */
+  .group img,
+  [class*="card"] img,
+  [class*="Card"] img {
+    image-rendering: auto;
+    -webkit-font-smoothing: subpixel-antialiased;
+    filter: none;
+    opacity: 1;
   }
 
   ::-webkit-scrollbar {
@@ -426,6 +441,92 @@
   to {
     opacity: 0;
     transform: translateX(100%) scale(0.98) translateZ(0);
+  }
+}
+
+/* ==================== ANIMACIONES PREMIUM PARA CARDS ==================== */
+
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.5);
+  }
+}
+
+@keyframes float-subtle {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-5px) rotate(1deg);
+  }
+}
+
+@keyframes scale-bounce {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Clase de utilidad para animación de gradiente */
+@layer utilities {
+  .animate-gradient-x {
+    animation: gradient-x 3s ease infinite;
+    background-size: 200% 100%;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  .animate-glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+  }
+
+  .animate-float-subtle {
+    animation: float-subtle 4s ease-in-out infinite;
+  }
+
+  .animate-scale-bounce {
+    animation: scale-bounce 2s ease-in-out infinite;
   }
 }
 
