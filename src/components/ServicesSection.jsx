@@ -1,15 +1,14 @@
 import { useState, useEffect, memo, useCallback } from "react";
 import ServiceCard from "./ServiceCard";
 import { getAll, TABLES as COLLECTIONS } from "../supabase/supabaseService";
-import { MessageCircle, Sparkles } from "lucide-react";
+import { MessageCircle, ArrowRight } from "lucide-react";
 
 // Usar variable de entorno para el número de WhatsApp
 const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
 
 /**
  * Componente ServicesSection - Sección completa de servicios
- * Diseño profesional con soporte completo para dark/light mode
- * Optimizado para rendimiento en móviles
+ * Diseño minimalista y profesional
  */
 const ServicesSection = memo(() => {
   const [isVisible, setIsVisible] = useState(false);
@@ -26,7 +25,7 @@ const ServicesSection = memo(() => {
       const data = await getAll(COLLECTIONS.SERVICES);
       setServices(data);
     } catch (error) {
-      console.error("Error al cargar servicios:", error);
+      // Silent error handling
     }
   };
 
@@ -44,55 +43,57 @@ const ServicesSection = memo(() => {
 
   return (
     <section
-      className={`w-full bg-secondary-50 dark:bg-secondary-900 py-16 transition-opacity duration-300 ${
+      className={`w-full bg-secondary-50 dark:bg-secondary-900 transition-opacity duration-300 ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Services Subsection */}
-        <div className="mb-16">
-          <div className="text-center mb-10 py-7 px-4 sm:px-8 bg-white dark:bg-secondary-900 rounded-2xl border border-secondary-200 dark:border-secondary-700 shadow-sm">
-            <div className="inline-flex items-center gap-2 bg-primary-100 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 px-4 py-1.5 rounded-full text-sm font-semibold mb-4 border border-primary-200 dark:border-primary-800">
-              <Sparkles className="w-4 h-4" />
-              <span>Servicios Especiales</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-secondary-50 m-0 mb-2.5 tracking-tight">
-              Servicios para Eventos
-            </h2>
-            <p className="text-sm sm:text-base text-secondary-600 dark:text-secondary-400 m-0 mx-auto max-w-xl leading-relaxed font-medium">
-              Hacemos de tu evento una experiencia inolvidable
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 product-grid">
-            {services.map((service) => (
-              <ServiceCard
-                key={service.id}
-                service={service}
-                onContact={handleContactService}
-              />
-            ))}
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        {/* Header */}
+        <div className="text-center mb-12 sm:mb-16">
+          <p className="text-sm font-semibold text-primary-600 dark:text-primary-400 uppercase tracking-wider mb-3">
+            Servicios
+          </p>
+          <h2 className="text-3xl sm:text-4xl font-bold text-secondary-900 dark:text-white m-0 mb-4">
+            Servicios para Eventos
+          </h2>
+          <p className="text-base sm:text-lg text-secondary-600 dark:text-secondary-400 m-0 max-w-xl mx-auto">
+            Hacemos de tu evento una experiencia gastronómica inolvidable
+          </p>
         </div>
 
-        {/* CTA Footer */}
-        <div className="mt-16 pt-16 border-t border-secondary-200 dark:border-secondary-700">
-          <div className="text-center max-w-xl mx-auto p-8 sm:p-12 bg-linear-to-br from-white to-secondary-100 dark:from-secondary-900 dark:to-secondary-950/80 border border-secondary-200 dark:border-secondary-700 rounded-2xl shadow-lg transition-colors duration-200">
-            <div className="w-16 h-16 mx-auto mb-6 bg-primary-100 dark:bg-primary-950/50 rounded-2xl flex items-center justify-center border border-primary-200 dark:border-primary-800 transition-colors duration-200">
-              <MessageCircle className="w-8 h-8 text-primary-600 dark:text-primary-400 transition-colors duration-200" />
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 sm:mb-24">
+          {services.map((service) => (
+            <ServiceCard
+              key={service.id}
+              service={service}
+              onContact={handleContactService}
+            />
+          ))}
+        </div>
+
+        {/* CTA Section */}
+        <div className="border-t border-secondary-200 dark:border-secondary-800 pt-16 sm:pt-24">
+          <div className="max-w-2xl mx-auto text-center">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary-100 dark:bg-primary-900/50 mb-6">
+              <MessageCircle className="w-7 h-7 text-primary-600 dark:text-primary-400" />
             </div>
-            <h3 className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-secondary-50 m-0 mb-4 tracking-tight transition-colors duration-200">
+            
+            <h3 className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-white m-0 mb-4">
               ¿Tenés alguna consulta?
             </h3>
-            <p className="text-sm sm:text-base text-secondary-600 dark:text-secondary-400 m-0 mb-8 leading-relaxed transition-colors duration-200">
+            
+            <p className="text-base sm:text-lg text-secondary-600 dark:text-secondary-400 m-0 mb-8 max-w-md mx-auto">
               Contactanos por WhatsApp y te asesoramos sin compromiso
             </p>
+            
             <button
-              className="bg-primary-500 hover:bg-primary-600 text-white border-none rounded-xl py-4 px-8 text-base font-semibold cursor-pointer transition-colors duration-150 inline-flex items-center gap-2.5 shadow-lg active:scale-[0.98]"
+              className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3.5 px-7 rounded-xl transition-colors duration-200 shadow-sm hover:shadow-md"
               onClick={handleGeneralContact}
             >
               <MessageCircle className="w-5 h-5" />
-              Contactar por WhatsApp
+              <span>Contactar por WhatsApp</span>
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>

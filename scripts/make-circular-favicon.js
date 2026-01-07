@@ -72,11 +72,6 @@ async function makeCircularFavicon() {
       ])
       .png()
       .toFile(outputPath);
-
-    console.log(
-      "✅ Favicon circular con borde creado exitosamente en:",
-      outputPath
-    );
   } catch (error) {
     console.error("❌ Error al crear favicon:", error);
     process.exit(1);

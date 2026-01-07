@@ -115,7 +115,6 @@ const AdminDashboard = () => {
       setLoading(true);
       await Promise.all([loadProducts(), loadFoods(), loadServices()]);
     } catch (error) {
-      console.error("Error al cargar datos:", error);
       showNotification("Error al cargar datos", "error");
     } finally {
       setLoading(false);
@@ -136,7 +135,7 @@ const AdminDashboard = () => {
         setProducts(data);
       }
     } catch (error) {
-      console.error("Error al cargar productos:", error);
+      // Error manejado silenciosamente
     }
   };
 
@@ -152,7 +151,7 @@ const AdminDashboard = () => {
         setFoods(data);
       }
     } catch (error) {
-      console.error("Error al cargar platos:", error);
+      // Error manejado silenciosamente
     }
   };
 
@@ -170,7 +169,7 @@ const AdminDashboard = () => {
         setServices(data);
       }
     } catch (error) {
-      console.error("Error al cargar servicios:", error);
+      // Error manejado silenciosamente
     }
   };
 
@@ -179,7 +178,7 @@ const AdminDashboard = () => {
       await logout();
       navigate("/");
     } catch (error) {
-      console.error("Error al cerrar sesión:", error);
+      // Error manejado silenciosamente
     }
   };
 
@@ -217,7 +216,6 @@ const AdminDashboard = () => {
       await loadProducts();
       showNotification("Producto actualizado correctamente");
     } catch (error) {
-      console.error("Error completo:", error);
       showNotification(`Error al actualizar: ${error.message}`, "error");
     }
   };
@@ -271,7 +269,6 @@ const AdminDashboard = () => {
       showNotification("Plato actualizado correctamente");
       setFoodModal({ open: false, food: null, isNew: false });
     } catch (error) {
-      console.error("Error completo:", error);
       showNotification(`Error al actualizar: ${error.message}`, "error");
     }
   };
@@ -326,7 +323,6 @@ const AdminDashboard = () => {
       await loadServices();
       showNotification("Servicio actualizado correctamente");
     } catch (error) {
-      console.error("Error completo:", error);
       showNotification(`Error al actualizar: ${error.message}`, "error");
     }
   };
@@ -410,48 +406,48 @@ const AdminDashboard = () => {
       {/* Sidebar */}
       <aside
         className={`
-        fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white border-r border-neutral-200 
+        fixed lg:static inset-y-0 left-0 z-50 w-72 bg-white border-r border-secondary-200 shadow-sm
         transform transition-transform duration-300 ease-in-out
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
       `}
       >
         <div className="h-full flex flex-col">
           {/* Logo */}
-          <div className="h-16 flex items-center justify-between px-6 border-b border-neutral-200">
+          <div className="h-16 flex items-center justify-between px-6 border-b border-secondary-200">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center shadow-md">
                 <UtensilsCrossed className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="font-bold text-neutral-800">LA COCINA DE LAU</h1>
-                <span className="text-xs text-neutral-500">Panel Admin</span>
+                <h1 className="font-bold text-secondary-800">LA COCINA DE LAU</h1>
+                <span className="text-xs text-secondary-500">Panel Admin</span>
               </div>
             </div>
             <button
-              className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+              className="lg:hidden p-2 hover:bg-secondary-100 rounded-lg transition-colors"
               onClick={() => setSidebarOpen(false)}
             >
-              <CloseIcon className="w-6 h-6" />
+              <CloseIcon className="w-6 h-6 text-secondary-600" />
             </button>
           </div>
 
           {/* Usuario */}
-          <div className="px-6 py-4 border-b border-neutral-100">
+          <div className="px-6 py-4 border-b border-secondary-100 bg-secondary-50/50">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
                 <Package className="w-5 h-5 text-primary-600" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="font-medium text-neutral-800 truncate">
+                <p className="font-medium text-secondary-800 truncate">
                   {user?.username || "Admin"}
                 </p>
-                <p className="text-xs text-neutral-500">Administrador</p>
+                <p className="text-xs text-secondary-500">Administrador</p>
               </div>
             </div>
           </div>
 
           {/* Navegación */}
-          <nav className="flex-1 overflow-y-auto py-4 px-3">
+          <nav className="flex-1 overflow-y-auto py-4 px-3 bg-secondary-50/30">
             <div className="space-y-1">
               {menuItems.map((item) => {
                 const IconComponent = item.icon;
@@ -468,8 +464,8 @@ const AdminDashboard = () => {
                       transition-all duration-200 cursor-pointer border-none outline-none
                       ${
                         isActive
-                          ? "bg-primary-500 text-white shadow-lg"
-                          : "bg-transparent text-neutral-600 hover:bg-neutral-100"
+                          ? "bg-primary-600 text-white shadow-lg"
+                          : "bg-transparent text-secondary-700 hover:bg-secondary-100"
                       }
                     `}
                   >
@@ -483,7 +479,7 @@ const AdminDashboard = () => {
                     ].includes(item.id) && (
                       <span
                         className={`ml-auto text-xs px-2 py-0.5 rounded-full ${
-                          isActive ? "bg-white/20" : "bg-neutral-200"
+                          isActive ? "bg-white/20" : "bg-secondary-200 text-secondary-600"
                         }`}
                       >
                         {getFilteredProducts(item.id).length}
@@ -496,12 +492,12 @@ const AdminDashboard = () => {
           </nav>
 
           {/* Acciones */}
-          <div className="p-4 border-t border-neutral-200 space-y-2">
+          <div className="p-4 border-t border-secondary-200 space-y-2 bg-white">
             <button
               onClick={() => navigate("/")}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-neutral-100 
-                text-neutral-700 rounded-xl text-sm font-medium transition-all duration-200 
-                hover:bg-neutral-200 cursor-pointer border-none"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-secondary-100 
+                text-secondary-700 rounded-xl text-sm font-medium transition-all duration-200 
+                hover:bg-secondary-200 cursor-pointer border-none"
             >
               <Eye className="w-5 h-5" />
               Ver Tienda
@@ -520,17 +516,17 @@ const AdminDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
+      <main className="flex-1 flex flex-col min-h-screen overflow-hidden bg-secondary-50">
         {/* Header */}
-        <header className="h-16 bg-white border-b border-neutral-200 flex items-center justify-between px-6 sticky top-0 z-30">
+        <header className="h-16 bg-white border-b border-secondary-200 flex items-center justify-between px-6 sticky top-0 z-30 shadow-sm">
           <div className="flex items-center gap-4">
             <button
-              className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer"
+              className="lg:hidden p-2 hover:bg-secondary-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer"
               onClick={() => setSidebarOpen(true)}
             >
-              <MenuIcon className="w-6 h-6" />
+              <MenuIcon className="w-6 h-6 text-secondary-700" />
             </button>
-            <h2 className="text-xl font-bold text-neutral-800 capitalize">
+            <h2 className="text-xl font-bold text-secondary-800 capitalize">
               {activeSection === "dashboard"
                 ? "Dashboard"
                 : activeSection === "config"
@@ -562,9 +558,9 @@ const AdminDashboard = () => {
                     });
                   }
                 }}
-                className="flex items-center gap-2 px-4 py-2.5 bg-primary-500 text-white 
+                className="flex items-center gap-2 px-4 py-2.5 bg-primary-600 text-white 
                 rounded-xl text-sm font-medium transition-all duration-200 
-                hover:bg-primary-600 hover:shadow-lg cursor-pointer border-none"
+                hover:bg-primary-700 hover:shadow-lg cursor-pointer border-none shadow-md"
               >
                 <Plus className="w-5 h-5" />
                 <span className="hidden sm:inline">
@@ -720,8 +716,8 @@ const DashboardView = ({ stats, products, foods }) => {
       </div>
 
       {/* Category Stats */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
-        <h3 className="text-lg font-semibold text-neutral-800 mb-4">
+      <div className="bg-white rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-secondary-200">
+        <h3 className="text-lg font-semibold text-secondary-800 mb-4">
           Productos por Categoría
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -730,15 +726,15 @@ const DashboardView = ({ stats, products, foods }) => {
             return (
               <div
                 key={key}
-                className="bg-neutral-50 rounded-xl p-4 text-center hover:bg-neutral-100 transition-colors"
+                className="bg-secondary-50 rounded-xl p-4 text-center hover:bg-secondary-100 transition-colors border border-secondary-200/60"
               >
                 <div className="w-12 h-12 mx-auto mb-2 bg-primary-100 rounded-xl flex items-center justify-center">
                   <IconComponent className="w-6 h-6 text-primary-600" />
                 </div>
-                <p className="text-2xl font-bold text-neutral-800">
+                <p className="text-2xl font-bold text-secondary-800">
                   {products.filter((p) => p.categoria === key).length}
                 </p>
-                <p className="text-sm text-neutral-500">{name}</p>
+                <p className="text-sm text-secondary-600">{name}</p>
               </div>
             );
           })}
@@ -747,15 +743,15 @@ const DashboardView = ({ stats, products, foods }) => {
 
       {/* Recent Items */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
-          <h3 className="text-lg font-semibold text-neutral-800 mb-4">
+        <div className="bg-white rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-secondary-200">
+          <h3 className="text-lg font-semibold text-secondary-800 mb-4">
             Últimos Productos
           </h3>
           <div className="space-y-3">
             {products.slice(0, 5).map((product) => (
               <div
                 key={product.id}
-                className="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl"
+                className="flex items-center gap-3 p-3 bg-secondary-50 rounded-xl border border-secondary-200/60"
               >
                 <img
                   src={product.imagen}
@@ -763,14 +759,14 @@ const DashboardView = ({ stats, products, foods }) => {
                   className="w-12 h-12 rounded-lg object-cover"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-neutral-800 truncate">
+                  <p className="font-medium text-secondary-800 truncate">
                     {product.nombre}
                   </p>
-                  <p className="text-sm text-neutral-500">
+                  <p className="text-sm text-secondary-500">
                     {categoryNames[product.categoria]}
                   </p>
                 </div>
-                <span className="text-sm font-semibold text-neutral-800">
+                <span className="text-sm font-semibold text-secondary-800">
                   ${product.precio?.toLocaleString()}
                 </span>
               </div>
@@ -778,15 +774,15 @@ const DashboardView = ({ stats, products, foods }) => {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
-          <h3 className="text-lg font-semibold text-neutral-800 mb-4">
+        <div className="bg-white rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-secondary-200">
+          <h3 className="text-lg font-semibold text-secondary-800 mb-4">
             Platos Destacados
           </h3>
           <div className="space-y-3">
             {foods.map((food) => (
               <div
                 key={food.id}
-                className="flex items-center gap-3 p-3 bg-neutral-50 rounded-xl"
+                className="flex items-center gap-3 p-3 bg-secondary-50 rounded-xl border border-secondary-200/60"
               >
                 <img
                   src={food.image}
@@ -794,10 +790,10 @@ const DashboardView = ({ stats, products, foods }) => {
                   className="w-12 h-12 rounded-lg object-cover"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-neutral-800 truncate">
+                  <p className="font-medium text-secondary-800 truncate">
                     {food.name}
                   </p>
-                  <p className="text-sm text-neutral-500">
+                  <p className="text-sm text-secondary-500">
                     {categoryNames[food.category]}
                   </p>
                 </div>

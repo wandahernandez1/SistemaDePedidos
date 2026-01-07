@@ -12,7 +12,7 @@ const EditableFoodCard = ({ food, onSave, onDelete, onEdit }) => {
       try {
         await onDelete(food);
       } catch (error) {
-        console.error("Error al eliminar:", error);
+        // Error manejado por el componente padre
       }
     }
   };

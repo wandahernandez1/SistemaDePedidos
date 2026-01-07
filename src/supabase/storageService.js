@@ -42,7 +42,6 @@ export const uploadImage = async (file, folder = "general") => {
 
     return publicUrl;
   } catch (error) {
-    console.error("Error al subir imagen:", error);
     throw error;
   }
 };
@@ -58,7 +57,6 @@ export const deleteImage = async (imageUrl) => {
     const pathParts = url.pathname.split(`${BUCKET_NAME}/`);
 
     if (pathParts.length < 2) {
-      console.warn("URL de imagen no válida para Supabase");
       return true;
     }
 
@@ -69,13 +67,11 @@ export const deleteImage = async (imageUrl) => {
       .remove([filePath]);
 
     if (error) {
-      console.warn("Error al eliminar imagen (puede que ya no exista):", error);
       return true; // No es error crítico
     }
 
     return true;
   } catch (error) {
-    console.error("Error al eliminar imagen:", error);
     return true; // No bloquear si falla
   }
 };
@@ -152,7 +148,6 @@ export const listImages = async (folder = "") => {
     if (error) throw error;
     return data || [];
   } catch (error) {
-    console.error("Error al listar imágenes:", error);
     throw error;
   }
 };

@@ -163,11 +163,6 @@ export const products = [
   },
 ];
 
-// Debug: verificar que la docena tiene tipoEspecial
-const docenaProduct = products.find((p) => p.id === 19);
-console.log("🔍 Producto docena en products.js:", docenaProduct);
-console.log("🔍 tipoEspecial:", docenaProduct?.tipoEspecial);
-
 export const categorias = [
   "todas",
   "hamburguesas",

@@ -52,7 +52,6 @@ const ConfigManager = () => {
           data.horarios_categorias || DEFAULT_CATEGORY_SCHEDULES,
       });
     } catch (error) {
-      console.error("Error al cargar configuración:", error);
       setMessage({ text: "Error al cargar la configuración", type: "error" });
     } finally {
       setLoading(false);
@@ -89,7 +88,6 @@ const ConfigManager = () => {
       });
       setTimeout(() => setMessage({ text: "", type: "" }), 3000);
     } catch (error) {
-      console.error("Error al guardar configuración:", error);
       setMessage({ text: "Error al guardar la configuración", type: "error" });
     } finally {
       setSaving(false);

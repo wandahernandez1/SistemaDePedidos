@@ -13,7 +13,7 @@ const EditableProductCard = ({ product, onSave, onDelete, onEdit }) => {
       try {
         await onDelete(product);
       } catch (error) {
-        console.error("Error al eliminar:", error);
+        // Error manejado por el componente padre
       }
     }
   };

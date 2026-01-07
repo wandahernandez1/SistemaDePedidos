@@ -168,7 +168,6 @@ const Cart = memo(
         // Guardar el pedido en Supabase
         await createOrder(orderData);
       } catch (error) {
-        console.error("Error al guardar el pedido:", error);
         // Continuamos con WhatsApp aunque falle el guardado
       }
 
