@@ -8,9 +8,9 @@ import { formatPrice } from "./formatPrice";
 const formatEmpanadaDetail = (customizacion) => {
   if (!customizacion || !customizacion.empanadas) return "";
 
-  let detail = "   📝 *Detalle de empanadas:*\n";
+  let detail = "   *Detalle de empanadas:*\n";
   customizacion.empanadas.forEach((emp) => {
-    detail += `      - ${emp.cantidad}x ${emp.tipo}\n`;
+    detail += `      • ${emp.cantidad}x ${emp.tipo}\n`;
   });
   return detail;
 };
@@ -24,11 +24,11 @@ const formatEmpanadaDetail = (customizacion) => {
 const formatBurgerDetail = (customization, customizationText) => {
   if (!customization) return "";
 
-  let detail = "   📝 *Personalización:*\n";
+  let detail = "   *Personalización:*\n";
 
   // Ingredientes removidos
   if (customization.removed && customization.removed.length > 0) {
-    detail += `      ❌ Sin: ${customization.removed.join(", ")}\n`;
+    detail += `      Sin: ${customization.removed.join(", ")}\n`;
   }
 
   // Ingredientes agregados
@@ -38,7 +38,7 @@ const formatBurgerDetail = (customization, customizationText) => {
         ing.quantity > 1 ? `${ing.quantity}x ${ing.name}` : ing.name
       )
       .join(", ");
-    detail += `      ✅ Extras: ${addedItems}\n`;
+    detail += `      Extras: ${addedItems}\n`;
   }
 
   return detail;
@@ -52,6 +52,8 @@ const formatBurgerDetail = (customization, customizationText) => {
  * @param {string} estimatedTime - Horario estimado (+30min)
  * @param {string} deliveryType - Tipo de entrega ("pickup" o "delivery")
  * @param {string} deliveryAddress - Dirección de envío (solo si es delivery)
+ * @param {string} customerName - Nombre del cliente
+ * @param {string} paymentMethod - Método de pago ("transfer" o "cash")
  * @returns {string} Mensaje formateado para WhatsApp
  */
 export const generateWhatsAppMessage = (
@@ -60,22 +62,31 @@ export const generateWhatsAppMessage = (
   deliveryTime,
   estimatedTime,
   deliveryType = "pickup",
-  deliveryAddress = ""
+  deliveryAddress = "",
+  customerName = "",
+  paymentMethod = "cash"
 ) => {
-  let message = "*NUEVO PEDIDO*\n\n";
+  let message = "═══════════════════════\n";
+  message += "*NUEVO PEDIDO*\n";
+  message += "═══════════════════════\n\n";
+
+  // Información del cliente
+  if (customerName) {
+    message += `*Cliente:* ${customerName}\n`;
+  }
 
   // Tipo de entrega
   const isDelivery = deliveryType === "delivery";
-  message += `🚀 *Tipo de entrega:* ${
-    isDelivery ? "Envío a domicilio 🛵" : "Retiro en local 🏪"
+  message += `*Tipo de entrega:* ${
+    isDelivery ? "Envío a domicilio" : "Retiro en local"
   }\n`;
 
   if (isDelivery && deliveryAddress) {
-    message += `📍 *Dirección:* ${deliveryAddress}\n`;
+    message += `*Dirección:* ${deliveryAddress}\n`;
   }
 
-  message += "\n📋 *Detalle del pedido:*\n";
-  message += "─────────────────\n";
+  message += "\n*Detalle del pedido:*\n";
+  message += "───────────────────\n";
 
   cartItems.forEach((item, index) => {
     const subtotal = item.precio * item.quantity;
@@ -100,14 +111,21 @@ export const generateWhatsAppMessage = (
     }
   });
 
-  message += "\n─────────────────\n";
-  message += `💰 *TOTAL: ${formatPrice(total)}*\n\n`;
+  message += "\n───────────────────\n";
+  message += `*TOTAL: ${formatPrice(total)}*\n\n`;
 
-  message += "*Horarios:*\n";
-  message += `📍 Horario solicitado: ${deliveryTime}\n`;
-  message += `🕐 Horario estimado: ${estimatedTime}\n\n`;
+  // Método de pago
+  const paymentMethodText =
+    paymentMethod === "transfer" ? "Transferencia bancaria" : "Efectivo";
+  message += `*Método de pago:* ${paymentMethodText}\n\n`;
 
-  message += "¡Gracias por tu pedido! 😊";
+  message += "*Información de entrega:*\n";
+  message += `• Horario solicitado: ${deliveryTime}\n`;
+  message += `• Horario estimado: ${estimatedTime}\n\n`;
+
+  message += "───────────────────\n";
+  message += "Gracias por su pedido.\n";
+  message += "Nos pondremos en contacto para confirmar.";
 
   return encodeURIComponent(message);
 };
