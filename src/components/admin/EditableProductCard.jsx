@@ -80,7 +80,7 @@ const EditableProductCard = ({ product, onSave, onDelete, onEdit }) => {
         `}
         >
           <button
-            className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border-none transition-all duration-200 hover:bg-blue-500 hover:text-white hover:scale-110"
+            className="w-10 h-10 bg-white text-secondary-700 rounded-xl flex items-center justify-center shadow-lg cursor-pointer border-none transition-all duration-200 hover:bg-primary-500 hover:text-white hover:scale-105"
             onClick={handleEdit}
             title="Editar"
           >
@@ -99,7 +99,7 @@ const EditableProductCard = ({ product, onSave, onDelete, onEdit }) => {
             </svg>
           </button>
           <button
-            className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border-none transition-all duration-200 hover:bg-red-500 hover:text-white hover:scale-110"
+            className="w-10 h-10 bg-white text-secondary-700 rounded-xl flex items-center justify-center shadow-lg cursor-pointer border-none transition-all duration-200 hover:bg-red-500 hover:text-white hover:scale-105"
             onClick={handleDelete}
             title="Eliminar"
           >

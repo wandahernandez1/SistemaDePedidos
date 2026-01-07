@@ -215,6 +215,7 @@ function PublicPage() {
         onClearCart={clearCart}
         horarioApertura={config?.horario_apertura || "09:00"}
         horarioCierre={config?.horario_cierre || "21:00"}
+        categorySchedules={schedules}
       />
 
       {/* Modal de notificación de horarios */}

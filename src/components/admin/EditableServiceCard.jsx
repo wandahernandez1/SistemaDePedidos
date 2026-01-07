@@ -166,7 +166,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
         `}
         >
           <button
-            className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border border-neutral-200 transition-all duration-200 hover:bg-primary-500 hover:text-white hover:border-primary-500 hover:scale-110"
+            className="w-9 h-9 bg-white text-secondary-700 rounded-xl flex items-center justify-center shadow-lg cursor-pointer border border-neutral-200 transition-all duration-200 hover:bg-primary-500 hover:text-white hover:border-primary-500 hover:scale-105"
             onClick={() => setIsEditing(true)}
             title="Editar"
           >
@@ -185,7 +185,7 @@ const EditableServiceCard = ({ service, onSave, onDelete }) => {
             </svg>
           </button>
           <button
-            className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-lg cursor-pointer border border-neutral-200 transition-all duration-200 hover:bg-red-500 hover:text-white hover:border-red-500 hover:scale-110"
+            className="w-9 h-9 bg-white text-secondary-700 rounded-xl flex items-center justify-center shadow-lg cursor-pointer border border-neutral-200 transition-all duration-200 hover:bg-red-500 hover:text-white hover:border-red-500 hover:scale-105"
             onClick={handleDelete}
             title="Eliminar"
           >

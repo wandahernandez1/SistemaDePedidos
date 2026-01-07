@@ -14,7 +14,10 @@ import {
   Leaf,
   Droplet,
   CircleDot,
+  Loader2,
+  Receipt,
 } from "lucide-react";
+import { getConfig } from "../supabase/supabaseService";
 
 // Mapeo de iconos para ingredientes - usando solo iconos disponibles en lucide-react
 const iconComponents = {
@@ -24,6 +27,34 @@ const iconComponents = {
   cheese: CircleDot, // Cheese no existe, usamos CircleDot
   leaf: Leaf,
   droplet: Droplet,
+};
+
+// Datos por defecto de adicionales (fallback)
+const defaultAdditionals = {
+  proteinas: [
+    { id: "extra-patty", name: "Medallón extra", price: 1500, icon: "beef" },
+    { id: "bacon", name: "Bacon", price: 800, icon: "bacon" },
+    { id: "fried-egg", name: "Huevo frito", price: 400, icon: "egg" },
+  ],
+  quesos: [
+    { id: "cheddar", name: "Queso cheddar", price: 500, icon: "cheese" },
+    { id: "blue-cheese", name: "Queso azul", price: 600, icon: "cheese" },
+    { id: "swiss-cheese", name: "Queso suizo", price: 550, icon: "cheese" },
+  ],
+  vegetales: [
+    { id: "caramelized-onion", name: "Cebolla caramelizada", price: 400, icon: "leaf" },
+    { id: "avocado", name: "Palta", price: 700, icon: "leaf" },
+    { id: "pickles", name: "Pepinillos", price: 300, icon: "leaf" },
+    { id: "jalapeños", name: "Jalapeños", price: 350, icon: "leaf" },
+    { id: "mushrooms", name: "Champiñones", price: 450, icon: "leaf" },
+  ],
+  salsas: [
+    { id: "bbq-sauce", name: "Salsa BBQ", price: 200, icon: "droplet" },
+    { id: "ranch", name: "Ranch", price: 200, icon: "droplet" },
+    { id: "mayo", name: "Mayonesa", price: 150, icon: "droplet" },
+    { id: "ketchup", name: "Ketchup", price: 150, icon: "droplet" },
+    { id: "mustard", name: "Mostaza", price: 150, icon: "droplet" },
+  ],
 };
 
 /**
@@ -54,38 +85,26 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
     ],
   };
 
-  // Ingredientes adicionales disponibles
-  const additionalIngredients = {
-    proteinas: [
-      { id: "extra-patty", name: "Medallón extra", price: 1500, icon: "beef" },
-      { id: "bacon", name: "Bacon", price: 800, icon: "bacon" },
-      { id: "fried-egg", name: "Huevo frito", price: 400, icon: "egg" },
-    ],
-    quesos: [
-      { id: "cheddar", name: "Queso cheddar", price: 500, icon: "cheese" },
-      { id: "blue-cheese", name: "Queso azul", price: 600, icon: "cheese" },
-      { id: "swiss-cheese", name: "Queso suizo", price: 550, icon: "cheese" },
-    ],
-    vegetales: [
-      {
-        id: "caramelized-onion",
-        name: "Cebolla caramelizada",
-        price: 400,
-        icon: "leaf",
-      },
-      { id: "avocado", name: "Palta", price: 700, icon: "leaf" },
-      { id: "pickles", name: "Pepinillos", price: 300, icon: "leaf" },
-      { id: "jalapeños", name: "Jalapeños", price: 350, icon: "leaf" },
-      { id: "mushrooms", name: "Champiñones", price: 450, icon: "leaf" },
-    ],
-    salsas: [
-      { id: "bbq-sauce", name: "Salsa BBQ", price: 200, icon: "droplet" },
-      { id: "ranch", name: "Ranch", price: 200, icon: "droplet" },
-      { id: "mayo", name: "Mayonesa", price: 150, icon: "droplet" },
-      { id: "ketchup", name: "Ketchup", price: 150, icon: "droplet" },
-      { id: "mustard", name: "Mostaza", price: 150, icon: "droplet" },
-    ],
-  };
+  // Estado para adicionales desde config
+  const [additionalIngredients, setAdditionalIngredients] = useState(defaultAdditionals);
+  const [loadingAdditionals, setLoadingAdditionals] = useState(true);
+
+  // Cargar adicionales desde configuración
+  useEffect(() => {
+    const loadAdditionals = async () => {
+      try {
+        const config = await getConfig();
+        if (config?.burger_additionals) {
+          setAdditionalIngredients(config.burger_additionals);
+        }
+      } catch (error) {
+        // Usar defaults si falla
+      } finally {
+        setLoadingAdditionals(false);
+      }
+    };
+    loadAdditionals();
+  }, []);
 
   const categoryNames = {
     proteinas: "Proteínas",
@@ -232,14 +251,26 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                   ? "Resumen de tu pedido"
                   : "Personaliza tu hamburguesa a tu gusto"}
               </p>
+              {/* Precio base visible */}
+              <div className="mt-2 flex items-center gap-3">
+                <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm text-white font-bold">
+                  Precio base: ${burger.precio.toLocaleString()}
+                </span>
+                {getAdditionsTotal() > 0 && (
+                  <span className="bg-accent-500/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm text-white font-bold">
+                    +${getAdditionsTotal().toLocaleString()} extras
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex max-h-[calc(95vh-200px)]">
+        <div className="flex flex-col max-h-[calc(95vh-200px)]">
           {!showSummary ? (
-            <div className="flex-1 overflow-y-auto p-6 w-full">
+            <div className="flex-1 flex flex-col w-full">
+              <div className="flex-1 overflow-y-auto p-6">
               {/* Base Ingredients */}
               {burgerBaseIngredients.length > 0 && (
                 <div className="mb-6 bg-white rounded-2xl p-6 shadow-sm border-2 border-secondary-200">
@@ -414,6 +445,33 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                   })}
                 </div>
               </div>
+              </div>
+              
+              {/* Footer sticky con precio y botón continuar */}
+              <div className="bg-white border-t border-secondary-200 p-4 shadow-lg">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="text-sm text-secondary-500">Precio actual</div>
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                      <span className="text-2xl font-bold text-secondary-900">
+                        ${(burger.precio + getAdditionsTotal()).toLocaleString()}
+                      </span>
+                      {getAdditionsTotal() > 0 && (
+                        <span className="text-sm text-secondary-500">
+                          (base ${burger.precio.toLocaleString()} + extras ${getAdditionsTotal().toLocaleString()})
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setShowSummary(true)}
+                    className="flex items-center gap-2 py-4 px-8 bg-gradient-to-r from-primary-600 to-primary-500 text-white border-none rounded-xl text-base font-bold cursor-pointer shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5"
+                  >
+                    Continuar
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
             </div>
           ) : (
             /* Summary View */
@@ -555,25 +613,84 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                   </div>
                 </div>
 
-                {/* Final Total */}
-                <div className="bg-white rounded-xl p-6 shadow-sm border border-secondary-200">
-                  <div className="flex items-baseline justify-between mb-4">
-                    <div>
-                      <div className="text-base font-semibold text-secondary-500">
-                        Total a pagar
+                {/* Price Breakdown */}
+                <div className="bg-gradient-to-br from-primary-50 to-white rounded-xl p-6 shadow-sm border border-primary-100">
+                  <h3 className="text-lg font-bold text-secondary-900 flex items-center gap-2 mb-4">
+                    <Receipt className="w-5 h-5 text-primary-500" /> Resumen de precio
+                  </h3>
+                  
+                  {/* Base Price */}
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center py-2">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-primary-400"></div>
+                        <span className="text-secondary-700 font-medium">
+                          {burger.nombre} (precio base)
+                        </span>
                       </div>
-                      <div className="text-sm text-secondary-400">
-                        {quantity} x $
-                        {(burger.precio + getAdditionsTotal()).toLocaleString()}
-                      </div>
+                      <span className="font-semibold text-secondary-900">
+                        ${burger.precio.toLocaleString()}
+                      </span>
                     </div>
-                    <div className="text-4xl font-bold text-secondary-900">
-                      ${calculateTotalPrice().toLocaleString()}
+                    
+                    {/* Extras Total */}
+                    {getAdditionsTotal() > 0 && (
+                      <div className="flex justify-between items-center py-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-accent-400"></div>
+                          <span className="text-secondary-700 font-medium">
+                            Extras adicionales
+                          </span>
+                        </div>
+                        <span className="font-semibold text-accent-600">
+                          +${getAdditionsTotal().toLocaleString()}
+                        </span>
+                      </div>
+                    )}
+                    
+                    {/* Unit Price Subtotal */}
+                    <div className="flex justify-between items-center py-2 border-t border-secondary-200">
+                      <span className="text-secondary-600 font-medium">
+                        Precio unitario
+                      </span>
+                      <span className="font-bold text-secondary-800">
+                        ${(burger.precio + getAdditionsTotal()).toLocaleString()}
+                      </span>
+                    </div>
+                    
+                    {/* Quantity multiplier */}
+                    {quantity > 1 && (
+                      <div className="flex justify-between items-center py-2 text-secondary-500">
+                        <span className="text-sm">
+                          × {quantity} unidades
+                        </span>
+                        <span className="text-sm">
+                          ${(burger.precio + getAdditionsTotal()).toLocaleString()} × {quantity}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Final Total */}
+                  <div className="mt-4 pt-4 border-t-2 border-primary-200">
+                    <div className="flex items-baseline justify-between">
+                      <div>
+                        <div className="text-lg font-bold text-secondary-900">
+                          Total a pagar
+                        </div>
+                        <div className="text-sm text-secondary-500">
+                          {quantity} {quantity === 1 ? 'hamburguesa' : 'hamburguesas'} personalizada{quantity > 1 ? 's' : ''}
+                        </div>
+                      </div>
+                      <div className="text-3xl font-bold text-primary-600">
+                        ${calculateTotalPrice().toLocaleString()}
+                      </div>
                     </div>
                   </div>
+                  
                   <button
                     onClick={handleAddToCart}
-                    className="w-full py-5 px-6 bg-gradient-to-r from-primary-600 to-primary-500 text-white border-none rounded-xl text-lg font-bold cursor-pointer shadow-lg transition-all duration-200 flex items-center justify-center gap-2 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
+                    className="w-full mt-4 py-5 px-6 bg-gradient-to-r from-primary-600 to-primary-500 text-white border-none rounded-xl text-lg font-bold cursor-pointer shadow-lg transition-all duration-200 flex items-center justify-center gap-2 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <ShoppingCart className="w-6 h-6" />
                     Agregar al carrito

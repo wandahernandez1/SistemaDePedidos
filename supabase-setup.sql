@@ -64,6 +64,7 @@ CREATE TABLE config (
   mensaje_bienvenida TEXT,
   dias_laborales TEXT[],
   horarios_categorias JSONB,
+  burger_additionals JSONB,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
