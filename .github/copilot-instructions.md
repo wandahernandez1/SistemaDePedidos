@@ -627,6 +627,7 @@ export function cn(...inputs) {
 > ```
 >
 > **REGLAS DE EJECUCIÓN:**
+>
 > 1. Este comando DEBE ejecutarse con `isBackground: false` para esperar la respuesta del usuario
 > 2. Si el comando falla (exit code != 0), VOLVER A EJECUTARLO hasta que funcione
 > 3. NO continuar hasta que el usuario responda en la terminal

@@ -26,7 +26,7 @@ const ServiceCard = memo(({ service, onContact }) => {
         <div className="shrink-0 w-12 h-12 rounded-xl bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
           <IconComponent className="w-6 h-6 text-primary-600 dark:text-primary-400" />
         </div>
-        
+
         <div className="flex-1 min-w-0">
           <h3 className="text-lg font-semibold text-secondary-900 dark:text-white m-0 mb-1">
             {service.title}

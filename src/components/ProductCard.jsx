@@ -1,5 +1,11 @@
 import { useState, memo, useCallback } from "react";
-import { Settings, ChevronRight, ShoppingCart, Sparkles, Star } from "lucide-react";
+import {
+  Settings,
+  ChevronRight,
+  ShoppingCart,
+  Sparkles,
+  Star,
+} from "lucide-react";
 import { formatPrice } from "../utils/formatPrice";
 import BurgerCustomizationModal from "./BurgerCustomizationModal";
 import EmpanadaCustomizationModal from "./EmpanadaCustomizationModal";
@@ -73,24 +79,24 @@ const ProductCard = memo(({ product, onAddToCart }) => {
 
   return (
     <>
-      <div 
+      <div
         className="group relative bg-white dark:bg-secondary-800/95 rounded-3xl overflow-hidden flex flex-col h-full transition-all duration-300 ease-out"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         style={{
-          boxShadow: isHovered 
-            ? '0 20px 40px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(35, 137, 238, 0.15)'
-            : '0 4px 20px -4px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04)',
+          boxShadow: isHovered
+            ? "0 20px 40px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(35, 137, 238, 0.15)"
+            : "0 4px 20px -4px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04)",
         }}
       >
         {/* Gradient border effect - sutil */}
         <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary-400/10 via-transparent to-accent-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-        
+
         {/* Image Container */}
         <div className="relative w-full h-48 sm:h-56 overflow-hidden">
           {/* Background gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent z-10 opacity-50 group-hover:opacity-30 transition-opacity duration-500" />
-          
+
           <img
             src={product.imagen}
             alt={product.nombre}
@@ -120,11 +126,11 @@ const ProductCard = memo(({ product, onAddToCart }) => {
         <div className="relative p-5 sm:p-6 flex flex-col gap-3 grow bg-gradient-to-b from-white to-secondary-50/30 dark:from-secondary-800/95 dark:to-secondary-900/95">
           {/* Decorative accent line */}
           <div className="absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent via-primary-400/30 to-transparent" />
-          
+
           <h3 className="text-lg sm:text-xl font-bold text-secondary-900 dark:text-white m-0 leading-tight tracking-tight transition-colors duration-300 group-hover:text-primary-600 dark:group-hover:text-primary-400">
             {product.nombre}
           </h3>
-          
+
           <p className="text-sm text-secondary-600 dark:text-secondary-400 leading-relaxed m-0 grow line-clamp-2">
             {product.descripcion}
           </p>
@@ -133,14 +139,16 @@ const ProductCard = memo(({ product, onAddToCart }) => {
           <div className="relative flex justify-between items-center mt-auto pt-4 gap-3">
             {/* Separator line */}
             <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-secondary-200 dark:via-secondary-700 to-transparent" />
-            
+
             <div className="flex flex-col">
-              <span className="text-xs text-secondary-500 dark:text-secondary-500 font-medium uppercase tracking-wider">Precio</span>
+              <span className="text-xs text-secondary-500 dark:text-secondary-500 font-medium uppercase tracking-wider">
+                Precio
+              </span>
               <span className="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white transition-colors duration-300 group-hover:text-primary-600 dark:group-hover:text-primary-400">
                 {formatPrice(product.precio)}
               </span>
             </div>
-            
+
             <button
               className="group/btn relative overflow-hidden bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-600 text-white border-none rounded-2xl px-5 py-3 text-sm font-semibold cursor-pointer flex items-center gap-2 transition-all duration-300 shadow-lg shadow-primary-500/20 hover:shadow-xl hover:shadow-primary-500/30 active:scale-95 shrink-0"
               onClick={handleAddClick}

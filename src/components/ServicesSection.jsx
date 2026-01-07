@@ -78,15 +78,15 @@ const ServicesSection = memo(() => {
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary-100 dark:bg-primary-900/50 mb-6">
               <MessageCircle className="w-7 h-7 text-primary-600 dark:text-primary-400" />
             </div>
-            
+
             <h3 className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-white m-0 mb-4">
               ¿Tenés alguna consulta?
             </h3>
-            
+
             <p className="text-base sm:text-lg text-secondary-600 dark:text-secondary-400 m-0 mb-8 max-w-md mx-auto">
               Contactanos por WhatsApp y te asesoramos sin compromiso
             </p>
-            
+
             <button
               className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold py-3.5 px-7 rounded-xl transition-colors duration-200 shadow-sm hover:shadow-md"
               onClick={handleGeneralContact}

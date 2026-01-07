@@ -71,8 +71,7 @@ const ScheduleNotificationModal = ({
   // Filtrar categorías disponibles
   const otherAvailableCategories = availableCategories.filter(
     (cat) =>
-      cat !== category &&
-      ["hamburguesas", "empanadas", "pizzas"].includes(cat)
+      cat !== category && ["hamburguesas", "empanadas", "pizzas"].includes(cat)
   );
 
   return (
@@ -116,7 +115,7 @@ const ScheduleNotificationModal = ({
             <p className="text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider mb-3">
               Horario de disponibilidad
             </p>
-            
+
             <div className="space-y-2.5">
               <div className="flex items-center gap-3">
                 <Calendar className="w-4 h-4 text-secondary-400 shrink-0" />
@@ -127,7 +126,8 @@ const ScheduleNotificationModal = ({
               <div className="flex items-center gap-3">
                 <Clock className="w-4 h-4 text-secondary-400 shrink-0" />
                 <span className="text-sm text-secondary-700 dark:text-secondary-300">
-                  {schedule?.horario_pedidos_inicio || "19:00"} - {schedule?.horario_pedidos_fin || "21:00"} hs
+                  {schedule?.horario_pedidos_inicio || "19:00"} -{" "}
+                  {schedule?.horario_pedidos_fin || "21:00"} hs
                 </span>
               </div>
             </div>
@@ -144,11 +144,15 @@ const ScheduleNotificationModal = ({
                   const catSchedule = allSchedules[cat];
                   const CatIcon = categoryIcons[cat];
                   return (
-                    <div key={cat} className="flex items-center gap-2 text-sm text-green-700 dark:text-green-400">
+                    <div
+                      key={cat}
+                      className="flex items-center gap-2 text-sm text-green-700 dark:text-green-400"
+                    >
                       {CatIcon && <CatIcon className="w-4 h-4" />}
                       <span className="font-medium">{categoryNames[cat]}</span>
                       <span className="text-green-600/70 dark:text-green-400/70">
-                        ({catSchedule?.horario_pedidos_inicio || "19:00"} - {catSchedule?.horario_pedidos_fin || "22:00"})
+                        ({catSchedule?.horario_pedidos_inicio || "19:00"} -{" "}
+                        {catSchedule?.horario_pedidos_fin || "22:00"})
                       </span>
                     </div>
                   );
@@ -160,7 +164,10 @@ const ScheduleNotificationModal = ({
           {/* Current time */}
           <div className="flex items-center justify-center gap-2 text-xs text-secondary-400 dark:text-secondary-500 mb-6">
             <Clock className="w-3 h-3" />
-            <span>{currentDay.charAt(0).toUpperCase() + currentDay.slice(1)}, {currentTime}</span>
+            <span>
+              {currentDay.charAt(0).toUpperCase() + currentDay.slice(1)},{" "}
+              {currentTime}
+            </span>
           </div>
 
           {/* Action button */}

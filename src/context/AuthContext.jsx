@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 
 /**
  * Configuración de autenticación
@@ -36,7 +42,10 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [loginAttempts, setLoginAttempts] = useState({ count: 0, lockUntil: null });
+  const [loginAttempts, setLoginAttempts] = useState({
+    count: 0,
+    lockUntil: null,
+  });
 
   /**
    * Cargar intentos de login desde storage
@@ -73,7 +82,9 @@ export const AuthProvider = ({ children }) => {
   const isAccountLocked = useCallback(() => {
     const attempts = loadLoginAttempts();
     if (attempts.lockUntil && Date.now() < attempts.lockUntil) {
-      const remainingTime = Math.ceil((attempts.lockUntil - Date.now()) / 60000);
+      const remainingTime = Math.ceil(
+        (attempts.lockUntil - Date.now()) / 60000
+      );
       return { locked: true, remainingMinutes: remainingTime };
     }
     return { locked: false, remainingMinutes: 0 };
@@ -124,7 +135,9 @@ export const AuthProvider = ({ children }) => {
     // Verificar si la cuenta está bloqueada
     const lockStatus = isAccountLocked();
     if (lockStatus.locked) {
-      throw new Error(`Cuenta bloqueada. Intenta en ${lockStatus.remainingMinutes} minutos`);
+      throw new Error(
+        `Cuenta bloqueada. Intenta en ${lockStatus.remainingMinutes} minutos`
+      );
     }
 
     // Sanitizar inputs
@@ -137,7 +150,9 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Simular delay de red para prevenir timing attacks
-    await new Promise((resolve) => setTimeout(resolve, 500 + Math.random() * 500));
+    await new Promise((resolve) =>
+      setTimeout(resolve, 500 + Math.random() * 500)
+    );
 
     // Validar credenciales de forma segura (comparación en tiempo constante simulada)
     const isValidUsername = cleanUsername === AUTH_CONFIG.username;
@@ -167,7 +182,7 @@ export const AuthProvider = ({ children }) => {
       // Login fallido - incrementar intentos
       const currentAttempts = loadLoginAttempts();
       const newCount = currentAttempts.count + 1;
-      
+
       let newAttempts;
       if (newCount >= AUTH_CONFIG.maxLoginAttempts) {
         // Bloquear cuenta
@@ -181,14 +196,18 @@ export const AuthProvider = ({ children }) => {
           lockUntil: null,
         };
       }
-      
+
       saveLoginAttempts(newAttempts);
 
       const remainingAttempts = AUTH_CONFIG.maxLoginAttempts - newCount;
       if (remainingAttempts > 0) {
-        throw new Error(`Credenciales inválidas. ${remainingAttempts} intentos restantes`);
+        throw new Error(
+          `Credenciales inválidas. ${remainingAttempts} intentos restantes`
+        );
       } else {
-        throw new Error(`Cuenta bloqueada por ${AUTH_CONFIG.lockoutDuration / 60000} minutos`);
+        throw new Error(
+          `Cuenta bloqueada por ${AUTH_CONFIG.lockoutDuration / 60000} minutos`
+        );
       }
     }
   };
@@ -204,9 +223,12 @@ export const AuthProvider = ({ children }) => {
   /**
    * Verificar si el usuario tiene un rol específico
    */
-  const hasRole = useCallback((role) => {
-    return user?.role === role;
-  }, [user]);
+  const hasRole = useCallback(
+    (role) => {
+      return user?.role === role;
+    },
+    [user]
+  );
 
   /**
    * Refrescar sesión si está próxima a expirar

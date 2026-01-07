@@ -419,7 +419,9 @@ const AdminDashboard = () => {
                 <UtensilsCrossed className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="font-bold text-secondary-800">LA COCINA DE LAU</h1>
+                <h1 className="font-bold text-secondary-800">
+                  LA COCINA DE LAU
+                </h1>
                 <span className="text-xs text-secondary-500">Panel Admin</span>
               </div>
             </div>
@@ -479,7 +481,9 @@ const AdminDashboard = () => {
                     ].includes(item.id) && (
                       <span
                         className={`ml-auto text-xs px-2 py-0.5 rounded-full ${
-                          isActive ? "bg-white/20" : "bg-secondary-200 text-secondary-600"
+                          isActive
+                            ? "bg-white/20"
+                            : "bg-secondary-200 text-secondary-600"
                         }`}
                       >
                         {getFilteredProducts(item.id).length}

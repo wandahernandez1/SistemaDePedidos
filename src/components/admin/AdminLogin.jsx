@@ -13,7 +13,10 @@ const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [lockInfo, setLockInfo] = useState({ locked: false, remainingMinutes: 0 });
+  const [lockInfo, setLockInfo] = useState({
+    locked: false,
+    remainingMinutes: 0,
+  });
 
   const { login, isAccountLocked, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -33,7 +36,9 @@ const AdminLogin = () => {
       const status = isAccountLocked();
       setLockInfo(status);
       if (status.locked) {
-        setError(`Cuenta bloqueada. Intenta en ${status.remainingMinutes} minutos`);
+        setError(
+          `Cuenta bloqueada. Intenta en ${status.remainingMinutes} minutos`
+        );
       }
     };
 
@@ -72,7 +77,9 @@ const AdminLogin = () => {
 
     // Verificar si está bloqueado
     if (lockInfo.locked) {
-      setError(`Cuenta bloqueada. Intenta en ${lockInfo.remainingMinutes} minutos`);
+      setError(
+        `Cuenta bloqueada. Intenta en ${lockInfo.remainingMinutes} minutos`
+      );
       return;
     }
 
@@ -112,9 +119,12 @@ const AdminLogin = () => {
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-center gap-3">
             <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
             <div>
-              <p className="text-red-700 font-medium text-sm">Cuenta bloqueada temporalmente</p>
+              <p className="text-red-700 font-medium text-sm">
+                Cuenta bloqueada temporalmente
+              </p>
               <p className="text-red-600 text-xs">
-                Demasiados intentos fallidos. Espera {lockInfo.remainingMinutes} minutos.
+                Demasiados intentos fallidos. Espera {lockInfo.remainingMinutes}{" "}
+                minutos.
               </p>
             </div>
           </div>
@@ -178,7 +188,9 @@ const AdminLogin = () => {
                 onClick={() => setShowPassword(!showPassword)}
                 disabled={loading || lockInfo.locked}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600 transition-colors disabled:opacity-50"
-                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                aria-label={
+                  showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+                }
               >
                 {showPassword ? (
                   <EyeOff className="w-5 h-5" />
