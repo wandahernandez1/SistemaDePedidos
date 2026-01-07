@@ -698,12 +698,16 @@ const AdminDashboard = () => {
 // Dashboard View Component - Diseño profesional y moderno
 const DashboardView = ({ stats, products, foods }) => {
   // Calcular estadísticas adicionales
-  const availableProducts = products.filter((p) => p.disponible !== false).length;
-  const productsByCategory = Object.entries(categoryNames).map(([key, name]) => ({
-    key,
-    name,
-    count: products.filter((p) => p.categoria === key).length,
-  }));
+  const availableProducts = products.filter(
+    (p) => p.disponible !== false
+  ).length;
+  const productsByCategory = Object.entries(categoryNames).map(
+    ([key, name]) => ({
+      key,
+      name,
+      count: products.filter((p) => p.categoria === key).length,
+    })
+  );
   const mostPopularCategory = productsByCategory.reduce(
     (prev, current) => (prev.count > current.count ? prev : current),
     { count: 0 }
@@ -714,9 +718,7 @@ const DashboardView = ({ stats, products, foods }) => {
       {/* Greeting Header */}
       <div className="bg-gradient-to-r from-primary-600 to-primary-500 rounded-2xl p-6 text-white">
         <h2 className="text-2xl font-bold mb-1">¡Bienvenido de vuelta!</h2>
-        <p className="text-primary-100">
-          Aquí tienes un resumen de tu negocio
-        </p>
+        <p className="text-primary-100">Aquí tienes un resumen de tu negocio</p>
       </div>
 
       {/* Main Stats Grid */}
@@ -751,7 +753,9 @@ const DashboardView = ({ stats, products, foods }) => {
         <StatCard
           title="Categorías"
           value={stats.categories}
-          subtitle={mostPopularCategory.name ? `Top: ${mostPopularCategory.name}` : ""}
+          subtitle={
+            mostPopularCategory.name ? `Top: ${mostPopularCategory.name}` : ""
+          }
           icon={LayoutDashboard}
           color="purple"
         />
@@ -761,17 +765,22 @@ const DashboardView = ({ stats, products, foods }) => {
       <div className="bg-white rounded-2xl border border-secondary-200 overflow-hidden">
         <div className="px-6 py-4 border-b border-secondary-100 flex items-center justify-between">
           <div>
-            <h3 className="font-semibold text-secondary-900">Productos por Categoría</h3>
-            <p className="text-sm text-secondary-500">Distribución actual del inventario</p>
+            <h3 className="font-semibold text-secondary-900">
+              Productos por Categoría
+            </h3>
+            <p className="text-sm text-secondary-500">
+              Distribución actual del inventario
+            </p>
           </div>
         </div>
         <div className="p-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {productsByCategory.map(({ key, name, count }) => {
               const IconComponent = categoryIconComponents[key] || Package;
-              const percentage = stats.totalProducts > 0 
-                ? Math.round((count / stats.totalProducts) * 100) 
-                : 0;
+              const percentage =
+                stats.totalProducts > 0
+                  ? Math.round((count / stats.totalProducts) * 100)
+                  : 0;
               return (
                 <div
                   key={key}
@@ -780,15 +789,21 @@ const DashboardView = ({ stats, products, foods }) => {
                   <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:scale-110 transition-transform">
                     <IconComponent className="w-6 h-6 text-white" />
                   </div>
-                  <p className="text-2xl font-bold text-secondary-900 mb-0.5">{count}</p>
-                  <p className="text-sm font-medium text-secondary-600 mb-1">{name}</p>
+                  <p className="text-2xl font-bold text-secondary-900 mb-0.5">
+                    {count}
+                  </p>
+                  <p className="text-sm font-medium text-secondary-600 mb-1">
+                    {name}
+                  </p>
                   <div className="w-full bg-secondary-200 rounded-full h-1.5">
                     <div
                       className="bg-primary-500 h-1.5 rounded-full transition-all duration-500"
                       style={{ width: `${percentage}%` }}
                     />
                   </div>
-                  <p className="text-xs text-secondary-400 mt-1">{percentage}%</p>
+                  <p className="text-xs text-secondary-400 mt-1">
+                    {percentage}%
+                  </p>
                 </div>
               );
             })}
@@ -802,8 +817,12 @@ const DashboardView = ({ stats, products, foods }) => {
         <div className="bg-white rounded-2xl border border-secondary-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-secondary-100 flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-secondary-900">Últimos Productos</h3>
-              <p className="text-sm text-secondary-500">Agregados recientemente</p>
+              <h3 className="font-semibold text-secondary-900">
+                Últimos Productos
+              </h3>
+              <p className="text-sm text-secondary-500">
+                Agregados recientemente
+              </p>
             </div>
             <span className="text-xs font-medium text-primary-600 bg-primary-50 px-2.5 py-1 rounded-lg">
               {products.length} total
@@ -867,7 +886,9 @@ const DashboardView = ({ stats, products, foods }) => {
         <div className="bg-white rounded-2xl border border-secondary-200 overflow-hidden">
           <div className="px-6 py-4 border-b border-secondary-100 flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-secondary-900">Platos Destacados</h3>
+              <h3 className="font-semibold text-secondary-900">
+                Platos Destacados
+              </h3>
               <p className="text-sm text-secondary-500">Menú principal</p>
             </div>
             <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg">
@@ -920,7 +941,9 @@ const DashboardView = ({ stats, products, foods }) => {
 
       {/* Quick Actions */}
       <div className="bg-secondary-50/50 rounded-2xl p-6 border border-secondary-200">
-        <h3 className="font-semibold text-secondary-900 mb-4">Acciones Rápidas</h3>
+        <h3 className="font-semibold text-secondary-900 mb-4">
+          Acciones Rápidas
+        </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <QuickAction icon={Package} label="Nuevo Producto" />
           <QuickAction icon={UtensilsCrossed} label="Nuevo Plato" />
@@ -938,36 +961,51 @@ const QuickAction = ({ icon: IconComponent, label }) => (
     <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center group-hover:bg-primary-100 transition-colors">
       <IconComponent className="w-5 h-5 text-primary-600" />
     </div>
-    <span className="text-sm font-medium text-secondary-700 group-hover:text-secondary-900">{label}</span>
+    <span className="text-sm font-medium text-secondary-700 group-hover:text-secondary-900">
+      {label}
+    </span>
   </button>
 );
 
 // Stat Card Component - Mejorado
-const StatCard = ({ title, value, subtitle, icon: IconComponent, trend, trendUp, color = "primary" }) => {
+const StatCard = ({
+  title,
+  value,
+  subtitle,
+  icon: IconComponent,
+  trend,
+  trendUp,
+  color = "primary",
+}) => {
   const colorClasses = {
     primary: "bg-primary-50 text-primary-600",
     amber: "bg-amber-50 text-amber-600",
     green: "bg-green-50 text-green-600",
     purple: "bg-purple-50 text-purple-600",
   };
-  
+
   const iconBg = colorClasses[color] || colorClasses.primary;
-  
+
   return (
     <div className="bg-white rounded-2xl p-5 border border-secondary-200 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-3">
-        <div className={`w-11 h-11 ${iconBg} rounded-xl flex items-center justify-center`}>
+        <div
+          className={`w-11 h-11 ${iconBg} rounded-xl flex items-center justify-center`}
+        >
           <IconComponent className="w-5 h-5" />
         </div>
         {trend && (
-          <span className={`text-xs font-medium px-2 py-1 rounded-lg ${
-            trendUp === true 
-              ? "text-green-700 bg-green-50" 
-              : trendUp === false 
-                ? "text-red-700 bg-red-50" 
+          <span
+            className={`text-xs font-medium px-2 py-1 rounded-lg ${
+              trendUp === true
+                ? "text-green-700 bg-green-50"
+                : trendUp === false
+                ? "text-red-700 bg-red-50"
                 : "text-secondary-600 bg-secondary-100"
-          }`}>
-            {trendUp === true && "↑"}{trendUp === false && "↓"} {trend}
+            }`}
+          >
+            {trendUp === true && "↑"}
+            {trendUp === false && "↓"} {trend}
           </span>
         )}
       </div>

@@ -28,7 +28,12 @@ const defaultAdditionals = {
     { id: "swiss-cheese", name: "Queso suizo", price: 550, icon: "cheese" },
   ],
   vegetales: [
-    { id: "caramelized-onion", name: "Cebolla caramelizada", price: 400, icon: "leaf" },
+    {
+      id: "caramelized-onion",
+      name: "Cebolla caramelizada",
+      price: 400,
+      icon: "leaf",
+    },
     { id: "avocado", name: "Palta", price: 700, icon: "leaf" },
     { id: "pickles", name: "Pepinillos", price: 300, icon: "leaf" },
     { id: "jalapeños", name: "Jalapeños", price: 350, icon: "leaf" },
@@ -68,7 +73,11 @@ const AdditionalsManager = memo(() => {
   const [newItem, setNewItem] = useState({ name: "", price: 0, icon: "leaf" });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [notification, setNotification] = useState({ show: false, message: "", type: "success" });
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  });
 
   // Cargar configuración de adicionales
   useEffect(() => {
@@ -91,7 +100,10 @@ const AdditionalsManager = memo(() => {
 
   const showNotification = useCallback((message, type = "success") => {
     setNotification({ show: true, message, type });
-    setTimeout(() => setNotification({ show: false, message: "", type: "success" }), 3000);
+    setTimeout(
+      () => setNotification({ show: false, message: "", type: "success" }),
+      3000
+    );
   }, []);
 
   const saveAdditionals = async (newAdditionals) => {
@@ -148,7 +160,11 @@ const AdditionalsManager = memo(() => {
       ...additionals,
       [activeCategory]: additionals[activeCategory].map((item) =>
         item.id === editingItem.id
-          ? { ...item, name: editingItem.name.trim(), price: Number(editingItem.price) }
+          ? {
+              ...item,
+              name: editingItem.name.trim(),
+              price: Number(editingItem.price),
+            }
           : item
       ),
     };
@@ -161,7 +177,9 @@ const AdditionalsManager = memo(() => {
   const handleDeleteItem = async (itemId) => {
     const updated = {
       ...additionals,
-      [activeCategory]: additionals[activeCategory].filter((item) => item.id !== itemId),
+      [activeCategory]: additionals[activeCategory].filter(
+        (item) => item.id !== itemId
+      ),
     };
     await saveAdditionals(updated);
   };
@@ -221,9 +239,13 @@ const AdditionalsManager = memo(() => {
             >
               <Icon className="w-4 h-4" />
               <span>{categoryLabels[cat]}</span>
-              <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                isActive ? "bg-primary-100 text-primary-700" : "bg-secondary-100 text-secondary-600"
-              }`}>
+              <span
+                className={`text-xs px-1.5 py-0.5 rounded-full ${
+                  isActive
+                    ? "bg-primary-100 text-primary-700"
+                    : "bg-secondary-100 text-secondary-600"
+                }`}
+              >
                 {additionals[cat]?.length || 0}
               </span>
             </button>
@@ -250,16 +272,25 @@ const AdditionalsManager = memo(() => {
                     <input
                       type="text"
                       value={editingItem.name}
-                      onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
+                      onChange={(e) =>
+                        setEditingItem({ ...editingItem, name: e.target.value })
+                      }
                       className="flex-1 px-3 py-2 border border-secondary-300 rounded-lg text-sm text-secondary-900 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                       placeholder="Nombre del adicional"
                     />
                     <div className="relative">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-500">$</span>
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-500">
+                        $
+                      </span>
                       <input
                         type="number"
                         value={editingItem.price}
-                        onChange={(e) => setEditingItem({ ...editingItem, price: e.target.value })}
+                        onChange={(e) =>
+                          setEditingItem({
+                            ...editingItem,
+                            price: e.target.value,
+                          })
+                        }
                         className="w-full sm:w-32 pl-7 pr-3 py-2 border border-secondary-300 rounded-lg text-sm text-secondary-900 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         placeholder="Precio"
                         min="0"
@@ -285,7 +316,9 @@ const AdditionalsManager = memo(() => {
                 // View Mode
                 <>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-secondary-900 truncate">{item.name}</p>
+                    <p className="font-medium text-secondary-900 truncate">
+                      {item.name}
+                    </p>
                   </div>
                   <div className="flex items-center gap-3 shrink-0">
                     <span className="text-sm font-semibold text-primary-600 bg-primary-50 px-3 py-1 rounded-lg">
@@ -316,17 +349,23 @@ const AdditionalsManager = memo(() => {
                 <input
                   type="text"
                   value={newItem.name}
-                  onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, name: e.target.value })
+                  }
                   className="flex-1 px-3 py-2 border border-secondary-300 rounded-lg text-sm text-secondary-900 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   placeholder="Nombre del adicional"
                   autoFocus
                 />
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-500">$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-secondary-500">
+                    $
+                  </span>
                   <input
                     type="number"
                     value={newItem.price || ""}
-                    onChange={(e) => setNewItem({ ...newItem, price: e.target.value })}
+                    onChange={(e) =>
+                      setNewItem({ ...newItem, price: e.target.value })
+                    }
                     className="w-full sm:w-32 pl-7 pr-3 py-2 border border-secondary-300 rounded-lg text-sm text-secondary-900 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     placeholder="Precio"
                     min="0"
@@ -357,7 +396,9 @@ const AdditionalsManager = memo(() => {
               className="w-full flex items-center justify-center gap-2 p-4 rounded-xl border-2 border-dashed border-secondary-300 text-secondary-600 hover:border-primary-400 hover:text-primary-600 hover:bg-primary-50/30 transition-colors"
             >
               <Plus className="w-5 h-5" />
-              <span className="font-medium">Agregar {categoryLabels[activeCategory].slice(0, -1)}</span>
+              <span className="font-medium">
+                Agregar {categoryLabels[activeCategory].slice(0, -1)}
+              </span>
             </button>
           )}
         </div>
@@ -370,7 +411,8 @@ const AdditionalsManager = memo(() => {
           <div className="text-sm text-amber-800">
             <p className="font-medium mb-1">Nota importante</p>
             <p className="text-amber-700">
-              Los cambios en los adicionales se aplican inmediatamente a la personalización de hamburguesas en la tienda.
+              Los cambios en los adicionales se aplican inmediatamente a la
+              personalización de hamburguesas en la tienda.
             </p>
           </div>
         </div>
@@ -380,7 +422,9 @@ const AdditionalsManager = memo(() => {
       {notification.show && (
         <div
           className={`fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-lg z-50 flex items-center gap-2 ${
-            notification.type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"
+            notification.type === "success"
+              ? "bg-green-500 text-white"
+              : "bg-red-500 text-white"
           }`}
         >
           {notification.type === "success" ? (

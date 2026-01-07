@@ -118,7 +118,10 @@ const Cart = memo(
         const schedule = categorySchedules[cat];
         if (schedule && schedule.habilitado) {
           const catStart = schedule.horario_pedidos_inicio || "19:00";
-          const catEnd = schedule.horario_entrega_fin || schedule.horario_pedidos_fin || "22:00";
+          const catEnd =
+            schedule.horario_entrega_fin ||
+            schedule.horario_pedidos_fin ||
+            "22:00";
 
           // Comparar horarios
           if (catStart > latestStart) {
@@ -152,7 +155,9 @@ const Cart = memo(
     // Generar opciones de horarios cada 30 minutos - memoizado
     const timeOptions = useMemo(() => {
       const options = [];
-      const [startHour, startMin] = effectiveSchedule.start.split(":").map(Number);
+      const [startHour, startMin] = effectiveSchedule.start
+        .split(":")
+        .map(Number);
       const [endHour, endMin] = effectiveSchedule.end.split(":").map(Number);
 
       let currentHour = startHour;
@@ -454,7 +459,10 @@ const Cart = memo(
                     <div className="flex items-start gap-2 p-2 mb-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700">
                       <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
                       <p className="text-xs text-amber-700 dark:text-amber-300">
-                        Horario según disponibilidad de <span className="font-semibold capitalize">{effectiveSchedule.restrictiveCategory}</span>
+                        Horario según disponibilidad de{" "}
+                        <span className="font-semibold capitalize">
+                          {effectiveSchedule.restrictiveCategory}
+                        </span>
                       </p>
                     </div>
                   )}
