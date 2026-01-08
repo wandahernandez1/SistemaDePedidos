@@ -1,11 +1,11 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { 
-  DAYS_MAP, 
+import {
+  DAYS_MAP,
   DEFAULT_CATEGORY_SCHEDULES,
   isTimeInActiveShift,
   getActiveShifts,
   getNextAvailableShift,
-  formatScheduleDisplay
+  formatScheduleDisplay,
 } from "../constants/schedules";
 
 /**
@@ -125,14 +125,20 @@ export const useScheduleAvailability = (customSchedules = null) => {
 
       // Verificar turno 1
       if (turnos.turno1?.habilitado) {
-        if (currentTimeStr >= turnos.turno1.inicio && currentTimeStr <= turnos.turno1.fin) {
+        if (
+          currentTimeStr >= turnos.turno1.inicio &&
+          currentTimeStr <= turnos.turno1.fin
+        ) {
           return { ...turnos.turno1, key: "turno1" };
         }
       }
 
       // Verificar turno 2
       if (turnos.turno2?.habilitado) {
-        if (currentTimeStr >= turnos.turno2.inicio && currentTimeStr <= turnos.turno2.fin) {
+        if (
+          currentTimeStr >= turnos.turno2.inicio &&
+          currentTimeStr <= turnos.turno2.fin
+        ) {
           return { ...turnos.turno2, key: "turno2" };
         }
       }
@@ -194,7 +200,9 @@ export const useScheduleAvailability = (customSchedules = null) => {
       };
 
       const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
-      return `${categoryName} están disponibles los ${formatDays(days)} ${formatTurnos()}.`;
+      return `${categoryName} están disponibles los ${formatDays(
+        days
+      )} ${formatTurnos()}.`;
     },
     [schedules]
   );
@@ -224,9 +232,12 @@ export const useScheduleAvailability = (customSchedules = null) => {
       const slots = [];
 
       // Si no hay categorías específicas, usar todas
-      const targetCategories = categories.length > 0 
-        ? categories 
-        : Object.keys(schedules).filter(cat => !["bebidas", "postres"].includes(cat));
+      const targetCategories =
+        categories.length > 0
+          ? categories
+          : Object.keys(schedules).filter(
+              (cat) => !["bebidas", "postres"].includes(cat)
+            );
 
       // Encontrar la intersección de turnos disponibles
       let commonSlots = null;
@@ -242,7 +253,8 @@ export const useScheduleAvailability = (customSchedules = null) => {
           // Solo incluir si el turno aún no ha terminado
           if (shift.fin > currentTimeStr || shift.inicio > currentTimeStr) {
             categorySlots.push({
-              inicio: shift.inicio > currentTimeStr ? shift.inicio : currentTimeStr,
+              inicio:
+                shift.inicio > currentTimeStr ? shift.inicio : currentTimeStr,
               fin: shift.fin,
               entrega_fin: shift.entrega_fin,
               nombre: shift.nombre,

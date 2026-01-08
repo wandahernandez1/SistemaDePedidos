@@ -49,7 +49,7 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
           nombre: turnos.turno1.nombre || "Mediodía",
           inicio: turnos.turno1.inicio,
           fin: turnos.turno1.fin,
-          icon: "sun"
+          icon: "sun",
         });
       }
       if (turnos.turno2?.habilitado) {
@@ -57,7 +57,7 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
           nombre: turnos.turno2.nombre || "Noche",
           inicio: turnos.turno2.inicio,
           fin: turnos.turno2.fin,
-          icon: "moon"
+          icon: "moon",
         });
       }
     }
@@ -70,7 +70,7 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
         nombre: "Horario",
         inicio,
         fin,
-        icon: "clock"
+        icon: "clock",
       });
     }
 
@@ -181,21 +181,41 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
                     {scheduleInfo.daysText}
                   </span>
                 </div>
-                
+
                 {/* Turnos activos */}
                 <div className="flex flex-col gap-1">
                   {scheduleInfo.activeShifts.map((shift, index) => (
                     <div key={index} className="flex items-center gap-2">
                       {shift.icon === "sun" ? (
-                        <Sun className={`w-3.5 h-3.5 ${isAvailable === false ? "text-amber-400" : "text-yellow-400"}`} />
+                        <Sun
+                          className={`w-3.5 h-3.5 ${
+                            isAvailable === false
+                              ? "text-amber-400"
+                              : "text-yellow-400"
+                          }`}
+                        />
                       ) : shift.icon === "moon" ? (
-                        <Moon className={`w-3.5 h-3.5 ${isAvailable === false ? "text-amber-400" : "text-indigo-300"}`} />
+                        <Moon
+                          className={`w-3.5 h-3.5 ${
+                            isAvailable === false
+                              ? "text-amber-400"
+                              : "text-indigo-300"
+                          }`}
+                        />
                       ) : (
-                        <Clock className={`w-3.5 h-3.5 ${isAvailable === false ? "text-amber-400" : "text-white/70"}`} />
+                        <Clock
+                          className={`w-3.5 h-3.5 ${
+                            isAvailable === false
+                              ? "text-amber-400"
+                              : "text-white/70"
+                          }`}
+                        />
                       )}
                       <span
                         className={`text-xs font-semibold ${
-                          isAvailable === false ? "text-amber-200" : "text-white/90"
+                          isAvailable === false
+                            ? "text-amber-200"
+                            : "text-white/90"
                         }`}
                       >
                         {shift.inicio} - {shift.fin}

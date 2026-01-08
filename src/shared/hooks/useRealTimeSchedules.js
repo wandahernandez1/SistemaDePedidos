@@ -10,12 +10,12 @@ import { useScheduleAvailability } from "./useScheduleAvailability";
  */
 const migrateSchedulesToNewFormat = (oldSchedules) => {
   if (!oldSchedules) return DEFAULT_CATEGORY_SCHEDULES;
-  
+
   const migrated = { ...oldSchedules };
-  
+
   Object.keys(migrated).forEach((category) => {
     const schedule = migrated[category];
-    
+
     // Si no tiene estructura de turnos, migrar
     if (schedule && !schedule.turnos) {
       migrated[category] = {
@@ -71,7 +71,7 @@ export const useRealTimeSchedules = () => {
         setConfig(configData);
 
         // Si hay horarios configurados, migrar si es necesario y usarlos
-        const schedulesData = configData.horarios_categorias 
+        const schedulesData = configData.horarios_categorias
           ? migrateSchedulesToNewFormat(configData.horarios_categorias)
           : DEFAULT_CATEGORY_SCHEDULES;
         setSchedules(schedulesData);

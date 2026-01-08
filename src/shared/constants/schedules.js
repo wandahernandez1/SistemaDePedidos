@@ -299,14 +299,20 @@ export const isTimeInActiveShift = (schedule, currentTime) => {
 
   // Verificar turno 1
   if (turnos.turno1?.habilitado) {
-    if (currentTime >= turnos.turno1.inicio && currentTime <= turnos.turno1.fin) {
+    if (
+      currentTime >= turnos.turno1.inicio &&
+      currentTime <= turnos.turno1.fin
+    ) {
       return true;
     }
   }
 
   // Verificar turno 2
   if (turnos.turno2?.habilitado) {
-    if (currentTime >= turnos.turno2.inicio && currentTime <= turnos.turno2.fin) {
+    if (
+      currentTime >= turnos.turno2.inicio &&
+      currentTime <= turnos.turno2.fin
+    ) {
       return true;
     }
   }

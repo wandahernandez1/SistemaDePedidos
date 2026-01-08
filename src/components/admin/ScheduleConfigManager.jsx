@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { Clock, Pizza, Beef, CircleDot, Calendar, Info, Sun, Moon } from "lucide-react";
+import {
+  Clock,
+  Pizza,
+  Beef,
+  CircleDot,
+  Calendar,
+  Info,
+  Sun,
+  Moon,
+} from "lucide-react";
 import {
   DAYS_LABELS,
   DEFAULT_CATEGORY_SCHEDULES,
@@ -29,10 +38,10 @@ const ScheduleConfigManager = ({ schedules, onChange, disabled = false }) => {
    */
   const migrateSchedules = (oldSchedules) => {
     const migrated = { ...oldSchedules };
-    
+
     Object.keys(migrated).forEach((category) => {
       const schedule = migrated[category];
-      
+
       // Si no tiene estructura de turnos, migrar
       if (!schedule.turnos) {
         migrated[category] = {
@@ -87,24 +96,29 @@ const ScheduleConfigManager = ({ schedules, onChange, disabled = false }) => {
         },
       },
     };
-    
+
     // Actualizar campos legacy para compatibilidad
     const turnos = updated[category].turnos;
     if (turnos.turno1?.habilitado || turnos.turno2?.habilitado) {
-      const firstActive = turnos.turno1?.habilitado ? turnos.turno1 : turnos.turno2;
-      const lastActive = turnos.turno2?.habilitado ? turnos.turno2 : turnos.turno1;
-      
+      const firstActive = turnos.turno1?.habilitado
+        ? turnos.turno1
+        : turnos.turno2;
+      const lastActive = turnos.turno2?.habilitado
+        ? turnos.turno2
+        : turnos.turno1;
+
       updated[category].horario_pedidos_inicio = firstActive.inicio;
       updated[category].horario_pedidos_fin = lastActive.fin;
       updated[category].horario_entrega_fin = lastActive.entrega_fin;
     }
-    
+
     setCategorySchedules(updated);
     onChange?.(updated);
   };
 
   const toggleShift = (category, shiftKey) => {
-    const currentValue = categorySchedules[category]?.turnos?.[shiftKey]?.habilitado;
+    const currentValue =
+      categorySchedules[category]?.turnos?.[shiftKey]?.habilitado;
     handleShiftChange(category, shiftKey, "habilitado", !currentValue);
   };
 
@@ -167,11 +181,13 @@ const ScheduleConfigManager = ({ schedules, onChange, disabled = false }) => {
           <Info className="w-5 h-5 text-primary-600 dark:text-primary-400" />
         </div>
         <div>
-          <p className="font-bold text-primary-800 dark:text-primary-200 mb-1 text-base">Sistema de Doble Turno</p>
+          <p className="font-bold text-primary-800 dark:text-primary-200 mb-1 text-base">
+            Sistema de Doble Turno
+          </p>
           <p className="text-sm text-primary-700 dark:text-primary-300 leading-relaxed">
-            Configura hasta 2 turnos por categoría: Mediodía y Noche. 
-            Cada turno puede activarse o desactivarse independientemente.
-            Los cambios se aplican automáticamente en toda la web.
+            Configura hasta 2 turnos por categoría: Mediodía y Noche. Cada turno
+            puede activarse o desactivarse independientemente. Los cambios se
+            aplican automáticamente en toda la web.
           </p>
         </div>
       </div>
@@ -215,8 +231,12 @@ const ScheduleConfigManager = ({ schedules, onChange, disabled = false }) => {
                     />
                   </div>
                   <div>
-                    <h4 className="font-bold text-neutral-800 dark:text-neutral-100">{name}</h4>
-                    <p className="text-sm text-neutral-500 dark:text-neutral-400">{description}</p>
+                    <h4 className="font-bold text-neutral-800 dark:text-neutral-100">
+                      {name}
+                    </h4>
+                    <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                      {description}
+                    </p>
                   </div>
                 </div>
 
@@ -226,7 +246,9 @@ const ScheduleConfigManager = ({ schedules, onChange, disabled = false }) => {
                   onClick={() => toggleEnabled(key)}
                   disabled={disabled}
                   className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
-                    isEnabled ? "bg-primary-500" : "bg-neutral-300 dark:bg-neutral-600"
+                    isEnabled
+                      ? "bg-primary-500"
+                      : "bg-neutral-300 dark:bg-neutral-600"
                   } ${
                     disabled
                       ? "cursor-not-allowed opacity-50"
@@ -300,7 +322,9 @@ const ScheduleConfigManager = ({ schedules, onChange, disabled = false }) => {
                     category={key}
                     disabled={disabled}
                     onToggle={() => toggleShift(key, "turno1")}
-                    onChange={(field, value) => handleShiftChange(key, "turno1", field, value)}
+                    onChange={(field, value) =>
+                      handleShiftChange(key, "turno1", field, value)
+                    }
                   />
 
                   {/* Turno 2 - Noche */}
@@ -314,7 +338,9 @@ const ScheduleConfigManager = ({ schedules, onChange, disabled = false }) => {
                     category={key}
                     disabled={disabled}
                     onToggle={() => toggleShift(key, "turno2")}
-                    onChange={(field, value) => handleShiftChange(key, "turno2", field, value)}
+                    onChange={(field, value) =>
+                      handleShiftChange(key, "turno2", field, value)
+                    }
                   />
                 </div>
 
@@ -353,7 +379,8 @@ const ShiftConfig = ({
   onChange,
 }) => {
   const isEnabled = shift?.habilitado || false;
-  const shiftName = shift?.nombre || (shiftKey === "turno1" ? "Mediodía" : "Noche");
+  const shiftName =
+    shift?.nombre || (shiftKey === "turno1" ? "Mediodía" : "Noche");
 
   return (
     <div
@@ -366,9 +393,17 @@ const ShiftConfig = ({
       {/* Header del turno */}
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Icon className={`w-5 h-5 ${isEnabled ? iconColor : "text-neutral-400"}`} />
+          <Icon
+            className={`w-5 h-5 ${isEnabled ? iconColor : "text-neutral-400"}`}
+          />
           <div>
-            <span className={`font-medium ${isEnabled ? "text-neutral-800 dark:text-neutral-100" : "text-neutral-500 dark:text-neutral-400"}`}>
+            <span
+              className={`font-medium ${
+                isEnabled
+                  ? "text-neutral-800 dark:text-neutral-100"
+                  : "text-neutral-500 dark:text-neutral-400"
+              }`}
+            >
               {shiftName}
             </span>
             {isEnabled && shift && (

@@ -332,7 +332,9 @@ const ConfigManager = () => {
               <span className="text-2xl font-bold text-secondary-800 dark:text-secondary-100">
                 {formData.tiempo_demora}
               </span>
-              <span className="text-sm text-secondary-500 dark:text-secondary-400 ml-1">min</span>
+              <span className="text-sm text-secondary-500 dark:text-secondary-400 ml-1">
+                min
+              </span>
             </div>
           </div>
           <div className="flex justify-between mt-2 text-xs text-secondary-400 dark:text-secondary-500">
@@ -446,23 +448,33 @@ const ConfigManager = () => {
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <div className="bg-secondary-50 dark:bg-secondary-800 rounded-xl p-4 border border-secondary-200 dark:border-secondary-700">
-              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">Horario</p>
+              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">
+                Horario
+              </p>
               <p className="font-semibold text-secondary-800 dark:text-secondary-100">
                 {formData.horario_apertura} - {formData.horario_cierre}
               </p>
             </div>
             <div className="bg-secondary-50 dark:bg-secondary-800 rounded-xl p-4 border border-secondary-200 dark:border-secondary-700">
-              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">Días</p>
+              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">
+                Días
+              </p>
               <p className="font-semibold text-secondary-800 dark:text-secondary-100">
                 {formData.dias_laborales.length} días
               </p>
             </div>
             <div className="bg-secondary-50 dark:bg-secondary-800 rounded-xl p-4 border border-secondary-200 dark:border-secondary-700">
-              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">Demora</p>
-              <p className="font-semibold text-secondary-800 dark:text-secondary-100">{formData.tiempo_demora} min</p>
+              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">
+                Demora
+              </p>
+              <p className="font-semibold text-secondary-800 dark:text-secondary-100">
+                {formData.tiempo_demora} min
+              </p>
             </div>
             <div className="bg-secondary-50 dark:bg-secondary-800 rounded-xl p-4 border border-secondary-200 dark:border-secondary-700">
-              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">WhatsApp</p>
+              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">
+                WhatsApp
+              </p>
               <p className="font-semibold text-secondary-800 dark:text-secondary-100 truncate">
                 {formData.telefono_whatsapp || "No configurado"}
               </p>
