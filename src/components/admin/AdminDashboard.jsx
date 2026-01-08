@@ -588,7 +588,24 @@ const AdminDashboard = () => {
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-6">
           {activeSection === "dashboard" && (
-            <DashboardView stats={stats} products={products} foods={foods} />
+            <DashboardView
+              stats={stats}
+              products={products}
+              foods={foods}
+              onNewProduct={() =>
+                setProductModal({
+                  open: true,
+                  product: null,
+                  isNew: true,
+                  category: "hamburguesas",
+                })
+              }
+              onNewFood={() =>
+                setFoodModal({ open: true, food: null, isNew: true })
+              }
+              onNewService={handleCreateService}
+              onGoToConfig={() => setActiveSection("config")}
+            />
           )}
 
           {activeSection === "orders" && <OrdersManager />}
@@ -696,7 +713,15 @@ const AdminDashboard = () => {
 };
 
 // Dashboard View Component - Diseño profesional y moderno
-const DashboardView = ({ stats, products, foods }) => {
+const DashboardView = ({
+  stats,
+  products,
+  foods,
+  onNewProduct,
+  onNewFood,
+  onNewService,
+  onGoToConfig,
+}) => {
   // Calcular estadísticas adicionales
   const availableProducts = products.filter(
     (p) => p.disponible !== false
@@ -945,10 +970,26 @@ const DashboardView = ({ stats, products, foods }) => {
           Acciones Rápidas
         </h3>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <QuickAction icon={Package} label="Nuevo Producto" />
-          <QuickAction icon={UtensilsCrossed} label="Nuevo Plato" />
-          <QuickAction icon={Briefcase} label="Nuevo Servicio" />
-          <QuickAction icon={Settings} label="Configuración" />
+          <QuickAction
+            icon={Package}
+            label="Nuevo Producto"
+            onClick={onNewProduct}
+          />
+          <QuickAction
+            icon={UtensilsCrossed}
+            label="Nuevo Plato"
+            onClick={onNewFood}
+          />
+          <QuickAction
+            icon={Briefcase}
+            label="Nuevo Servicio"
+            onClick={onNewService}
+          />
+          <QuickAction
+            icon={Settings}
+            label="Configuración"
+            onClick={onGoToConfig}
+          />
         </div>
       </div>
     </div>
@@ -956,8 +997,11 @@ const DashboardView = ({ stats, products, foods }) => {
 };
 
 // Quick Action Button
-const QuickAction = ({ icon: IconComponent, label }) => (
-  <button className="flex items-center gap-3 p-4 bg-white rounded-xl border border-secondary-200 hover:border-primary-300 hover:shadow-md transition-all duration-200 text-left group cursor-pointer">
+const QuickAction = ({ icon: IconComponent, label, onClick }) => (
+  <button
+    onClick={onClick}
+    className="flex items-center gap-3 p-4 bg-white rounded-xl border border-secondary-200 hover:border-primary-300 hover:shadow-md transition-all duration-200 text-left group cursor-pointer"
+  >
     <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center group-hover:bg-primary-100 transition-colors">
       <IconComponent className="w-5 h-5 text-primary-600" />
     </div>

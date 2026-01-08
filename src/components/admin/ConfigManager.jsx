@@ -107,8 +107,8 @@ const ConfigManager = () => {
     return (
       <div className="flex items-center justify-center py-16">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-neutral-200 border-t-primary-500 rounded-full animate-spin"></div>
-          <p className="text-neutral-500 font-medium">
+          <div className="w-10 h-10 border-4 border-secondary-200 dark:border-secondary-700 border-t-primary-500 rounded-full animate-spin"></div>
+          <p className="text-secondary-500 dark:text-secondary-400 font-medium">
             Cargando configuración...
           </p>
         </div>
@@ -122,11 +122,11 @@ const ConfigManager = () => {
       {message.text && (
         <div
           className={`
-          mb-6 px-5 py-4 rounded-xl flex items-center gap-3
+          mb-6 px-5 py-4 rounded-xl flex items-center gap-3 shadow-sm
           ${
             message.type === "success"
-              ? "bg-green-50 text-green-700 border border-green-200"
-              : "bg-red-50 text-red-700 border border-red-200"
+              ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border-2 border-emerald-200 dark:border-emerald-800"
+              : "bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border-2 border-red-200 dark:border-red-800"
           }
         `}
         >
@@ -165,11 +165,11 @@ const ConfigManager = () => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Horarios */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
+        <div className="bg-white dark:bg-secondary-900 rounded-2xl p-6 shadow-sm border-2 border-secondary-200 dark:border-secondary-700">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/50 rounded-xl flex items-center justify-center">
               <svg
-                className="w-5 h-5 text-primary-600"
+                className="w-5 h-5 text-primary-600 dark:text-primary-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -183,10 +183,10 @@ const ConfigManager = () => {
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-neutral-800">
+              <h3 className="text-lg font-bold text-secondary-800 dark:text-secondary-100">
                 Horarios de Atención
               </h3>
-              <p className="text-sm text-neutral-500">
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">
                 Configura los horarios de apertura y cierre
               </p>
             </div>
@@ -194,7 +194,7 @@ const ConfigManager = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                 Apertura
               </label>
               <input
@@ -203,11 +203,11 @@ const ConfigManager = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, horario_apertura: e.target.value })
                 }
-                className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl text-neutral-800 focus:outline-none focus:border-primary-500 transition-colors"
+                className="w-full px-4 py-3 border-2 border-secondary-200 dark:border-secondary-600 rounded-xl text-secondary-800 dark:text-secondary-100 bg-white dark:bg-secondary-800 focus:outline-none focus:border-primary-500 transition-colors"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                 Cierre
               </label>
               <input
@@ -216,13 +216,13 @@ const ConfigManager = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, horario_cierre: e.target.value })
                 }
-                className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl text-neutral-800 focus:outline-none focus:border-primary-500 transition-colors"
+                className="w-full px-4 py-3 border-2 border-secondary-200 dark:border-secondary-600 rounded-xl text-secondary-800 dark:text-secondary-100 bg-white dark:bg-secondary-800 focus:outline-none focus:border-primary-500 transition-colors"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-neutral-700 mb-3">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-3">
               Días Laborales
             </label>
             <div className="flex flex-wrap gap-2">
@@ -235,8 +235,8 @@ const ConfigManager = () => {
                     px-4 py-2.5 rounded-xl font-medium text-sm transition-all duration-200 border-2 cursor-pointer
                     ${
                       formData.dias_laborales.includes(dia.value)
-                        ? "bg-primary-500 text-white border-primary-500"
-                        : "bg-white text-neutral-600 border-neutral-200 hover:border-primary-400"
+                        ? "bg-primary-500 text-white border-primary-500 shadow-md"
+                        : "bg-white dark:bg-secondary-800 text-secondary-600 dark:text-secondary-300 border-secondary-200 dark:border-secondary-600 hover:border-primary-400 dark:hover:border-primary-500"
                     }
                   `}
                 >
@@ -249,11 +249,11 @@ const ConfigManager = () => {
         </div>
 
         {/* Horarios por Categoría */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
+        <div className="bg-white dark:bg-secondary-900 rounded-2xl p-6 shadow-sm border-2 border-secondary-200 dark:border-secondary-700">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-violet-100 dark:bg-violet-900/50 rounded-xl flex items-center justify-center">
               <svg
-                className="w-5 h-5 text-purple-600"
+                className="w-5 h-5 text-violet-600 dark:text-violet-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -267,10 +267,10 @@ const ConfigManager = () => {
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-neutral-800">
+              <h3 className="text-lg font-bold text-secondary-800 dark:text-secondary-100">
                 Horarios por Categoría
               </h3>
-              <p className="text-sm text-neutral-500">
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">
                 Define disponibilidad específica para cada tipo de producto
               </p>
             </div>
@@ -286,11 +286,11 @@ const ConfigManager = () => {
         </div>
 
         {/* Tiempo de Preparación */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
+        <div className="bg-white dark:bg-secondary-900 rounded-2xl p-6 shadow-sm border-2 border-secondary-200 dark:border-secondary-700">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 bg-accent-100 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-amber-100 dark:bg-amber-900/50 rounded-xl flex items-center justify-center">
               <svg
-                className="w-5 h-5 text-accent-600"
+                className="w-5 h-5 text-amber-600 dark:text-amber-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -304,10 +304,10 @@ const ConfigManager = () => {
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-neutral-800">
+              <h3 className="text-lg font-bold text-secondary-800 dark:text-secondary-100">
                 Tiempo de Preparación
               </h3>
-              <p className="text-sm text-neutral-500">
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">
                 Tiempo estimado de preparación de pedidos
               </p>
             </div>
@@ -326,16 +326,18 @@ const ConfigManager = () => {
               min="5"
               max="120"
               step="5"
-              className="flex-1 h-2 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-primary-500"
+              className="flex-1 h-2 bg-secondary-200 dark:bg-secondary-700 rounded-lg appearance-none cursor-pointer accent-primary-500"
             />
             <div className="w-24 text-center">
-              <span className="text-2xl font-bold text-neutral-800">
+              <span className="text-2xl font-bold text-secondary-800 dark:text-secondary-100">
                 {formData.tiempo_demora}
               </span>
-              <span className="text-sm text-neutral-500 ml-1">min</span>
+              <span className="text-sm text-secondary-500 dark:text-secondary-400 ml-1">
+                min
+              </span>
             </div>
           </div>
-          <div className="flex justify-between mt-2 text-xs text-neutral-400">
+          <div className="flex justify-between mt-2 text-xs text-secondary-400 dark:text-secondary-500">
             <span>5 min</span>
             <span>60 min</span>
             <span>120 min</span>
@@ -343,11 +345,11 @@ const ConfigManager = () => {
         </div>
 
         {/* Contacto WhatsApp */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-200">
+        <div className="bg-white dark:bg-secondary-900 rounded-2xl p-6 shadow-sm border-2 border-secondary-200 dark:border-secondary-700">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/50 rounded-xl flex items-center justify-center">
               <svg
-                className="w-5 h-5 text-green-600"
+                className="w-5 h-5 text-emerald-600 dark:text-emerald-400"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -355,10 +357,10 @@ const ConfigManager = () => {
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-neutral-800">
+              <h3 className="text-lg font-bold text-secondary-800 dark:text-secondary-100">
                 Contacto WhatsApp
               </h3>
-              <p className="text-sm text-neutral-500">
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">
                 Número para recibir pedidos
               </p>
             </div>
@@ -366,11 +368,11 @@ const ConfigManager = () => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                 Número de WhatsApp
               </label>
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary-400 dark:text-secondary-500">
                   +
                 </span>
                 <input
@@ -383,16 +385,16 @@ const ConfigManager = () => {
                     })
                   }
                   placeholder="549111234567"
-                  className="w-full pl-8 pr-4 py-3 border-2 border-neutral-200 rounded-xl text-neutral-800 focus:outline-none focus:border-green-500 transition-colors"
+                  className="w-full pl-8 pr-4 py-3 border-2 border-secondary-200 dark:border-secondary-600 rounded-xl text-secondary-800 dark:text-secondary-100 bg-white dark:bg-secondary-800 focus:outline-none focus:border-emerald-500 transition-colors"
                 />
               </div>
-              <p className="text-xs text-neutral-400 mt-1.5">
+              <p className="text-xs text-secondary-400 dark:text-secondary-500 mt-1.5">
                 Formato internacional sin espacios. Ej: 5491112345678
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                 Mensaje de Bienvenida
               </label>
               <textarea
@@ -405,56 +407,75 @@ const ConfigManager = () => {
                 }
                 rows={3}
                 placeholder="¡Bienvenido a nuestro restaurante!"
-                className="w-full px-4 py-3 border-2 border-neutral-200 rounded-xl text-neutral-800 focus:outline-none focus:border-green-500 transition-colors resize-none"
+                className="w-full px-4 py-3 border-2 border-secondary-200 dark:border-secondary-600 rounded-xl text-secondary-800 dark:text-secondary-100 bg-white dark:bg-secondary-800 focus:outline-none focus:border-emerald-500 transition-colors resize-none"
               />
             </div>
           </div>
         </div>
 
         {/* Vista Previa */}
-        <div className="bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-2xl p-6 text-white">
-          <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
-            </svg>
-            Vista Previa
-          </h3>
+        <div className="bg-white dark:bg-secondary-900 rounded-2xl p-6 shadow-sm border-2 border-secondary-200 dark:border-secondary-700">
+          <div className="flex items-center gap-3 mb-5">
+            <div className="w-10 h-10 bg-primary-100 dark:bg-primary-900/50 rounded-xl flex items-center justify-center">
+              <svg
+                className="w-5 h-5 text-primary-600 dark:text-primary-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-secondary-800 dark:text-secondary-100">
+                Vista Previa
+              </h3>
+              <p className="text-sm text-secondary-500 dark:text-secondary-400">
+                Resumen de la configuración actual
+              </p>
+            </div>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-white/10 rounded-xl p-4">
-              <p className="text-neutral-400 text-xs mb-1">Horario</p>
-              <p className="font-semibold">
+            <div className="bg-secondary-50 dark:bg-secondary-800 rounded-xl p-4 border border-secondary-200 dark:border-secondary-700">
+              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">
+                Horario
+              </p>
+              <p className="font-semibold text-secondary-800 dark:text-secondary-100">
                 {formData.horario_apertura} - {formData.horario_cierre}
               </p>
             </div>
-            <div className="bg-white/10 rounded-xl p-4">
-              <p className="text-neutral-400 text-xs mb-1">Días</p>
-              <p className="font-semibold">
+            <div className="bg-secondary-50 dark:bg-secondary-800 rounded-xl p-4 border border-secondary-200 dark:border-secondary-700">
+              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">
+                Días
+              </p>
+              <p className="font-semibold text-secondary-800 dark:text-secondary-100">
                 {formData.dias_laborales.length} días
               </p>
             </div>
-            <div className="bg-white/10 rounded-xl p-4">
-              <p className="text-neutral-400 text-xs mb-1">Demora</p>
-              <p className="font-semibold">{formData.tiempo_demora} min</p>
+            <div className="bg-secondary-50 dark:bg-secondary-800 rounded-xl p-4 border border-secondary-200 dark:border-secondary-700">
+              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">
+                Demora
+              </p>
+              <p className="font-semibold text-secondary-800 dark:text-secondary-100">
+                {formData.tiempo_demora} min
+              </p>
             </div>
-            <div className="bg-white/10 rounded-xl p-4">
-              <p className="text-neutral-400 text-xs mb-1">WhatsApp</p>
-              <p className="font-semibold truncate">
+            <div className="bg-secondary-50 dark:bg-secondary-800 rounded-xl p-4 border border-secondary-200 dark:border-secondary-700">
+              <p className="text-secondary-400 dark:text-secondary-500 text-xs mb-1">
+                WhatsApp
+              </p>
+              <p className="font-semibold text-secondary-800 dark:text-secondary-100 truncate">
                 {formData.telefono_whatsapp || "No configurado"}
               </p>
             </div>
@@ -467,8 +488,8 @@ const ConfigManager = () => {
             type="submit"
             disabled={saving}
             className="flex items-center gap-2 px-8 py-3 bg-primary-500 text-white rounded-xl font-semibold
-              hover:bg-primary-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
-              border-none cursor-pointer"
+              hover:bg-primary-600 active:scale-[0.98] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
+              border-none cursor-pointer shadow-md hover:shadow-lg"
           >
             {saving ? (
               <>

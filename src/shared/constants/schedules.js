@@ -1,9 +1,15 @@
 /**
  * Constantes de horarios del negocio
  *
+ * Sistema de doble turno:
+ * - Cada categoría puede tener hasta 2 turnos configurables
+ * - Turno 1: Por ejemplo 09:00 a 13:00 (mediodía)
+ * - Turno 2: Por ejemplo 18:00 a 21:00 (noche)
+ * - Cada turno puede activarse/desactivarse independientemente
+ *
  * Reglas de disponibilidad:
- * - Empanadas y Pizzas: Lunes a Viernes, 19:00 a 22:00
- * - Hamburguesas: Viernes, Sábado y Domingo, pedidos de 19:00 a 21:00, entregas hasta 23:00
+ * - Empanadas y Pizzas: Doble turno configurable
+ * - Hamburguesas: Viernes, Sábado y Domingo (generalmente solo turno noche)
  */
 
 // Días de la semana (0 = Domingo, 1 = Lunes, ..., 6 = Sábado)
@@ -27,30 +33,94 @@ export const DAYS_LABELS = {
   sábado: { short: "Sáb", full: "Sábado" },
 };
 
-// Configuración por defecto de horarios por categoría
+/**
+ * Estructura de turno individual
+ */
+export const DEFAULT_SHIFT = {
+  habilitado: false,
+  inicio: "09:00",
+  fin: "13:00",
+  entrega_fin: "13:30",
+};
+
+/**
+ * Configuración por defecto de horarios por categoría con sistema de doble turno
+ */
 export const DEFAULT_CATEGORY_SCHEDULES = {
-  // Empanadas y Pizzas - Lunes a Viernes
+  // Empanadas - Lunes a Viernes con doble turno
   empanadas: {
     dias: ["lunes", "martes", "miércoles", "jueves", "viernes"],
-    horario_pedidos_inicio: "19:00",
+    habilitado: true,
+    turnos: {
+      turno1: {
+        habilitado: true,
+        nombre: "Mediodía",
+        inicio: "11:00",
+        fin: "13:30",
+        entrega_fin: "14:00",
+      },
+      turno2: {
+        habilitado: true,
+        nombre: "Noche",
+        inicio: "19:00",
+        fin: "22:00",
+        entrega_fin: "22:30",
+      },
+    },
+    // Campos legacy para compatibilidad
+    horario_pedidos_inicio: "11:00",
     horario_pedidos_fin: "22:00",
     horario_entrega_fin: "22:30",
-    habilitado: true,
   },
+  // Pizzas - Lunes a Viernes con doble turno
   pizzas: {
     dias: ["lunes", "martes", "miércoles", "jueves", "viernes"],
-    horario_pedidos_inicio: "19:00",
+    habilitado: true,
+    turnos: {
+      turno1: {
+        habilitado: true,
+        nombre: "Mediodía",
+        inicio: "11:00",
+        fin: "13:30",
+        entrega_fin: "14:00",
+      },
+      turno2: {
+        habilitado: true,
+        nombre: "Noche",
+        inicio: "19:00",
+        fin: "22:00",
+        entrega_fin: "22:30",
+      },
+    },
+    // Campos legacy para compatibilidad
+    horario_pedidos_inicio: "11:00",
     horario_pedidos_fin: "22:00",
     horario_entrega_fin: "22:30",
-    habilitado: true,
   },
-  // Hamburguesas - Viernes, Sábado y Domingo
+  // Hamburguesas - Viernes, Sábado y Domingo (generalmente solo noche)
   hamburguesas: {
     dias: ["viernes", "sábado", "domingo"],
+    habilitado: true,
+    turnos: {
+      turno1: {
+        habilitado: false,
+        nombre: "Mediodía",
+        inicio: "11:00",
+        fin: "14:00",
+        entrega_fin: "14:30",
+      },
+      turno2: {
+        habilitado: true,
+        nombre: "Noche",
+        inicio: "19:00",
+        fin: "21:00",
+        entrega_fin: "23:00",
+      },
+    },
+    // Campos legacy para compatibilidad
     horario_pedidos_inicio: "19:00",
     horario_pedidos_fin: "21:00",
     horario_entrega_fin: "23:00",
-    habilitado: true,
   },
   // Bebidas - siempre disponibles cuando hay algún servicio activo
   bebidas: {
@@ -63,10 +133,26 @@ export const DEFAULT_CATEGORY_SCHEDULES = {
       "sábado",
       "domingo",
     ],
-    horario_pedidos_inicio: "19:00",
+    habilitado: true,
+    turnos: {
+      turno1: {
+        habilitado: true,
+        nombre: "Mediodía",
+        inicio: "11:00",
+        fin: "14:00",
+        entrega_fin: "14:30",
+      },
+      turno2: {
+        habilitado: true,
+        nombre: "Noche",
+        inicio: "19:00",
+        fin: "22:00",
+        entrega_fin: "23:00",
+      },
+    },
+    horario_pedidos_inicio: "11:00",
     horario_pedidos_fin: "22:00",
     horario_entrega_fin: "23:00",
-    habilitado: true,
   },
   // Postres - mismo horario que bebidas
   postres: {
@@ -79,10 +165,26 @@ export const DEFAULT_CATEGORY_SCHEDULES = {
       "sábado",
       "domingo",
     ],
-    horario_pedidos_inicio: "19:00",
+    habilitado: true,
+    turnos: {
+      turno1: {
+        habilitado: true,
+        nombre: "Mediodía",
+        inicio: "11:00",
+        fin: "14:00",
+        entrega_fin: "14:30",
+      },
+      turno2: {
+        habilitado: true,
+        nombre: "Noche",
+        inicio: "19:00",
+        fin: "22:00",
+        entrega_fin: "23:00",
+      },
+    },
+    horario_pedidos_inicio: "11:00",
     horario_pedidos_fin: "22:00",
     horario_entrega_fin: "23:00",
-    habilitado: true,
   },
 };
 
@@ -95,25 +197,24 @@ export const SCHEDULE_MESSAGES = {
   },
   empanadas: {
     unavailable:
-      "Las empanadas están disponibles de Lunes a Viernes de 19:00 a 22:00 hs.",
-    deliveryInfo: "Pedidos de 19:00 a 22:00 hs.",
+      "Las empanadas están disponibles de Lunes a Viernes de 11:00 a 13:30 y de 19:00 a 22:00 hs.",
+    deliveryInfo: "Pedidos en horarios de turno activo.",
   },
   pizzas: {
     unavailable:
-      "Las pizzas están disponibles de Lunes a Viernes de 19:00 a 22:00 hs.",
-    deliveryInfo: "Pedidos de 19:00 a 22:00 hs.",
+      "Las pizzas están disponibles de Lunes a Viernes de 11:00 a 13:30 y de 19:00 a 22:00 hs.",
+    deliveryInfo: "Pedidos en horarios de turno activo.",
   },
 };
 
 /**
- * Formatea el horario para mostrar al usuario
+ * Formatea el horario para mostrar al usuario (soporta doble turno)
  */
 export const formatScheduleDisplay = (schedule) => {
   if (!schedule) return "";
 
   const dias = schedule.dias || [];
-  const inicio = schedule.horario_pedidos_inicio || "19:00";
-  const fin = schedule.horario_pedidos_fin || "22:00";
+  const turnos = schedule.turnos;
 
   // Agrupar días consecutivos
   const formatDays = (days) => {
@@ -141,5 +242,110 @@ export const formatScheduleDisplay = (schedule) => {
     return days.map((d) => DAYS_LABELS[d]?.short || d).join(", ");
   };
 
-  return `${formatDays(dias)} de ${inicio} a ${fin} hs`;
+  // Formatear turnos activos
+  const formatShifts = () => {
+    if (!turnos) {
+      // Compatibilidad con formato antiguo
+      const inicio = schedule.horario_pedidos_inicio || "19:00";
+      const fin = schedule.horario_pedidos_fin || "22:00";
+      return `${inicio} a ${fin} hs`;
+    }
+
+    const activeShifts = [];
+    if (turnos.turno1?.habilitado) {
+      activeShifts.push(`${turnos.turno1.inicio} a ${turnos.turno1.fin}`);
+    }
+    if (turnos.turno2?.habilitado) {
+      activeShifts.push(`${turnos.turno2.inicio} a ${turnos.turno2.fin}`);
+    }
+
+    if (activeShifts.length === 0) return "Sin horarios activos";
+    if (activeShifts.length === 1) return `${activeShifts[0]} hs`;
+    return `${activeShifts[0]} y ${activeShifts[1]} hs`;
+  };
+
+  return `${formatDays(dias)} - ${formatShifts()}`;
+};
+
+/**
+ * Obtiene los turnos activos de una categoría
+ */
+export const getActiveShifts = (schedule) => {
+  if (!schedule || !schedule.turnos) return [];
+
+  const active = [];
+  if (schedule.turnos.turno1?.habilitado) {
+    active.push({ ...schedule.turnos.turno1, key: "turno1" });
+  }
+  if (schedule.turnos.turno2?.habilitado) {
+    active.push({ ...schedule.turnos.turno2, key: "turno2" });
+  }
+  return active;
+};
+
+/**
+ * Verifica si la hora actual está dentro de algún turno activo
+ */
+export const isTimeInActiveShift = (schedule, currentTime) => {
+  if (!schedule || !schedule.habilitado) return false;
+
+  const turnos = schedule.turnos;
+  if (!turnos) {
+    // Compatibilidad con formato antiguo
+    const inicio = schedule.horario_pedidos_inicio || "19:00";
+    const fin = schedule.horario_pedidos_fin || "22:00";
+    return currentTime >= inicio && currentTime <= fin;
+  }
+
+  // Verificar turno 1
+  if (turnos.turno1?.habilitado) {
+    if (
+      currentTime >= turnos.turno1.inicio &&
+      currentTime <= turnos.turno1.fin
+    ) {
+      return true;
+    }
+  }
+
+  // Verificar turno 2
+  if (turnos.turno2?.habilitado) {
+    if (
+      currentTime >= turnos.turno2.inicio &&
+      currentTime <= turnos.turno2.fin
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+/**
+ * Obtiene el próximo turno disponible
+ */
+export const getNextAvailableShift = (schedule, currentTime) => {
+  if (!schedule || !schedule.habilitado || !schedule.turnos) return null;
+
+  const { turno1, turno2 } = schedule.turnos;
+
+  // Si estamos antes del turno 1 y está habilitado
+  if (turno1?.habilitado && currentTime < turno1.inicio) {
+    return { ...turno1, key: "turno1" };
+  }
+
+  // Si estamos entre turnos y turno 2 está habilitado
+  if (turno2?.habilitado && currentTime < turno2.inicio) {
+    return { ...turno2, key: "turno2" };
+  }
+
+  // Si pasaron ambos turnos, el próximo será turno 1 del día siguiente
+  if (turno1?.habilitado) {
+    return { ...turno1, key: "turno1", nextDay: true };
+  }
+
+  if (turno2?.habilitado) {
+    return { ...turno2, key: "turno2", nextDay: true };
+  }
+
+  return null;
 };

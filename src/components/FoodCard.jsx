@@ -6,23 +6,26 @@ import {
   Flame,
   Eye,
   Calendar,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 /**
  * Componente FoodCard - Tarjeta de plato destacado
  * Diseño premium con efectos sutiles y transiciones suaves
  * Completamente responsivo y optimizado para rendimiento
+ * Soporta sistema de doble turno
  */
 const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  // Formatear horario para mostrar - memoizado
+  // Formatear horario para mostrar - memoizado (soporta doble turno)
   const scheduleInfo = useMemo(() => {
     if (!schedule) return null;
     const dias = schedule.dias || [];
-    const inicio = schedule.horario_pedidos_inicio || "19:00";
-    const fin = schedule.horario_pedidos_fin || "21:00";
+    const turnos = schedule.turnos;
 
+    // Formatear días
     const weekdays = ["lunes", "martes", "miércoles", "jueves", "viernes"];
     const isWeekdays =
       weekdays.every((d) => dias.includes(d)) && dias.length === 5;
@@ -38,7 +41,40 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
         .map((d) => d.charAt(0).toUpperCase() + d.slice(1, 3))
         .join(", ");
 
-    return { daysText, timeText: `${inicio} - ${fin}` };
+    // Formatear turnos
+    const activeShifts = [];
+    if (turnos) {
+      if (turnos.turno1?.habilitado) {
+        activeShifts.push({
+          nombre: turnos.turno1.nombre || "Mediodía",
+          inicio: turnos.turno1.inicio,
+          fin: turnos.turno1.fin,
+          icon: "sun",
+        });
+      }
+      if (turnos.turno2?.habilitado) {
+        activeShifts.push({
+          nombre: turnos.turno2.nombre || "Noche",
+          inicio: turnos.turno2.inicio,
+          fin: turnos.turno2.fin,
+          icon: "moon",
+        });
+      }
+    }
+
+    // Fallback a formato antiguo si no hay turnos
+    if (activeShifts.length === 0) {
+      const inicio = schedule.horario_pedidos_inicio || "19:00";
+      const fin = schedule.horario_pedidos_fin || "21:00";
+      activeShifts.push({
+        nombre: "Horario",
+        inicio,
+        fin,
+        icon: "clock",
+      });
+    }
+
+    return { daysText, activeShifts };
   }, [schedule]);
 
   const handleClick = useCallback(() => {
@@ -123,13 +159,14 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
 
           {/* Schedule & CTA Row */}
           <div className="flex items-end justify-between gap-3 pt-1">
-            {/* Horario de disponibilidad - Diseño mejorado */}
+            {/* Horario de disponibilidad - Diseño con soporte doble turno */}
             {scheduleInfo && (
               <div
-                className={`flex flex-col gap-1 ${
+                className={`flex flex-col gap-1.5 ${
                   isAvailable === false ? "opacity-90" : ""
                 }`}
               >
+                {/* Días */}
                 <div className="flex items-center gap-2">
                   {isAvailable === false ? (
                     <AlertCircle className="w-4 h-4 text-amber-400" />
@@ -144,20 +181,49 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
                     {scheduleInfo.daysText}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Clock
-                    className={`w-4 h-4 ${
-                      isAvailable === false ? "text-amber-400" : "text-white/70"
-                    }`}
-                  />
-                  <span
-                    className={`text-sm font-semibold ${
-                      isAvailable === false ? "text-amber-200" : "text-white/90"
-                    }`}
-                  >
-                    {scheduleInfo.timeText}
-                  </span>
+
+                {/* Turnos activos */}
+                <div className="flex flex-col gap-1">
+                  {scheduleInfo.activeShifts.map((shift, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      {shift.icon === "sun" ? (
+                        <Sun
+                          className={`w-3.5 h-3.5 ${
+                            isAvailable === false
+                              ? "text-amber-400"
+                              : "text-yellow-400"
+                          }`}
+                        />
+                      ) : shift.icon === "moon" ? (
+                        <Moon
+                          className={`w-3.5 h-3.5 ${
+                            isAvailable === false
+                              ? "text-amber-400"
+                              : "text-indigo-300"
+                          }`}
+                        />
+                      ) : (
+                        <Clock
+                          className={`w-3.5 h-3.5 ${
+                            isAvailable === false
+                              ? "text-amber-400"
+                              : "text-white/70"
+                          }`}
+                        />
+                      )}
+                      <span
+                        className={`text-xs font-semibold ${
+                          isAvailable === false
+                            ? "text-amber-200"
+                            : "text-white/90"
+                        }`}
+                      >
+                        {shift.inicio} - {shift.fin}
+                      </span>
+                    </div>
+                  ))}
                 </div>
+
                 {isAvailable === false && (
                   <span className="text-xs text-amber-400 font-medium mt-0.5">
                     Fuera de horario

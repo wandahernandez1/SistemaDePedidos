@@ -383,49 +383,6 @@ const Cart = memo(
 
               {/* Footer */}
               <div className="border-t border-secondary-200 dark:border-secondary-800 p-4 bg-white dark:bg-secondary-950 shrink-0">
-                {/* Nombre del cliente */}
-                <div className="mb-4">
-                  <Input
-                    label="Nombre y apellido"
-                    placeholder="Tu nombre completo"
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    inputSize="md"
-                    required
-                  />
-                </div>
-                {/* Método de pago */}
-                <div className="mb-4">
-                  <label className="block text-xs font-bold text-secondary-800 dark:text-secondary-200 mb-2">
-                    Método de pago
-                  </label>
-                  <div className="flex gap-4 items-center">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <Radio
-                        name="paymentMethod"
-                        value="efectivo"
-                        checked={paymentMethod === "efectivo"}
-                        onChange={() => setPaymentMethod("efectivo")}
-                        size="md"
-                      />
-                      <span className="text-sm text-secondary-700 dark:text-secondary-200">
-                        Efectivo
-                      </span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <Radio
-                        name="paymentMethod"
-                        value="transferencia"
-                        checked={paymentMethod === "transferencia"}
-                        onChange={() => setPaymentMethod("transferencia")}
-                        size="md"
-                      />
-                      <span className="text-sm text-secondary-700 dark:text-secondary-200">
-                        Transferencia
-                      </span>
-                    </label>
-                  </div>
-                </div>
                 {/* Delivery Type */}
                 <div className="mb-4">
                   <label className="flex items-center gap-2 text-xs font-bold text-secondary-800 dark:text-secondary-200 mb-2">

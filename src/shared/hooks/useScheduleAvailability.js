@@ -1,8 +1,16 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { DAYS_MAP, DEFAULT_CATEGORY_SCHEDULES } from "../constants/schedules";
+import {
+  DAYS_MAP,
+  DEFAULT_CATEGORY_SCHEDULES,
+  isTimeInActiveShift,
+  getActiveShifts,
+  getNextAvailableShift,
+  formatScheduleDisplay,
+} from "../constants/schedules";
 
 /**
  * Hook para verificar la disponibilidad de categorías según día y hora
+ * Soporta sistema de doble turno configurable
  *
  * @param {Object} customSchedules - Horarios personalizados desde la configuración
  * @returns {Object} - Funciones y estados de disponibilidad
@@ -58,7 +66,7 @@ export const useScheduleAvailability = (customSchedules = null) => {
   }, []);
 
   /**
-   * Verificar si una categoría está disponible ahora
+   * Verificar si una categoría está disponible ahora (soporta doble turno)
    */
   const isCategoryAvailableNow = useCallback(
     (category) => {
@@ -68,39 +76,13 @@ export const useScheduleAvailability = (customSchedules = null) => {
       const currentDay = getCurrentDay();
       const currentTimeStr = getCurrentTimeString();
 
-      // Debug temporal - remover en producción
-      if (category === "hamburguesas") {
-        console.log("🍔 Debug Hamburguesas:", {
-          category,
-          currentDay,
-          currentTimeStr,
-          scheduleDays: schedule.dias,
-          scheduleStart: schedule.horario_pedidos_inicio,
-          scheduleEnd: schedule.horario_pedidos_fin,
-          dayIncluded: schedule.dias.includes(currentDay),
-          timeAfterStart: compareTime(
-            currentTimeStr,
-            schedule.horario_pedidos_inicio
-          ),
-          timeBeforeEnd: compareTime(
-            currentTimeStr,
-            schedule.horario_pedidos_fin
-          ),
-        });
-      }
-
       // Verificar si el día actual está en los días habilitados
       if (!schedule.dias.includes(currentDay)) return false;
 
-      // Verificar si la hora actual está dentro del rango de pedidos
-      const afterStart =
-        compareTime(currentTimeStr, schedule.horario_pedidos_inicio) >= 0;
-      const beforeEnd =
-        compareTime(currentTimeStr, schedule.horario_pedidos_fin) <= 0;
-
-      return afterStart && beforeEnd;
+      // Verificar si estamos dentro de algún turno activo
+      return isTimeInActiveShift(schedule, currentTimeStr);
     },
-    [schedules, getCurrentDay, getCurrentTimeString, compareTime]
+    [schedules, getCurrentDay, getCurrentTimeString]
   );
 
   /**
@@ -126,7 +108,48 @@ export const useScheduleAvailability = (customSchedules = null) => {
   );
 
   /**
-   * Obtener mensaje de no disponibilidad para una categoría
+   * Obtener el turno actual activo de una categoría
+   */
+  const getCurrentActiveShift = useCallback(
+    (category) => {
+      const schedule = schedules[category];
+      if (!schedule || !schedule.habilitado) return null;
+
+      const currentDay = getCurrentDay();
+      const currentTimeStr = getCurrentTimeString();
+
+      if (!schedule.dias.includes(currentDay)) return null;
+
+      const turnos = schedule.turnos;
+      if (!turnos) return null;
+
+      // Verificar turno 1
+      if (turnos.turno1?.habilitado) {
+        if (
+          currentTimeStr >= turnos.turno1.inicio &&
+          currentTimeStr <= turnos.turno1.fin
+        ) {
+          return { ...turnos.turno1, key: "turno1" };
+        }
+      }
+
+      // Verificar turno 2
+      if (turnos.turno2?.habilitado) {
+        if (
+          currentTimeStr >= turnos.turno2.inicio &&
+          currentTimeStr <= turnos.turno2.fin
+        ) {
+          return { ...turnos.turno2, key: "turno2" };
+        }
+      }
+
+      return null;
+    },
+    [schedules, getCurrentDay, getCurrentTimeString]
+  );
+
+  /**
+   * Obtener mensaje de no disponibilidad para una categoría (con info de turnos)
    */
   const getUnavailableMessage = useCallback(
     (category) => {
@@ -134,8 +157,7 @@ export const useScheduleAvailability = (customSchedules = null) => {
       if (!schedule) return "Esta categoría no está disponible.";
 
       const days = schedule.dias || [];
-      const inicio = schedule.horario_pedidos_inicio || "19:00";
-      const fin = schedule.horario_pedidos_fin || "22:00";
+      const turnos = schedule.turnos;
 
       // Formatear días
       const formatDays = (d) => {
@@ -156,10 +178,31 @@ export const useScheduleAvailability = (customSchedules = null) => {
           .join(", ");
       };
 
+      // Formatear turnos
+      const formatTurnos = () => {
+        if (!turnos) {
+          const inicio = schedule.horario_pedidos_inicio || "19:00";
+          const fin = schedule.horario_pedidos_fin || "22:00";
+          return `de ${inicio} a ${fin} hs`;
+        }
+
+        const activeShifts = [];
+        if (turnos.turno1?.habilitado) {
+          activeShifts.push(`${turnos.turno1.inicio} a ${turnos.turno1.fin}`);
+        }
+        if (turnos.turno2?.habilitado) {
+          activeShifts.push(`${turnos.turno2.inicio} a ${turnos.turno2.fin}`);
+        }
+
+        if (activeShifts.length === 0) return "";
+        if (activeShifts.length === 1) return `de ${activeShifts[0]} hs`;
+        return `de ${activeShifts[0]} y de ${activeShifts[1]} hs`;
+      };
+
       const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
       return `${categoryName} están disponibles los ${formatDays(
         days
-      )} de ${inicio} a ${fin} hs.`;
+      )} ${formatTurnos()}.`;
     },
     [schedules]
   );
@@ -180,6 +223,62 @@ export const useScheduleAvailability = (customSchedules = null) => {
     return getAvailableCategoriesNow().length > 0;
   }, [getAvailableCategoriesNow]);
 
+  /**
+   * Obtener los turnos activos para el carrito (basado en categorías)
+   */
+  const getAvailableTimeSlots = useCallback(
+    (categories = []) => {
+      const currentTimeStr = getCurrentTimeString();
+      const slots = [];
+
+      // Si no hay categorías específicas, usar todas
+      const targetCategories =
+        categories.length > 0
+          ? categories
+          : Object.keys(schedules).filter(
+              (cat) => !["bebidas", "postres"].includes(cat)
+            );
+
+      // Encontrar la intersección de turnos disponibles
+      let commonSlots = null;
+
+      targetCategories.forEach((category) => {
+        const schedule = schedules[category];
+        if (!schedule || !schedule.habilitado) return;
+
+        const activeShifts = getActiveShifts(schedule);
+        const categorySlots = [];
+
+        activeShifts.forEach((shift) => {
+          // Solo incluir si el turno aún no ha terminado
+          if (shift.fin > currentTimeStr || shift.inicio > currentTimeStr) {
+            categorySlots.push({
+              inicio:
+                shift.inicio > currentTimeStr ? shift.inicio : currentTimeStr,
+              fin: shift.fin,
+              entrega_fin: shift.entrega_fin,
+              nombre: shift.nombre,
+            });
+          }
+        });
+
+        if (commonSlots === null) {
+          commonSlots = categorySlots;
+        } else {
+          // Intersección: solo mantener slots que estén en ambos
+          commonSlots = commonSlots.filter((slot) =>
+            categorySlots.some(
+              (cs) => cs.inicio <= slot.fin && cs.fin >= slot.inicio
+            )
+          );
+        }
+      });
+
+      return commonSlots || [];
+    },
+    [schedules, getCurrentTimeString]
+  );
+
   return {
     currentTime,
     currentDay: getCurrentDay(),
@@ -188,9 +287,14 @@ export const useScheduleAvailability = (customSchedules = null) => {
     isCategoryAvailableNow,
     isCategoryAvailableOnDay,
     getCategorySchedule,
+    getCurrentActiveShift,
     getUnavailableMessage,
     getAvailableCategoriesNow,
     isBusinessOpen,
+    getAvailableTimeSlots,
+    // Utilidades
+    compareTime,
+    formatScheduleDisplay,
   };
 };
 
