@@ -5,8 +5,48 @@ import { DEFAULT_CATEGORY_SCHEDULES } from "../constants/schedules";
 import { useScheduleAvailability } from "./useScheduleAvailability";
 
 /**
+ * Migra la estructura de horarios antigua a la nueva estructura con doble turno
+ * Si ya tiene la estructura nueva, la devuelve sin cambios
+ */
+const migrateSchedulesToNewFormat = (oldSchedules) => {
+  if (!oldSchedules) return DEFAULT_CATEGORY_SCHEDULES;
+  
+  const migrated = { ...oldSchedules };
+  
+  Object.keys(migrated).forEach((category) => {
+    const schedule = migrated[category];
+    
+    // Si no tiene estructura de turnos, migrar
+    if (schedule && !schedule.turnos) {
+      migrated[category] = {
+        ...schedule,
+        turnos: {
+          turno1: {
+            habilitado: false,
+            nombre: "Mediodía",
+            inicio: "11:00",
+            fin: "13:30",
+            entrega_fin: "14:00",
+          },
+          turno2: {
+            habilitado: true,
+            nombre: "Noche",
+            inicio: schedule.horario_pedidos_inicio || "19:00",
+            fin: schedule.horario_pedidos_fin || "22:00",
+            entrega_fin: schedule.horario_entrega_fin || "22:30",
+          },
+        },
+      };
+    }
+  });
+
+  return migrated;
+};
+
+/**
  * Hook que maneja horarios en tiempo real desde Supabase
  * Escucha cambios en la configuración y actualiza la disponibilidad automáticamente
+ * Soporta sistema de doble turno con migración automática
  */
 export const useRealTimeSchedules = () => {
   const [schedules, setSchedules] = useState(DEFAULT_CATEGORY_SCHEDULES);
@@ -30,9 +70,10 @@ export const useRealTimeSchedules = () => {
       if (configData) {
         setConfig(configData);
 
-        // Si hay horarios configurados, usarlos; sino usar los por defecto
-        const schedulesData =
-          configData.horarios_categorias || DEFAULT_CATEGORY_SCHEDULES;
+        // Si hay horarios configurados, migrar si es necesario y usarlos
+        const schedulesData = configData.horarios_categorias 
+          ? migrateSchedulesToNewFormat(configData.horarios_categorias)
+          : DEFAULT_CATEGORY_SCHEDULES;
         setSchedules(schedulesData);
       } else {
         // Si no hay configuración, usar defaults
@@ -55,9 +96,10 @@ export const useRealTimeSchedules = () => {
       const newConfig = payload.new;
       setConfig(newConfig);
 
-      // Actualizar horarios si están disponibles
-      const newSchedules =
-        newConfig.horarios_categorias || DEFAULT_CATEGORY_SCHEDULES;
+      // Actualizar horarios (migrando si es necesario)
+      const newSchedules = newConfig.horarios_categorias
+        ? migrateSchedulesToNewFormat(newConfig.horarios_categorias)
+        : DEFAULT_CATEGORY_SCHEDULES;
       setSchedules(newSchedules);
     }
   }, []);
