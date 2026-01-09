@@ -55,6 +55,7 @@ const Cart = memo(
     horarioApertura = "09:00",
     horarioCierre = "21:00",
     categorySchedules = null,
+    tiempoPreparacion = 30,
   }) => {
     const [deliveryTime, setDeliveryTime] = useState("");
     const [showConfirmation, setShowConfirmation] = useState(false);
@@ -245,8 +246,11 @@ const Cart = memo(
     }, [effectiveSchedule]);
 
     const estimatedTime = useMemo(
-      () => (deliveryTime ? calculateEstimatedTime(deliveryTime) : ""),
-      [deliveryTime]
+      () =>
+        deliveryTime
+          ? calculateEstimatedTime(deliveryTime, tiempoPreparacion)
+          : "",
+      [deliveryTime, tiempoPreparacion]
     );
 
     const handleClose = useCallback(() => {
@@ -608,7 +612,9 @@ const Cart = memo(
                   {estimatedTime && (
                     <p className="mt-2 px-2.5 py-2 bg-primary-500 rounded-lg text-xs text-white font-semibold text-center">
                       Estimado: <strong>{estimatedTime}</strong>
-                      <span className="ml-1 opacity-80">(+30 min)</span>
+                      <span className="ml-1 opacity-80">
+                        (+{tiempoPreparacion} min)
+                      </span>
                     </p>
                   )}
                 </div>
