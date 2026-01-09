@@ -131,17 +131,18 @@ export const generateWhatsAppMessage = (
 };
 
 /**
- * Calcula el horario estimado de entrega (+30 minutos)
+ * Calcula el horario estimado de entrega basado en el tiempo de preparación configurado
  * @param {string} selectedTime - Horario seleccionado (HH:mm)
+ * @param {number} preparationTime - Tiempo de preparación en minutos (default: 30)
  * @returns {string} Horario estimado (HH:mm)
  */
-export const calculateEstimatedTime = (selectedTime) => {
+export const calculateEstimatedTime = (selectedTime, preparationTime = 30) => {
   if (!selectedTime) return "";
 
   const [hours, minutes] = selectedTime.split(":").map(Number);
   const date = new Date();
   date.setHours(hours);
-  date.setMinutes(minutes + 30);
+  date.setMinutes(minutes + preparationTime);
 
   const estimatedHours = date.getHours().toString().padStart(2, "0");
   const estimatedMinutes = date.getMinutes().toString().padStart(2, "0");

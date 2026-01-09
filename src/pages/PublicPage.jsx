@@ -227,6 +227,7 @@ function PublicPage() {
         horarioApertura={config?.horario_apertura || "09:00"}
         horarioCierre={config?.horario_cierre || "21:00"}
         categorySchedules={schedules}
+        tiempoPreparacion={config?.tiempo_demora || 30}
       />
 
       {/* Modal de notificación de horarios */}
