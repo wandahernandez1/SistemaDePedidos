@@ -8,6 +8,7 @@ import Footer from "../components/Footer";
 import ScheduleNotificationModal from "../components/ScheduleNotificationModal";
 import { useCart } from "../hooks/useCart";
 import { useRealTimeSchedules } from "../shared/hooks/useRealTimeSchedules";
+import { useBackNavigation } from "../shared/hooks/useBackNavigation";
 import { getAll, TABLES as COLLECTIONS } from "../supabase/supabaseService";
 
 /**
@@ -150,6 +151,16 @@ function PublicPage() {
   const handleCartClose = useCallback(() => {
     setIsCartOpen(false);
   }, []);
+
+  // Hook para manejar la navegación hacia atrás en móviles
+  useBackNavigation({
+    isModalOpen: scheduleModalOpen,
+    isCartOpen,
+    showMenuView,
+    onCloseModal: handleCloseScheduleModal,
+    onCloseCart: handleCartClose,
+    onBackToMenu: handleBackToMenu,
+  });
 
   // Memoizar datos del modal
   const unavailabilityInfo = useMemo(() => {
