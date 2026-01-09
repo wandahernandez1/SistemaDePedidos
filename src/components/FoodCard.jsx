@@ -127,7 +127,9 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
                   className="inline-flex items-center gap-1 backdrop-blur-sm bg-white/15 text-white px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold border border-white/20 shadow-sm whitespace-nowrap"
                 >
                   <Flame className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-400 shrink-0" />
-                  <span className="truncate max-w-[60px] sm:max-w-none">{tag}</span>
+                  <span className="truncate max-w-[60px] sm:max-w-none">
+                    {tag}
+                  </span>
                 </span>
               ))}
             </div>
