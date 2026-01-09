@@ -137,10 +137,9 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
 
           {/* Status indicator */}
           {isAvailable !== false && (
-            <div className="flex items-center gap-1.5 backdrop-blur-sm bg-emerald-500/20 text-emerald-300 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium border border-emerald-400/30 shrink-0">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span className="hidden sm:inline">Disponible</span>
-              <span className="sm:hidden">OK</span>
+            <div className="flex items-center gap-1 sm:gap-1.5 backdrop-blur-sm bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 sm:px-2.5 sm:py-1.5 rounded-full text-[9px] sm:text-xs font-medium border border-emerald-400/30 shrink-0">
+              <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-emerald-400" />
+              <span>Disponible</span>
             </div>
           )}
         </div>
