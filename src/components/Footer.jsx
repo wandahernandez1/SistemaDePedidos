@@ -174,7 +174,9 @@ const Footer = () => {
                 <Instagram className="h-5 w-5" />
               </a>
               <a
-                href="#"
+                href="https://wa.me/542284229601"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-xl bg-secondary-800 dark:bg-secondary-800/80 flex items-center justify-center text-secondary-400 transition-all duration-300 hover:bg-green-500 hover:text-white hover:-translate-y-1 border border-secondary-700 dark:border-secondary-700"
                 aria-label="WhatsApp"
               >

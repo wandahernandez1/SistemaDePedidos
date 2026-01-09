@@ -84,7 +84,7 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
   return (
     <div
       className={`group relative rounded-3xl overflow-hidden h-full flex flex-col cursor-pointer transition-all duration-300 ease-out ${
-        isAvailable === false ? "opacity-80 grayscale-[15%]" : ""
+        isAvailable === false ? "opacity-95 dark:opacity-90 grayscale-[5%] dark:grayscale-[10%]" : ""
       }`}
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
@@ -96,13 +96,17 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
       }}
     >
       {/* Main Image Container - Full card background */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden bg-secondary-200 dark:bg-secondary-800">
         <img
           src={food.image}
           alt={food.name}
-          className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          className="w-full h-full min-w-full min-h-full object-cover object-center"
           loading="lazy"
           decoding="async"
+          style={{ 
+            objectFit: 'cover',
+            objectPosition: 'center',
+          }}
         />
         {/* Gradient overlay for readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />

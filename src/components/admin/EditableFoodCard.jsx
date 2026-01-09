@@ -44,7 +44,7 @@ const EditableFoodCard = ({ food, onSave, onDelete, onEdit }) => {
         <img
           src={food.image}
           alt={food.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover"
           loading="lazy"
         />
 
