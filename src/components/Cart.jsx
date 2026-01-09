@@ -162,7 +162,9 @@ const Cart = memo(
      */
     const getCurrentTimeString = useCallback(() => {
       const now = new Date();
-      return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+      return `${String(now.getHours()).padStart(2, "0")}:${String(
+        now.getMinutes()
+      ).padStart(2, "0")}`;
     }, []);
 
     const [currentTime, setCurrentTime] = useState(getCurrentTimeString);
@@ -173,7 +175,7 @@ const Cart = memo(
       if (showTimeSelector) {
         // Actualizar inmediatamente al abrir
         setCurrentTime(getCurrentTimeString());
-        
+
         // Configurar intervalo para actualizar cada 30 segundos
         intervalRef.current = setInterval(() => {
           setCurrentTime(getCurrentTimeString());
@@ -204,10 +206,13 @@ const Cart = memo(
      * Verificar si un horario ya pasó
      * Un horario se considera pasado si es menor que la hora actual
      */
-    const isTimePassed = useCallback((time) => {
-      // Comparación directa de strings funciona porque el formato HH:mm es ordenable lexicográficamente
-      return time < currentTime;
-    }, [currentTime]);
+    const isTimePassed = useCallback(
+      (time) => {
+        // Comparación directa de strings funciona porque el formato HH:mm es ordenable lexicográficamente
+        return time < currentTime;
+      },
+      [currentTime]
+    );
 
     // Generar opciones de horarios cada 30 minutos - memoizado
     const timeOptions = useMemo(() => {
@@ -569,7 +574,7 @@ const Cart = memo(
                           {timeOptions.map((time) => {
                             const isPassed = isTimePassed(time);
                             const isSelected = deliveryTime === time;
-                            
+
                             return (
                               <button
                                 key={time}
@@ -579,10 +584,12 @@ const Cart = memo(
                                   isPassed
                                     ? "bg-secondary-100 dark:bg-secondary-800 border-secondary-200 dark:border-secondary-700 text-secondary-400 dark:text-secondary-600 cursor-not-allowed line-through opacity-60"
                                     : isSelected
-                                      ? "bg-primary-500 border-primary-500 text-white cursor-pointer"
-                                      : "bg-white dark:bg-secondary-900 border-secondary-300 dark:border-secondary-700 text-secondary-800 dark:text-secondary-100 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 cursor-pointer"
+                                    ? "bg-primary-500 border-primary-500 text-white cursor-pointer"
+                                    : "bg-white dark:bg-secondary-900 border-secondary-300 dark:border-secondary-700 text-secondary-800 dark:text-secondary-100 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 cursor-pointer"
                                 }`}
-                                onClick={() => !isPassed && handleSelectTime(time)}
+                                onClick={() =>
+                                  !isPassed && handleSelectTime(time)
+                                }
                               >
                                 {time}
                                 {isPassed && (
