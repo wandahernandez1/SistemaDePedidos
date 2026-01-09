@@ -246,7 +246,10 @@ const Cart = memo(
     }, [effectiveSchedule]);
 
     const estimatedTime = useMemo(
-      () => (deliveryTime ? calculateEstimatedTime(deliveryTime, tiempoPreparacion) : ""),
+      () =>
+        deliveryTime
+          ? calculateEstimatedTime(deliveryTime, tiempoPreparacion)
+          : "",
       [deliveryTime, tiempoPreparacion]
     );
 
@@ -609,7 +612,9 @@ const Cart = memo(
                   {estimatedTime && (
                     <p className="mt-2 px-2.5 py-2 bg-primary-500 rounded-lg text-xs text-white font-semibold text-center">
                       Estimado: <strong>{estimatedTime}</strong>
-                      <span className="ml-1 opacity-80">(+{tiempoPreparacion} min)</span>
+                      <span className="ml-1 opacity-80">
+                        (+{tiempoPreparacion} min)
+                      </span>
                     </p>
                   )}
                 </div>
