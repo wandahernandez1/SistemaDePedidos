@@ -1,4 +1,4 @@
-import { useState, memo, useCallback, useMemo } from "react";
+import { useState, memo, useCallback, useMemo, useEffect, useRef } from "react";
 import {
   X,
   Store,
@@ -156,6 +156,59 @@ const Cart = memo(
       };
     }, [categorySchedules, cartCategories, horarioApertura, horarioCierre]);
 
+    /**
+     * Obtener la hora actual en formato HH:mm
+     * Se actualiza cada minuto mientras el selector está abierto para mantener precisión
+     */
+    const getCurrentTimeString = useCallback(() => {
+      const now = new Date();
+      return `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+    }, []);
+
+    const [currentTime, setCurrentTime] = useState(getCurrentTimeString);
+    const intervalRef = useRef(null);
+
+    // Actualizar la hora cada minuto mientras el selector está abierto
+    useEffect(() => {
+      if (showTimeSelector) {
+        // Actualizar inmediatamente al abrir
+        setCurrentTime(getCurrentTimeString());
+        
+        // Configurar intervalo para actualizar cada 30 segundos
+        intervalRef.current = setInterval(() => {
+          setCurrentTime(getCurrentTimeString());
+        }, 30000); // Cada 30 segundos para mayor precisión
+      } else {
+        // Limpiar intervalo al cerrar
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      }
+
+      return () => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      };
+    }, [showTimeSelector, getCurrentTimeString]);
+
+    // Actualizar la hora actual cuando se abre el selector
+    const handleOpenTimeSelector = useCallback(() => {
+      setCurrentTime(getCurrentTimeString());
+      setShowTimeSelector(true);
+    }, [getCurrentTimeString]);
+
+    /**
+     * Verificar si un horario ya pasó
+     * Un horario se considera pasado si es menor que la hora actual
+     */
+    const isTimePassed = useCallback((time) => {
+      // Comparación directa de strings funciona porque el formato HH:mm es ordenable lexicográficamente
+      return time < currentTime;
+    }, [currentTime]);
+
     // Generar opciones de horarios cada 30 minutos - memoizado
     const timeOptions = useMemo(() => {
       const options = [];
@@ -205,10 +258,6 @@ const Cart = memo(
 
     const handleSetDelivery = useCallback(() => {
       setDeliveryType("delivery");
-    }, []);
-
-    const handleOpenTimeSelector = useCallback(() => {
-      setShowTimeSelector(true);
     }, []);
 
     const handleCloseTimeSelector = useCallback(() => {
@@ -517,20 +566,33 @@ const Cart = memo(
                           </button>
                         </div>
                         <div className="grid grid-cols-3 gap-3 p-5 max-h-[calc(70vh-80px)] overflow-y-auto">
-                          {timeOptions.map((time) => (
-                            <button
-                              key={time}
-                              type="button"
-                              className={`py-4 px-3 border-2 rounded-xl text-base font-semibold cursor-pointer transition-colors duration-150 min-h-13 ${
-                                deliveryTime === time
-                                  ? "bg-primary-500 border-primary-500 text-white"
-                                  : "bg-white dark:bg-secondary-900 border-secondary-300 dark:border-secondary-700 text-secondary-800 dark:text-secondary-100 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30"
-                              }`}
-                              onClick={() => handleSelectTime(time)}
-                            >
-                              {time}
-                            </button>
-                          ))}
+                          {timeOptions.map((time) => {
+                            const isPassed = isTimePassed(time);
+                            const isSelected = deliveryTime === time;
+                            
+                            return (
+                              <button
+                                key={time}
+                                type="button"
+                                disabled={isPassed}
+                                className={`py-4 px-3 border-2 rounded-xl text-base font-semibold transition-colors duration-150 min-h-13 relative ${
+                                  isPassed
+                                    ? "bg-secondary-100 dark:bg-secondary-800 border-secondary-200 dark:border-secondary-700 text-secondary-400 dark:text-secondary-600 cursor-not-allowed line-through opacity-60"
+                                    : isSelected
+                                      ? "bg-primary-500 border-primary-500 text-white cursor-pointer"
+                                      : "bg-white dark:bg-secondary-900 border-secondary-300 dark:border-secondary-700 text-secondary-800 dark:text-secondary-100 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 cursor-pointer"
+                                }`}
+                                onClick={() => !isPassed && handleSelectTime(time)}
+                              >
+                                {time}
+                                {isPassed && (
+                                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-secondary-400 dark:bg-secondary-600 rounded-full flex items-center justify-center">
+                                    <Clock className="w-2.5 h-2.5 text-white" />
+                                  </span>
+                                )}
+                              </button>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>
