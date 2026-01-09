@@ -84,7 +84,9 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
   return (
     <div
       className={`group relative rounded-3xl overflow-hidden h-full flex flex-col cursor-pointer transition-all duration-300 ease-out ${
-        isAvailable === false ? "opacity-95 dark:opacity-90 grayscale-[5%] dark:grayscale-[10%]" : ""
+        isAvailable === false
+          ? "opacity-95 dark:opacity-90 grayscale-[5%] dark:grayscale-[10%]"
+          : ""
       }`}
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}
@@ -103,9 +105,9 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
           className="w-full h-full min-w-full min-h-full object-cover object-center"
           loading="lazy"
           decoding="async"
-          style={{ 
-            objectFit: 'cover',
-            objectPosition: 'center',
+          style={{
+            objectFit: "cover",
+            objectPosition: "center",
           }}
         />
         {/* Gradient overlay for readability */}
@@ -115,17 +117,17 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
       {/* Content overlay */}
       <div className="relative flex flex-col h-full min-h-[280px] sm:min-h-[320px] p-5 sm:p-6">
         {/* Top Section - Tags & Status */}
-        <div className="flex justify-between items-start gap-2">
-          {/* Tags with glassmorphism */}
+        <div className="flex justify-between items-start gap-3">
+          {/* Tags with glassmorphism - Max 2 tags, truncate if needed */}
           {food.tags && food.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {food.tags.map((tag, index) => (
+            <div className="flex flex-wrap gap-1.5 max-w-[60%]">
+              {food.tags.slice(0, 2).map((tag, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center gap-1.5 backdrop-blur-sm bg-white/15 text-white px-3 py-1.5 rounded-full text-xs font-semibold border border-white/20 shadow-sm"
+                  className="inline-flex items-center gap-1 backdrop-blur-sm bg-white/15 text-white px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold border border-white/20 shadow-sm whitespace-nowrap"
                 >
-                  <Flame className="w-3 h-3 text-orange-400" />
-                  {tag}
+                  <Flame className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-400 shrink-0" />
+                  <span className="truncate max-w-[60px] sm:max-w-none">{tag}</span>
                 </span>
               ))}
             </div>
@@ -133,9 +135,10 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
 
           {/* Status indicator */}
           {isAvailable !== false && (
-            <div className="flex items-center gap-1.5 backdrop-blur-sm bg-emerald-500/20 text-emerald-300 px-2.5 py-1.5 rounded-full text-xs font-medium border border-emerald-400/30">
+            <div className="flex items-center gap-1.5 backdrop-blur-sm bg-emerald-500/20 text-emerald-300 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-medium border border-emerald-400/30 shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              Disponible
+              <span className="hidden sm:inline">Disponible</span>
+              <span className="sm:hidden">OK</span>
             </div>
           )}
         </div>

@@ -65,8 +65,8 @@ const ProductList = memo(
             </p>
           </div>
 
-          {/* Menu Grid - Responsivo con contenido optimizado */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 mb-8 sm:mb-12 product-grid">
+          {/* Menu Grid - 3 cards centradas en desktop, responsive en móvil */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12 product-grid max-w-5xl mx-auto">
             {foods &&
               foods.map((food) => {
                 const schedule = categorySchedules?.[food.category];

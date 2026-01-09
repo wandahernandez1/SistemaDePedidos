@@ -103,9 +103,9 @@ const ProductCard = memo(({ product, onAddToCart }) => {
             className="w-full h-full min-w-full min-h-full object-cover object-center"
             loading="lazy"
             decoding="async"
-            style={{ 
-              objectFit: 'cover',
-              objectPosition: 'center',
+            style={{
+              objectFit: "cover",
+              objectPosition: "center",
             }}
           />
 
