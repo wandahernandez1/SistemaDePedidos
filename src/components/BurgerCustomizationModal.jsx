@@ -69,16 +69,16 @@ const defaultAdditionals = {
  */
 const extractIngredientsFromDescription = (descripcion) => {
   if (!descripcion) return [];
-  
+
   // Separar por comas y la palabra "y"
   const parts = descripcion
     .split(/,\s*|\s+y\s+/)
-    .map(part => part.trim())
-    .filter(part => part.length > 0);
-  
+    .map((part) => part.trim())
+    .filter((part) => part.length > 0);
+
   // Capitalizar primera letra de cada ingrediente
-  return parts.map(part => 
-    part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+  return parts.map(
+    (part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
   );
 };
 
@@ -442,7 +442,7 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                     })}
                   </div>
                 </div>
-                
+
                 {/* Spacer para que el último elemento no quede oculto */}
                 <div className="h-4 sm:h-6" aria-hidden="true"></div>
               </div>
@@ -493,7 +493,8 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                 {/* Burger Info */}
                 <div className="mb-4 sm:mb-6">
                   <h3 className="text-base sm:text-lg font-bold text-secondary-900 flex items-center gap-2 mb-3 sm:mb-4">
-                    <Beef className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" /> Tu hamburguesa
+                    <Beef className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />{" "}
+                    Tu hamburguesa
                   </h3>
                   <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-sm border border-secondary-200">
                     <div className="flex justify-between items-center">
@@ -513,8 +514,8 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                 ).length > 0 && (
                   <div className="mb-4 sm:mb-6">
                     <h3 className="text-base sm:text-lg font-bold text-secondary-900 flex items-center gap-2 mb-3 sm:mb-4">
-                      <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" /> Ingredientes
-                      incluidos
+                      <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />{" "}
+                      Ingredientes incluidos
                     </h3>
                     <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-sm border border-secondary-200">
                       <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -537,7 +538,8 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                 {removedIngredients.length > 0 && (
                   <div className="mb-4 sm:mb-6">
                     <h3 className="text-base sm:text-lg font-bold text-secondary-900 flex items-center gap-2 mb-3 sm:mb-4">
-                      <X className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" /> Sin estos
+                      <X className="w-4 h-4 sm:w-5 sm:h-5 text-red-500" /> Sin
+                      estos
                     </h3>
                     <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-sm border border-secondary-200">
                       <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -558,7 +560,8 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                 {addedIngredients.length > 0 && (
                   <div className="mb-4 sm:mb-6">
                     <h3 className="text-base sm:text-lg font-bold text-secondary-900 flex items-center gap-2 mb-3 sm:mb-4">
-                      <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" /> Extras
+                      <Plus className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />{" "}
+                      Extras
                     </h3>
                     <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-sm border border-secondary-200">
                       {addedIngredients.map((ing) => {
@@ -594,7 +597,8 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                 {/* Quantity */}
                 <div className="mb-4 sm:mb-6">
                   <h3 className="text-base sm:text-lg font-bold text-secondary-900 flex items-center gap-2 mb-3 sm:mb-4">
-                    <Hash className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" /> Cantidad
+                    <Hash className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />{" "}
+                    Cantidad
                   </h3>
                   <div className="flex items-center gap-2 sm:gap-3 bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 shadow-sm border border-secondary-200">
                     <button
@@ -619,7 +623,8 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                 {/* Price Breakdown */}
                 <div className="bg-gradient-to-br from-primary-50 to-white rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm border border-primary-100">
                   <h3 className="text-base sm:text-lg font-bold text-secondary-900 flex items-center gap-2 mb-3 sm:mb-4">
-                    <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" /> Resumen
+                    <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500" />{" "}
+                    Resumen
                   </h3>
 
                   {/* Base Price */}
@@ -665,7 +670,9 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
                     {/* Quantity multiplier */}
                     {quantity > 1 && (
                       <div className="flex justify-between items-center py-1 sm:py-2 text-secondary-500">
-                        <span className="text-xs sm:text-sm">× {quantity} unidades</span>
+                        <span className="text-xs sm:text-sm">
+                          × {quantity} unidades
+                        </span>
                         <span className="text-xs sm:text-sm">
                           $
                           {(
