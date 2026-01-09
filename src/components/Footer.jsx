@@ -28,8 +28,18 @@ const Footer = () => {
   const formatDays = (days) => {
     if (!days || days.length === 0) return "";
 
-    const dayOrder = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
-    const sortedDays = [...days].sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b));
+    const dayOrder = [
+      "lunes",
+      "martes",
+      "miércoles",
+      "jueves",
+      "viernes",
+      "sábado",
+      "domingo",
+    ];
+    const sortedDays = [...days].sort(
+      (a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b)
+    );
 
     // Detectar rangos consecutivos
     const weekdays = ["lunes", "martes", "miércoles", "jueves", "viernes"];
@@ -51,10 +61,12 @@ const Footer = () => {
     }
 
     // Caso especial: Viernes, Sábado, Domingo
-    if (sortedDays.length === 3 && 
-        sortedDays.includes("viernes") && 
-        sortedDays.includes("sábado") && 
-        sortedDays.includes("domingo")) {
+    if (
+      sortedDays.length === 3 &&
+      sortedDays.includes("viernes") &&
+      sortedDays.includes("sábado") &&
+      sortedDays.includes("domingo")
+    ) {
       return "Vie - Dom";
     }
 
@@ -101,19 +113,19 @@ const Footer = () => {
     if (!schedules) return [];
 
     const categories = [
-      { 
-        key: "empanadas", 
-        name: "Empanadas", 
+      {
+        key: "empanadas",
+        name: "Empanadas",
         icon: UtensilsCrossed,
       },
-      { 
-        key: "pizzas", 
-        name: "Pizzas", 
+      {
+        key: "pizzas",
+        name: "Pizzas",
         icon: Pizza,
       },
-      { 
-        key: "hamburguesas", 
-        name: "Hamburguesas", 
+      {
+        key: "hamburguesas",
+        name: "Hamburguesas",
         icon: Beef,
       },
     ];
@@ -215,8 +227,12 @@ const Footer = () => {
                       </span>
                       {category.shifts.map((shift, idx) => (
                         <div key={idx} className="text-xs">
-                          <span className="text-secondary-500">{shift.name}: </span>
-                          <span className="text-secondary-300">{shift.hours}</span>
+                          <span className="text-secondary-500">
+                            {shift.name}:{" "}
+                          </span>
+                          <span className="text-secondary-300">
+                            {shift.hours}
+                          </span>
                         </div>
                       ))}
                     </div>

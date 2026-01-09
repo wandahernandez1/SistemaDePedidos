@@ -64,7 +64,14 @@ export const useBackNavigation = ({
       // para evitar salir de la aplicación
       window.history.pushState({ page: "main" }, "");
     },
-    [isModalOpen, isCartOpen, showMenuView, onCloseModal, onCloseCart, onBackToMenu]
+    [
+      isModalOpen,
+      isCartOpen,
+      showMenuView,
+      onCloseModal,
+      onCloseCart,
+      onBackToMenu,
+    ]
   );
 
   /**
