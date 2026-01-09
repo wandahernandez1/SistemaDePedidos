@@ -1,287 +1,364 @@
-# Sistema de Pedidos TakeAway
+# 🍔 LA COCINA DE LAU - Sistema de Pedidos TakeAway
 
-Aplicación web para gestión de pedidos de comida con panel administrativo y carrito de compras integrado con WhatsApp.
+<div align="center">
 
----
+![React](https://img.shields.io/badge/React-19.1.1-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-7.1.7-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Tailwind-4.1.18-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 
-## Planteamiento del Problema
+**Aplicación web moderna para gestión de pedidos de comida con panel administrativo y carrito de compras integrado con WhatsApp.**
 
-Los negocios gastronómicos pequeños necesitan digitalizar su proceso de pedidos sin invertir en soluciones complejas o costosas. Las plataformas tradicionales cobran comisiones elevadas y no ofrecen control total sobre la gestión del menú, precios y customización de productos.
+[🚀 Demo en Vivo](#-demo-en-vivo) • [📋 Características](#-características-principales) • [🏗️ Arquitectura](#️-arquitectura-de-la-solución) • [💡 Retos Técnicos](#-retos-técnicos-superados)
 
-Los clientes requieren una experiencia fluida para explorar el menú, personalizar productos (hamburguesas, empanadas) y enviar pedidos directamente por WhatsApp sin fricciones ni registros obligatorios.
-
----
-
-## Solución
-
-Sistema web progresivo que permite a los administradores gestionar productos, servicios y pedidos desde un dashboard centralizado, mientras los clientes pueden navegar el catálogo, personalizar productos complejos y finalizar pedidos mediante WhatsApp.
-
-La arquitectura separa la vista pública (catálogo + carrito) de la vista administrativa (CRUD completo de recursos), utilizando Supabase como backend serverless y almacenamiento de imágenes.
+</div>
 
 ---
 
-## Funcionalidades Principales
+## 🚀 Demo en Vivo
 
-**Vista Pública (Cliente)**
+| Entorno         | URL                                                                      | Credenciales     |
+| --------------- | ------------------------------------------------------------------------ | ---------------- |
+| **Producción**  | [lacocinadelau.vercel.app](https://lacocinadelau.vercel.app)             | -                |
+| **Panel Admin** | [lacocinadelau.vercel.app/admin](https://lacocinadelau.vercel.app/admin) | Solicitar acceso |
 
-- Navegación de productos por categorías (hamburguesas, empanadas, bebidas, pizzas)
-- Carrito de compras persistente con incremento/decremento de cantidades
-- Customización avanzada de productos:
-  - Hamburguesas: elección de pan, carne, extras
-  - Empanadas: selección de relleno y aclaraciones
-- Selector de tipo de entrega (pickup/delivery) con horarios configurables
-- Generación automática de mensaje formateado para WhatsApp
-- Sistema de temas (claro/oscuro)
-
-**Panel Administrativo**
-
-- Autenticación con Supabase Auth
-- CRUD completo de productos, servicios y categorías
-- Upload de imágenes con Supabase Storage
-- Configuración dinámica de horarios de atención
-- Gestión de pedidos con estados (pendiente, en proceso, completado)
-- Vista de órdenes históricas y activas
+> 📱 **Optimizado para móviles** - La experiencia está diseñada primero para dispositivos móviles, ideal para clientes que hacen pedidos desde sus teléfonos.
 
 ---
 
-## Stack Tecnológico
+## 📋 Características Principales
 
-**Frontend**
+### Vista Pública (Cliente)
 
-- React 19.1.1
-- React Router DOM 7.10.1 (enrutamiento SPA)
-- Vite 7.1.7 (build tool)
+- 🍕 Navegación de productos por categorías con horarios en tiempo real
+- 🛒 Carrito de compras persistente con modificación de cantidades
+- 🎨 Customización avanzada de hamburguesas y empanadas
+- 📱 Envío de pedidos por WhatsApp con mensaje formateado
+- 🌙 Soporte para modo claro/oscuro
+- ⏰ Sistema de disponibilidad por horarios y días
 
-**Estilos y UI**
+### Panel Administrativo
 
-- Tailwind CSS 4.1.18 (utility-first)
-- shadcn/ui (componentes base con CVA)
-- Lucide React 0.562.0 (iconografía)
-- class-variance-authority (variantes de componentes)
-- tailwind-merge + clsx (merge de clases)
-
-**Backend y Servicios**
-
-- Supabase (PostgreSQL + Storage + Auth)
-
-**Gestión de Estado**
-
-- Context API (AuthContext, ThemeContext)
-- Custom hooks (useCart, useDisclosure)
-
-**Herramientas de Desarrollo**
-
-- ESLint 9.36.0 (linting)
-- PostCSS + Autoprefixer
+- 🔐 Autenticación segura con Supabase Auth
+- 📦 CRUD completo de productos, categorías y servicios
+- 🖼️ Upload de imágenes con Supabase Storage
+- ⚙️ Configuración dinámica de horarios por categoría
+- 📊 Gestión de pedidos con historial
 
 ---
 
-## Estructura del Proyecto
+## 🏗️ Arquitectura de la Solución
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                              ARQUITECTURA DEL SISTEMA                            │
+└─────────────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                                   FRONTEND                                        │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐ │
+│  │                              React + Vite                                    │ │
+│  │  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐  ┌──────────────┐  │ │
+│  │  │   PublicPage  │  │ AdminDashboard│  │    Context    │  │    Hooks     │  │ │
+│  │  │   (Cliente)   │  │    (Admin)    │  │    Providers  │  │   (Custom)   │  │ │
+│  │  └───────┬───────┘  └───────┬───────┘  └───────┬───────┘  └──────┬───────┘  │ │
+│  │          │                  │                  │                 │          │ │
+│  │          └──────────────────┼──────────────────┼─────────────────┘          │ │
+│  │                             │                  │                            │ │
+│  │                    ┌────────▼──────────────────▼────────┐                   │ │
+│  │                    │         Shared Components          │                   │ │
+│  │                    │    (shadcn/ui + Lucide Icons)      │                   │ │
+│  │                    └────────────────────────────────────┘                   │ │
+│  └─────────────────────────────────────────────────────────────────────────────┘ │
+│                                        │                                          │
+│                                        ▼                                          │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐ │
+│  │                          Supabase Client (SDK)                              │ │
+│  │     supabaseService.js  │  storageService.js  │  config.js (Auth)           │ │
+│  └─────────────────────────────────────────────────────────────────────────────┘ │
+└────────────────────────────────────────┬─────────────────────────────────────────┘
+                                         │
+                                         │ HTTPS / WebSocket (Real-time)
+                                         ▼
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                                   BACKEND (BaaS)                                  │
+│  ┌─────────────────────────────────────────────────────────────────────────────┐ │
+│  │                               SUPABASE                                       │ │
+│  │  ┌───────────────┐  ┌───────────────┐  ┌───────────────┐  ┌──────────────┐  │ │
+│  │  │  PostgreSQL   │  │    Storage    │  │     Auth      │  │  Real-time   │  │ │
+│  │  │   Database    │  │   (Images)    │  │ (JWT + RLS)   │  │  Subscriptions│ │ │
+│  │  ├───────────────┤  ├───────────────┤  ├───────────────┤  ├──────────────┤  │ │
+│  │  │ • products    │  │ • products/   │  │ • Admin users │  │ • Config     │  │ │
+│  │  │ • foods       │  │ • foods/      │  │ • Sessions    │  │   changes    │  │ │
+│  │  │ • orders      │  │ • services/   │  │ • Row Level   │  │ • Schedule   │  │ │
+│  │  │ • config      │  │               │  │   Security    │  │   updates    │  │ │
+│  │  │ • services    │  │               │  │               │  │              │  │ │
+│  │  └───────────────┘  └───────────────┘  └───────────────┘  └──────────────┘  │ │
+│  └─────────────────────────────────────────────────────────────────────────────┘ │
+└──────────────────────────────────────────────────────────────────────────────────┘
+                                         │
+                                         ▼
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                               INTEGRACIÓN EXTERNA                                 │
+│                    ┌─────────────────────────────────────┐                        │
+│                    │         WhatsApp Business           │                        │
+│                    │    (API wa.me - Click to Chat)      │                        │
+│                    │                                     │                        │
+│                    │  Mensaje formateado con:            │                        │
+│                    │  • Productos del carrito            │                        │
+│                    │  • Personalizaciones                │                        │
+│                    │  • Tipo de entrega                  │                        │
+│                    │  • Horario seleccionado             │                        │
+│                    │  • Total del pedido                 │                        │
+│                    └─────────────────────────────────────┘                        │
+└──────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Flujo de Datos
+
+```
+Cliente                    Frontend                   Supabase                 WhatsApp
+   │                          │                          │                        │
+   │─── Selecciona ───────────▶                          │                        │
+   │    categoría             │                          │                        │
+   │                          │──── GET products ────────▶                        │
+   │                          │◀─── JSON response ───────│                        │
+   │◀── Muestra productos ────│                          │                        │
+   │                          │                          │                        │
+   │─── Agrega al carrito ────▶                          │                        │
+   │    (con personalización) │                          │                        │
+   │                          │──── localStorage ────────▶ (Persistencia local)   │
+   │                          │                          │                        │
+   │─── Enviar pedido ────────▶                          │                        │
+   │                          │──── POST order ──────────▶                        │
+   │                          │                          │──── Guarda orden ──────│
+   │                          │◀─── Order ID ────────────│                        │
+   │                          │                          │                        │
+   │                          │──── Genera mensaje ──────▶                        │
+   │                          │     WhatsApp             │──── wa.me/... ─────────▶
+   │◀── Abre WhatsApp ────────│                          │                        │
+```
+
+---
+
+## 💡 Retos Técnicos Superados
+
+### 1. 🕐 Sistema de Horarios en Tiempo Real
+
+**Problema:** Los horarios de disponibilidad varían por categoría (empanadas de L-V, hamburguesas Vie-Dom) y por turnos (mediodía/noche). Necesitaba actualizarse en tiempo real sin refrescar la página.
+
+**Solución:**
+
+- Implementación de **Supabase Real-time subscriptions** para escuchar cambios en la configuración
+- Hook personalizado `useRealTimeSchedules` que gestiona el estado y la suscripción
+- Sistema de doble turno configurable por categoría
+- Migración automática de estructura de datos antigua a nueva
+
+```javascript
+// Suscripción en tiempo real a cambios de configuración
+useEffect(() => {
+  const subscription = supabase
+    .channel("config-changes")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "config" },
+      handleConfigChange
+    )
+    .subscribe();
+
+  return () => subscription.unsubscribe();
+}, []);
+```
+
+### 2. 📱 Navegación Móvil y Botón "Atrás"
+
+**Problema:** En dispositivos móviles, el botón "atrás" del navegador sacaba al usuario de la aplicación en lugar de navegar dentro de ella (cerrar modales, volver al menú).
+
+**Solución:**
+
+- Hook personalizado `useBackNavigation` que intercepta el evento `popstate`
+- Gestión del History API para crear entradas de navegación internas
+- Priorización de acciones: cerrar modal → cerrar carrito → volver al menú
+
+```javascript
+// Hook que maneja la navegación hacia atrás
+useBackNavigation({
+  isModalOpen,
+  isCartOpen,
+  showMenuView,
+  onCloseModal,
+  onCloseCart,
+  onBackToMenu,
+});
+```
+
+### 3. 🎨 Tema Oscuro/Claro Consistente
+
+**Problema:** Mantener consistencia visual entre ambos temas con colores que funcionen en ambos contextos sin duplicar código CSS.
+
+**Solución:**
+
+- Variables CSS personalizadas en `:root` y `.dark`
+- Configuración de Tailwind que referencia las variables
+- Componentes que usan clases como `bg-secondary-50 dark:bg-secondary-900`
+
+```css
+:root {
+  --color-primary-500: #2389ee;
+  --bg-primary: #ffffff;
+}
+.dark {
+  --bg-primary: var(--color-secondary-900);
+}
+```
+
+### 4. 🍔 Personalización Compleja de Productos
+
+**Problema:** Las hamburguesas requieren múltiples opciones (pan, carne, extras) y las empanadas tienen sistema de docena mixta. Cada personalización afecta el precio final.
+
+**Solución:**
+
+- Modales de personalización específicos por tipo de producto
+- Cálculo dinámico de precio basado en opciones seleccionadas
+- Serialización de opciones para el mensaje de WhatsApp
+- Almacenamiento de configuración junto al producto en el carrito
+
+### 5. 📷 Manejo de Imágenes Responsivas
+
+**Problema:** Imágenes de diferentes tamaños y proporciones debían verse consistentes en las cards sin distorsión.
+
+**Solución:**
+
+- `object-fit: cover` con `object-position: center`
+- Fallback de color de fondo mientras carga la imagen
+- `min-w-full min-h-full` para garantizar cobertura completa
+- Lazy loading nativo para optimizar rendimiento
+
+---
+
+## 🛠️ Stack Tecnológico
+
+### Frontend
+
+| Tecnología   | Versión | Propósito               |
+| ------------ | ------- | ----------------------- |
+| React        | 19.1.1  | Framework UI            |
+| React Router | 7.10.1  | Enrutamiento SPA        |
+| Vite         | 7.1.7   | Build tool y dev server |
+| Tailwind CSS | 4.1.18  | Estilos utility-first   |
+| shadcn/ui    | -       | Componentes base        |
+| Lucide React | 0.562.0 | Iconografía             |
+
+### Backend (BaaS)
+
+| Tecnología        | Propósito                    |
+| ----------------- | ---------------------------- |
+| Supabase          | Base de datos PostgreSQL     |
+| Supabase Auth     | Autenticación JWT + RLS      |
+| Supabase Storage  | Almacenamiento de imágenes   |
+| Supabase Realtime | Suscripciones en tiempo real |
+
+### DevOps
+
+| Herramienta | Propósito            |
+| ----------- | -------------------- |
+| Vercel      | Hosting y CI/CD      |
+| ESLint      | Linting de código    |
+| Git         | Control de versiones |
+
+---
+
+## 📁 Estructura del Proyecto
 
 ```
 src/
-├── components/          # Componentes de dominio
-│   ├── Cart.jsx        # Carrito lateral
-│   ├── Navbar.jsx      # Navegación principal
-│   ├── Footer.jsx      # Footer con información
-│   ├── ProductCard.jsx # Tarjeta de producto
-│   ├── FoodCard.jsx    # Tarjeta de categoría destacada
-│   ├── *CustomizationModal.jsx  # Modales de customización
-│   └── admin/          # Componentes administrativos
-│       ├── AdminDashboard.jsx
-│       ├── OrdersManager.jsx
-│       ├── ProductManager.jsx
-│       ├── FoodManager.jsx
-│       └── ProtectedRoute.jsx
-├── shared/             # Recursos compartidos
-│   ├── components/ui/  # Componentes base (shadcn)
-│   │   ├── button.jsx
-│   │   ├── card.jsx
-│   │   ├── modal.jsx
-│   │   └── ...
-│   ├── hooks/          # Hooks reutilizables
-│   ├── utils/          # Utilidades (cn.js)
-│   └── constants/      # Constantes globales
-├── context/            # Proveedores de contexto
-├── hooks/              # Hooks de lógica de negocio
-├── pages/              # Páginas/vistas principales
-├── supabase/           # Servicios de backend
-│   ├── config.js       # Cliente Supabase
-│   ├── supabaseService.js  # API de datos
-│   └── storageService.js   # API de storage
-└── utils/              # Funciones utilitarias
+├── components/              # Componentes de dominio
+│   ├── Cart.jsx             # Carrito lateral
+│   ├── Navbar.jsx           # Navegación principal
+│   ├── Footer.jsx           # Footer con info de contacto
+│   ├── ProductCard.jsx      # Tarjeta de producto
+│   ├── FoodCard.jsx         # Tarjeta de categoría
+│   ├── *Modal.jsx           # Modales de personalización
+│   └── admin/               # Componentes administrativos
+├── shared/                  # Recursos compartidos
+│   ├── components/ui/       # Componentes base (shadcn)
+│   ├── hooks/               # Hooks reutilizables
+│   │   ├── useRealTimeSchedules.js
+│   │   ├── useBackNavigation.js
+│   │   └── useScheduleAvailability.js
+│   ├── utils/               # Utilidades (cn.js)
+│   └── constants/           # Constantes (schedules.js)
+├── context/                 # Providers (Auth, Theme, Toast)
+├── hooks/                   # Hooks de negocio (useCart)
+├── pages/                   # Páginas principales
+├── supabase/                # Servicios de backend
+│   ├── config.js            # Cliente Supabase
+│   ├── supabaseService.js   # API de datos
+│   └── storageService.js    # API de storage
+└── utils/                   # Funciones utilitarias
     ├── formatPrice.js
     └── generateWhatsAppMessage.js
 ```
 
 ---
 
-## Instalación y Configuración Local
+## 🚀 Instalación Local
 
 ### Prerrequisitos
 
-- Node.js 18+ y npm
+- Node.js 18+
 - Cuenta de Supabase (gratuita)
 
 ### Pasos
 
-1. **Clonar repositorio**
+```bash
+# 1. Clonar repositorio
+git clone https://github.com/wandahernandez1/sistemaPedidos.git
+cd sistemaPedidos
 
-   ```bash
-   git clone https://github.com/tu-usuario/sistemaPedidos.git
-   cd sistemaPedidos
-   ```
+# 2. Instalar dependencias
+npm install
 
-2. **Instalar dependencias**
+# 3. Configurar variables de entorno
+cp .env.example .env
+# Editar .env con tus credenciales de Supabase
 
-   ```bash
-   npm install
-   ```
+# 4. Iniciar servidor de desarrollo
+npm run dev
+```
 
-3. **Configurar Supabase**
-
-   - Crear proyecto en [Supabase](https://supabase.com)
-   - Ejecutar el script `supabase-setup.sql` en SQL Editor
-   - Crear buckets de storage:
-     - `products` (público)
-     - `foods` (público)
-     - `services` (público)
-
-4. **Configurar variables de entorno**
-
-   Crear archivo `.env` en la raíz del proyecto:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-   Editar `.env` con tus credenciales:
-
-   ```env
-   VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
-   VITE_SUPABASE_ANON_KEY=tu_anon_key_aqui
-   VITE_WHATSAPP_NUMBER=5491122334455
-   ```
-
-   Actualizar `src/supabase/config.js` para usar variables de entorno:
-
-   ```javascript
-   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-   const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-   ```
-
-5. **Iniciar servidor de desarrollo**
-
-   ```bash
-   npm run dev
-   ```
-
-6. **Acceder a la aplicación**
-   - Vista pública: `http://localhost:5173/`
-   - Panel admin: `http://localhost:5173/admin/login`
-
----
-
-## Variables de Entorno
-
-El proyecto utiliza variables de entorno para configuración sensible. Todas las variables deben tener el prefijo `VITE_` para ser accesibles en el cliente.
-
-**Archivo `.env`** (crear en la raíz):
+### Variables de Entorno
 
 ```env
-# Supabase
 VITE_SUPABASE_URL=https://tu-proyecto.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-
-# WhatsApp Business
-# Formato: código país + código área + número (sin espacios)
-# Ejemplo Argentina: 5491122334455
-VITE_WHATSAPP_NUMBER=542284445588
+VITE_SUPABASE_ANON_KEY=tu_anon_key_aqui
+VITE_WHATSAPP_NUMBER=542284229601
 ```
 
-**Notas importantes:**
+---
 
-- NO commitear el archivo `.env` al repositorio (incluido en `.gitignore`)
-- El archivo `.env.example` contiene el template con valores placeholder
-- En producción (Vercel/Netlify), configurar las variables en el dashboard del servicio
+## 👩‍💻 Autora
+
+<div align="center">
+
+**Wanda Solange Hernández**  
+Frontend Developer
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/wanda-solange-hernandez/)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/wandahernandez1)
+
+</div>
 
 ---
 
-## Uso Básico
+## 📄 Licencia
 
-### Como Cliente
-
-1. Navegar el catálogo de productos por categorías
-2. Click en "Agregar" para añadir productos al carrito
-3. Para hamburguesas/empanadas, seleccionar opciones en modal de customización
-4. Abrir carrito lateral para revisar pedido
-5. Seleccionar tipo de entrega y horario deseado
-6. Click en "Enviar por WhatsApp" para finalizar
-
-### Como Administrador
-
-1. Acceder a `/admin/login` con credenciales de Supabase
-2. Dashboard muestra opciones de gestión (Productos, Servicios, Pedidos)
-3. Crear/editar productos con formularios modales
-4. Upload de imágenes arrastrando archivos
-5. Configurar horarios de atención desde ConfigManager
+Este proyecto es privado - Todos los derechos reservados © 2026
 
 ---
 
-## Decisiones Técnicas
+<div align="center">
 
-### Arquitectura
+Hecho con ❤️ en Olavarría, Argentina
 
-**Separación de responsabilidades**: Los componentes se dividen en tres capas (shared/ui, components de dominio, pages). Esto facilita el reuso y mantiene el código escalable sin introducir complejidad prematura como Redux.
-
-**Context API sobre Redux**: Dado el alcance del proyecto (estado de autenticación y tema), Context API es suficiente. Evita la sobrecarga de boilerplate y devtools de Redux para casos simples.
-
-**Supabase como BaaS**: Elimina la necesidad de crear y mantener un backend custom. PostgreSQL ofrece esquema relacional robusto, Storage maneja CDN de imágenes, y Auth resuelve autenticación sin implementar JWT manualmente.
-
-**WhatsApp sobre checkout propio**: Reduce fricción para clientes acostumbrados a WhatsApp. Evita implementar pasarelas de pago, gestión de transacciones y PCI compliance. Trade-off: pérdida de automatización de confirmación de órdenes.
-
-### UI/UX
-
-**shadcn/ui sobre MUI**: Componentes sin runtime adicional, customizables a nivel de código (no temas JSON). CVA permite variantes tipo-seguras sin prop drilling complejo.
-
-**Lucide Icons**: Librería tree-shakeable con iconos consistentes. Solo se importan los íconos necesarios, reduciendo bundle size vs Font Awesome o Material Icons.
-
-**Customización inline**: Los modales de customización evitan crear una página adicional, manteniendo el contexto del usuario en la vista del catálogo.
-
-### Performance
-
-**Lazy loading de imágenes**: Implementado con `loading="lazy"` nativo en `<img>` para optimizar carga inicial.
-
-**Barrel exports**: Archivos `index.js` en `shared/components/ui` reducen imports verbosos pero aumentan ligeramente el bundle size. Trade-off aceptable para DX.
-
----
-
-## Build y Deploy
-
-### Build para producción
-
-```bash
-npm run build
-```
-
-Los archivos optimizados se generan en `dist/`.
-
-### Deploy recomendado
-
-- **Vercel/Netlify**: Deploy automático desde Git con CI/CD
-- **Variables de entorno**: Configurar en dashboard del proveedor
-- **Rewrite rules**: Configurar SPA routing para React Router
-
----
-
-## Autor
-
-**Nombre del Desarrollador**  
-Frontend Developer  
-[LinkedIn](https://www.linkedin.com/in/wanda-solange-hernandez/) | [GitHub](https://github.com/wandahernandez1)
-
----
-
-## Licencia
-
-Proyecto privado - Todos los derechos reservados
+</div>

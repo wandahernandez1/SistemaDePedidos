@@ -93,16 +93,20 @@ const ProductCard = memo(({ product, onAddToCart }) => {
         <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary-400/10 via-transparent to-accent-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         {/* Image Container */}
-        <div className="relative w-full h-48 sm:h-56 overflow-hidden">
+        <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-secondary-100 dark:bg-secondary-700">
           {/* Background gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent z-10 opacity-50 group-hover:opacity-30 transition-opacity duration-500" />
 
           <img
             src={product.imagen}
             alt={product.nombre}
-            className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+            className="w-full h-full min-w-full min-h-full object-cover object-center"
             loading="lazy"
             decoding="async"
+            style={{
+              objectFit: "cover",
+              objectPosition: "center",
+            }}
           />
 
           {/* Floating unit badge with glassmorphism */}
