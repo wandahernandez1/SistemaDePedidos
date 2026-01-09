@@ -7,87 +7,147 @@ import {
   Store,
   MapPin,
   Heart,
+  UtensilsCrossed,
+  Pizza,
+  Beef,
 } from "lucide-react";
 import { useRealTimeSchedules } from "../shared/hooks/useRealTimeSchedules";
 
 /**
  * Componente Footer - Pie de página profesional y minimalista
- * Los horarios se actualizan automáticamente desde la configuración
+ * Los horarios se actualizan automáticamente desde la configuración por categoría
  * Diseño optimizado para dark/light mode con alto contraste
  */
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  const { config, schedules } = useRealTimeSchedules();
+  const { schedules } = useRealTimeSchedules();
 
   /**
-   * Generar horarios dinámicos basados en la configuración
+   * Formatear días para mostrar de forma compacta
    */
-  const getScheduleDisplay = () => {
-    if (!config || !schedules) {
-      return [{ label: "Lunes - Domingo", hours: "19:00 - 22:00" }];
+  const formatDays = (days) => {
+    if (!days || days.length === 0) return "";
+
+    const dayOrder = [
+      "lunes",
+      "martes",
+      "miércoles",
+      "jueves",
+      "viernes",
+      "sábado",
+      "domingo",
+    ];
+    const sortedDays = [...days].sort(
+      (a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b)
+    );
+
+    // Detectar rangos consecutivos
+    const weekdays = ["lunes", "martes", "miércoles", "jueves", "viernes"];
+    const weekend = ["sábado", "domingo"];
+
+    const hasAllWeekdays = weekdays.every((d) => sortedDays.includes(d));
+    const hasWeekend = weekend.every((d) => sortedDays.includes(d));
+    const hasSaturday = sortedDays.includes("sábado");
+    const hasSunday = sortedDays.includes("domingo");
+
+    if (hasAllWeekdays && hasWeekend) {
+      return "Lun - Dom";
+    }
+    if (hasAllWeekdays && hasSaturday && !hasSunday) {
+      return "Lun - Sáb";
+    }
+    if (hasAllWeekdays && !hasSaturday && !hasSunday) {
+      return "Lun - Vie";
     }
 
-    // Si hay configuración específica, usar horario general de apertura y cierre
-    if (config.horario_apertura && config.horario_cierre) {
-      // Obtener días laborales de la configuración
-      const workingDays = config.dias_laborales || [
-        "lunes",
-        "martes",
-        "miércoles",
-        "jueves",
-        "viernes",
-        "sábado",
-      ];
-
-      // Formatear días laborales para mostrar
-      const formatDays = (days) => {
-        if (
-          days.length === 7 ||
-          (days.length === 6 && !days.includes("domingo"))
-        ) {
-          const hasWeekdays = [
-            "lunes",
-            "martes",
-            "miércoles",
-            "jueves",
-            "viernes",
-          ].every((d) => days.includes(d));
-          const hasSaturday = days.includes("sábado");
-
-          if (hasWeekdays && hasSaturday) {
-            return days.includes("domingo")
-              ? "Lunes - Domingo"
-              : "Lunes - Sábado";
-          }
-        }
-
-        // Si no es un patrón estándar, mostrar días individuales
-        const dayNames = {
-          lunes: "Lun",
-          martes: "Mar",
-          miércoles: "Mié",
-          jueves: "Jue",
-          viernes: "Vie",
-          sábado: "Sáb",
-          domingo: "Dom",
-        };
-
-        return days.map((day) => dayNames[day] || day).join(", ");
-      };
-
-      return [
-        {
-          label: formatDays(workingDays),
-          hours: `${config.horario_apertura} - ${config.horario_cierre}`,
-        },
-      ];
+    // Caso especial: Viernes, Sábado, Domingo
+    if (
+      sortedDays.length === 3 &&
+      sortedDays.includes("viernes") &&
+      sortedDays.includes("sábado") &&
+      sortedDays.includes("domingo")
+    ) {
+      return "Vie - Dom";
     }
 
-    // Fallback por defecto
-    return [{ label: "Lunes - Domingo", hours: "19:00 - 22:00" }];
+    // Para otros casos, mostrar abreviados
+    const dayNames = {
+      lunes: "Lun",
+      martes: "Mar",
+      miércoles: "Mié",
+      jueves: "Jue",
+      viernes: "Vie",
+      sábado: "Sáb",
+      domingo: "Dom",
+    };
+
+    return sortedDays.map((day) => dayNames[day]).join(", ");
   };
 
-  const scheduleDisplay = getScheduleDisplay();
+  /**
+   * Obtener los horarios de turnos activos de una categoría
+   */
+  const getActiveShifts = (schedule) => {
+    if (!schedule?.turnos) return [];
+
+    const shifts = [];
+    if (schedule.turnos.turno1?.habilitado) {
+      shifts.push({
+        name: schedule.turnos.turno1.nombre || "Mediodía",
+        hours: `${schedule.turnos.turno1.inicio} - ${schedule.turnos.turno1.fin}`,
+      });
+    }
+    if (schedule.turnos.turno2?.habilitado) {
+      shifts.push({
+        name: schedule.turnos.turno2.nombre || "Noche",
+        hours: `${schedule.turnos.turno2.inicio} - ${schedule.turnos.turno2.fin}`,
+      });
+    }
+    return shifts;
+  };
+
+  /**
+   * Generar datos de horarios por categoría
+   */
+  const getCategorySchedules = () => {
+    if (!schedules) return [];
+
+    const categories = [
+      {
+        key: "empanadas",
+        name: "Empanadas",
+        icon: UtensilsCrossed,
+      },
+      {
+        key: "pizzas",
+        name: "Pizzas",
+        icon: Pizza,
+      },
+      {
+        key: "hamburguesas",
+        name: "Hamburguesas",
+        icon: Beef,
+      },
+    ];
+
+    return categories
+      .map((cat) => {
+        const schedule = schedules[cat.key];
+        if (!schedule || !schedule.habilitado) return null;
+
+        const shifts = getActiveShifts(schedule);
+        if (shifts.length === 0) return null;
+
+        return {
+          ...cat,
+          days: formatDays(schedule.dias),
+          shifts,
+        };
+      })
+      .filter(Boolean);
+  };
+
+  const categorySchedules = getCategorySchedules();
 
   return (
     <footer className="bg-secondary-900 dark:bg-secondary-950 text-secondary-200 mt-20 transition-colors duration-300">
@@ -105,7 +165,9 @@ const Footer = () => {
             </p>
             <div className="flex gap-3">
               <a
-                href="#"
+                href="https://www.instagram.com/lacocinadelau__"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-xl bg-secondary-800 dark:bg-secondary-800/80 flex items-center justify-center text-secondary-400 transition-all duration-300 hover:bg-primary-500 hover:text-white hover:-translate-y-1 border border-secondary-700 dark:border-secondary-700"
                 aria-label="Instagram"
               >
@@ -139,24 +201,44 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Horarios */}
+          {/* Horarios por Categoría */}
           <div>
             <h4 className="text-sm font-bold text-white mb-5 uppercase tracking-wider flex items-center gap-2">
               <Clock className="h-4 w-4 text-primary-400" />
               Horarios
             </h4>
-            <ul className="space-y-3">
-              {scheduleDisplay.map((schedule, index) => (
-                <li
-                  key={index}
-                  className="text-secondary-400 dark:text-secondary-500 text-sm flex justify-between py-1.5 border-b border-secondary-800 dark:border-secondary-800/70 last:border-b-0"
-                >
-                  <span>{schedule.label}</span>
-                  <span className="font-medium text-secondary-200">
-                    {schedule.hours}
-                  </span>
-                </li>
-              ))}
+            <ul className="space-y-4">
+              {categorySchedules.map((category) => {
+                const IconComponent = category.icon;
+                return (
+                  <li
+                    key={category.key}
+                    className="text-secondary-400 dark:text-secondary-500 text-sm"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <IconComponent className="h-4 w-4 text-primary-400 shrink-0" />
+                      <span className="font-medium text-secondary-200">
+                        {category.name}
+                      </span>
+                    </div>
+                    <div className="pl-6 space-y-0.5">
+                      <span className="text-xs text-secondary-500">
+                        {category.days}
+                      </span>
+                      {category.shifts.map((shift, idx) => (
+                        <div key={idx} className="text-xs">
+                          <span className="text-secondary-500">
+                            {shift.name}:{" "}
+                          </span>
+                          <span className="text-secondary-300">
+                            {shift.hours}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
