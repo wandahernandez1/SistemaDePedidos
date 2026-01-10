@@ -47,13 +47,16 @@ const formatBurgerDetail = (customization, customizationText) => {
 /**
  * Genera el mensaje formateado para WhatsApp
  * @param {Array} cartItems - Items del carrito
- * @param {number} total - Total del pedido
+ * @param {number} total - Total del pedido (con descuento aplicado)
  * @param {string} deliveryTime - Horario de entrega solicitado
  * @param {string} estimatedTime - Horario estimado (+30min)
  * @param {string} deliveryType - Tipo de entrega ("pickup" o "delivery")
  * @param {string} deliveryAddress - Dirección de envío (solo si es delivery)
  * @param {string} customerName - Nombre del cliente
  * @param {string} paymentMethod - Método de pago ("transfer" o "cash")
+ * @param {number} totalDiscount - Descuento total aplicado por ofertas
+ * @param {number} totalWithoutDiscount - Total sin descuentos (precio original)
+ * @param {Array} itemsWithOffer - Items que tienen oferta aplicada con detalle del descuento
  * @returns {string} Mensaje formateado para WhatsApp
  */
 export const generateWhatsAppMessage = (
@@ -64,7 +67,10 @@ export const generateWhatsAppMessage = (
   deliveryType = "pickup",
   deliveryAddress = "",
   customerName = "",
-  paymentMethod = "cash"
+  paymentMethod = "cash",
+  totalDiscount = 0,
+  totalWithoutDiscount = 0,
+  itemsWithOffer = []
 ) => {
   let message = "═══════════════════════\n";
   message += "*NUEVO PEDIDO*\n";
@@ -96,6 +102,11 @@ export const generateWhatsAppMessage = (
     message += `   • Cantidad: ${item.quantity} ${unidadText}\n`;
     message += `   • Precio unitario: ${formatPrice(item.precio)}\n`;
     message += `   • Subtotal: ${formatPrice(subtotal)}\n`;
+    
+    // Indicar si el item tiene oferta aplicada
+    if (item.enOferta && item.precioOriginal) {
+      message += `   ⭐ *OFERTA* - Precio original: ${formatPrice(item.precioOriginal)}\n`;
+    }
 
     // Agregar detalle de empanadas personalizadas
     if (item.customizacion && item.customizacion.empanadas) {
@@ -112,7 +123,30 @@ export const generateWhatsAppMessage = (
   });
 
   message += "\n───────────────────\n";
-  message += `*TOTAL: ${formatPrice(total)}*\n\n`;
+  
+  // Si hay descuento, mostrar desglose detallado
+  if (totalDiscount > 0 && totalWithoutDiscount > 0) {
+    message += `Subtotal: ${formatPrice(totalWithoutDiscount)}\n\n`;
+    
+    // Detalle de ofertas aplicadas
+    if (itemsWithOffer && itemsWithOffer.length > 0) {
+      message += `*🏷️ OFERTAS APLICADAS:*\n`;
+      itemsWithOffer.forEach(item => {
+        const discountPerUnit = item.precioOriginal - item.precio;
+        message += `   • ${item.nombre}`;
+        if (item.quantity > 1) {
+          message += ` x${item.quantity}`;
+        }
+        message += `\n     Ahorro: ${formatPrice(discountPerUnit)} c/u = -${formatPrice(item.discount || discountPerUnit * item.quantity)}\n`;
+      });
+      message += `\n`;
+    }
+    
+    message += `*Total descuento: -${formatPrice(totalDiscount)}*\n`;
+    message += `───────────────────\n`;
+  }
+  
+  message += `*TOTAL A PAGAR: ${formatPrice(total)}*\n\n`;
 
   // Método de pago
   const paymentMethodText =

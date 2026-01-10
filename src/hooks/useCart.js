@@ -118,6 +118,37 @@ export const useCart = () => {
   }, [cartItems]);
 
   /**
+   * Calcular el descuento total aplicado por ofertas
+   * Suma la diferencia entre precioOriginal y precio para items en oferta
+   */
+  const getTotalDiscount = useCallback(() => {
+    return cartItems.reduce((discount, item) => {
+      if (item.enOferta && item.precioOriginal) {
+        const itemDiscount = (item.precioOriginal - item.precio) * item.quantity;
+        return discount + itemDiscount;
+      }
+      return discount;
+    }, 0);
+  }, [cartItems]);
+
+  /**
+   * Calcular el total sin descuentos (precio original)
+   */
+  const getTotalWithoutDiscount = useCallback(() => {
+    return cartItems.reduce((total, item) => {
+      const price = item.precioOriginal || item.precio;
+      return total + price * item.quantity;
+    }, 0);
+  }, [cartItems]);
+
+  /**
+   * Obtener items que tienen descuento aplicado
+   */
+  const getItemsWithDiscount = useCallback(() => {
+    return cartItems.filter(item => item.enOferta && item.precioOriginal);
+  }, [cartItems]);
+
+  /**
    * Obtener la cantidad total de items en el carrito - memoizado
    */
   const getTotalItems = useCallback(() => {
@@ -132,6 +163,9 @@ export const useCart = () => {
     removeFromCart,
     clearCart,
     getTotal,
+    getTotalDiscount,
+    getTotalWithoutDiscount,
+    getItemsWithDiscount,
     getTotalItems,
   };
 };

@@ -8,6 +8,7 @@ import {
   MessageCircle,
   Send,
   AlertCircle,
+  Tag,
 } from "lucide-react";
 import CartItem from "./CartItem";
 import { formatPrice } from "../utils/formatPrice";
@@ -46,6 +47,8 @@ const Cart = memo(
   ({
     cartItems,
     total,
+    totalDiscount = 0,
+    totalWithoutDiscount = 0,
     isOpen,
     onClose,
     onIncrement,
@@ -68,6 +71,19 @@ const Cart = memo(
     const { warning } = useToast();
 
     const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
+
+    /**
+     * Obtener items que tienen oferta aplicada con detalles del descuento
+     */
+    const itemsWithOffer = useMemo(() => {
+      return cartItems
+        .filter(item => item.enOferta && item.precioOriginal)
+        .map(item => ({
+          ...item,
+          discount: (item.precioOriginal - item.precio) * item.quantity,
+          discountPerUnit: item.precioOriginal - item.precio,
+        }));
+    }, [cartItems]);
 
     /**
      * Detectar categorías únicas de los items en el carrito
@@ -355,7 +371,10 @@ const Cart = memo(
         deliveryType,
         deliveryAddress,
         customerName,
-        paymentMethod
+        paymentMethod,
+        totalDiscount,
+        totalWithoutDiscount,
+        itemsWithOffer
       );
 
       const whatsappUrl = generateWhatsAppUrl(WHATSAPP_NUMBER, message);
@@ -372,6 +391,9 @@ const Cart = memo(
     }, [
       cartItems,
       total,
+      totalDiscount,
+      totalWithoutDiscount,
+      itemsWithOffer,
       deliveryType,
       deliveryTime,
       deliveryAddress,
@@ -426,31 +448,33 @@ const Cart = memo(
             </div>
           ) : (
             <>
-              {/* Cart Items */}
-              <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 max-h-[35vh]">
-                {cartItems.map((item) => (
-                  <CartItem
-                    key={item.cartItemId || item.id}
-                    item={{ ...item, id: item.cartItemId || item.id }}
-                    onIncrement={onIncrement}
-                    onDecrement={onDecrement}
-                    onRemove={onRemove}
-                  />
-                ))}
-              </div>
+              {/* Contenido scrollable del carrito */}
+              <div className="flex-1 overflow-y-auto flex flex-col min-h-0">
+                {/* Cart Items */}
+                <div className="p-4 flex flex-col gap-3">
+                  {cartItems.map((item) => (
+                    <CartItem
+                      key={item.cartItemId || item.id}
+                      item={{ ...item, id: item.cartItemId || item.id }}
+                      onIncrement={onIncrement}
+                      onDecrement={onDecrement}
+                      onRemove={onRemove}
+                    />
+                  ))}
+                </div>
 
-              {/* Footer */}
-              <div className="border-t border-secondary-200 dark:border-secondary-800 p-4 bg-white dark:bg-secondary-950 shrink-0">
-                {/* Delivery Type */}
-                <div className="mb-4">
-                  <label className="flex items-center gap-2 text-xs font-bold text-secondary-800 dark:text-secondary-200 mb-2">
-                    Tipo de entrega
-                  </label>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 border-2 rounded-lg cursor-pointer transition-colors duration-150 ${
-                        deliveryType === "pickup"
+                {/* Footer - dentro del scroll */}
+                <div className="border-t border-secondary-200 dark:border-secondary-800 p-4 bg-white dark:bg-secondary-950">
+                  {/* Delivery Type */}
+                  <div className="mb-4">
+                    <label className="flex items-center gap-2 text-xs font-bold text-secondary-800 dark:text-secondary-200 mb-2">
+                      Tipo de entrega
+                    </label>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 border-2 rounded-lg cursor-pointer transition-colors duration-150 ${
+                          deliveryType === "pickup"
                           ? "border-primary-500 bg-primary-50 dark:bg-primary-950/50"
                           : "border-secondary-300 dark:border-secondary-700 bg-white dark:bg-secondary-900 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30"
                       }`}
@@ -619,14 +643,68 @@ const Cart = memo(
                   )}
                 </div>
 
-                {/* Total */}
-                <div className="flex justify-between items-center p-4 mb-4 bg-secondary-50 dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-                  <span className="text-sm font-bold text-secondary-500 dark:text-secondary-400 uppercase tracking-wide">
-                    Total
-                  </span>
-                  <span className="text-2xl font-bold text-secondary-900 dark:text-secondary-50 tracking-tight">
-                    {formatPrice(total)}
-                  </span>
+                {/* Total Section con descuento */}
+                <div className="p-4 mb-4 bg-secondary-50 dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
+                  {/* Si hay descuento, mostrar desglose detallado */}
+                  {totalDiscount > 0 && itemsWithOffer.length > 0 && (
+                    <>
+                      {/* Subtotal (precio original) */}
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs font-medium text-secondary-400 dark:text-secondary-500">
+                          Subtotal
+                        </span>
+                        <span className="text-sm text-secondary-500 dark:text-secondary-400 line-through">
+                          {formatPrice(totalWithoutDiscount)}
+                        </span>
+                      </div>
+                      
+                      {/* Detalle de ofertas aplicadas */}
+                      <div className="mb-3 pb-3 border-b border-secondary-200 dark:border-secondary-700 space-y-2">
+                        <div className="flex items-center gap-1.5 mb-2">
+                          <Tag className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
+                            Ofertas aplicadas
+                          </span>
+                        </div>
+                        {itemsWithOffer.map((item, index) => (
+                          <div key={item.cartItemId || `offer-${index}`} className="flex justify-between items-start gap-2 pl-4 sm:pl-5">
+                            <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+                              <span className="text-[11px] font-medium text-secondary-600 dark:text-secondary-400 truncate block max-w-full">
+                                {item.nombre}
+                                {item.quantity > 1 && (
+                                  <span className="text-secondary-400 dark:text-secondary-500"> x{item.quantity}</span>
+                                )}
+                              </span>
+                              <span className="text-[10px] text-secondary-400 dark:text-secondary-500 truncate">
+                                Ahorrás {formatPrice(item.discountPerUnit)} c/u
+                              </span>
+                            </div>
+                            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap flex-shrink-0">
+                              -{formatPrice(item.discount)}
+                            </span>
+                          </div>
+                        ))}
+                        {/* Total descuento */}
+                        <div className="flex justify-between items-center pt-2 mt-2 border-t border-dashed border-secondary-200 dark:border-secondary-700">
+                          <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                            Total descuento
+                          </span>
+                          <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                            -{formatPrice(totalDiscount)}
+                          </span>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {/* Total final */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-bold text-secondary-500 dark:text-secondary-400 uppercase tracking-wide">
+                      Total
+                    </span>
+                    <span className="text-2xl font-bold text-secondary-900 dark:text-secondary-50 tracking-tight">
+                      {formatPrice(total)}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Actions */}
@@ -649,6 +727,8 @@ const Cart = memo(
                   </button>
                 </div>
               </div>
+              {/* Fin del contenedor scrollable */}
+            </div>
             </>
           )}
         </div>

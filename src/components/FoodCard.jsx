@@ -115,19 +115,19 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
       </div>
 
       {/* Content overlay */}
-      <div className="relative flex flex-col h-full min-h-[280px] sm:min-h-[320px] p-5 sm:p-6">
+      <div className="relative flex flex-col h-full min-h-[300px] sm:min-h-[360px] lg:min-h-[400px] p-5 sm:p-6 lg:p-8">
         {/* Top Section - Tags & Status */}
         <div className="flex justify-between items-start gap-3">
           {/* Tags with glassmorphism - Max 2 tags, truncate if needed */}
           {food.tags && food.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 max-w-[60%]">
+            <div className="flex flex-wrap gap-2 max-w-[65%]">
               {food.tags.slice(0, 2).map((tag, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center gap-1 backdrop-blur-sm bg-white/15 text-white px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-semibold border border-white/20 shadow-sm whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 backdrop-blur-md bg-white/20 text-white px-3 py-1.5 rounded-full text-xs sm:text-sm font-semibold border border-white/25 shadow-lg whitespace-nowrap"
                 >
-                  <Flame className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-400 shrink-0" />
-                  <span className="truncate max-w-[60px] sm:max-w-none">
+                  <Flame className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-orange-400 shrink-0" />
+                  <span className="truncate max-w-[80px] sm:max-w-none">
                     {tag}
                   </span>
                 </span>
@@ -137,8 +137,8 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
 
           {/* Status indicator */}
           {isAvailable !== false && (
-            <div className="flex items-center gap-1 sm:gap-1.5 backdrop-blur-sm bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 sm:px-2.5 sm:py-1.5 rounded-full text-[9px] sm:text-xs font-medium border border-emerald-400/30 shrink-0">
-              <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-emerald-400" />
+            <div className="flex items-center gap-1.5 sm:gap-2 backdrop-blur-md bg-emerald-500/25 text-emerald-200 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-full text-xs sm:text-sm font-semibold border border-emerald-400/35 shrink-0 shadow-lg">
+              <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span>Disponible</span>
             </div>
           )}
@@ -148,19 +148,19 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
         <div className="flex-1" />
 
         {/* Bottom Section - Content */}
-        <div className="space-y-4">
+        <div className="space-y-4 lg:space-y-5">
           {/* Title */}
           <h3
-            className="text-xl sm:text-2xl font-bold text-white m-0 tracking-tight leading-tight"
-            style={{ textShadow: "0 2px 8px rgba(0,0,0,0.4)" }}
+            className="text-2xl sm:text-2xl lg:text-3xl font-bold text-white m-0 tracking-tight leading-tight"
+            style={{ textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}
           >
             {food.name}
           </h3>
 
           {/* Description */}
           <p
-            className="text-sm sm:text-base text-white/85 leading-relaxed m-0 line-clamp-2"
-            style={{ textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}
+            className="text-sm sm:text-base lg:text-lg text-white/90 leading-relaxed m-0 line-clamp-2"
+            style={{ textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}
           >
             {food.description}
           </p>
@@ -175,14 +175,14 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
                 }`}
               >
                 {/* Días */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 lg:gap-2.5">
                   {isAvailable === false ? (
-                    <AlertCircle className="w-4 h-4 text-amber-400" />
+                    <AlertCircle className="w-4 h-4 lg:w-5 lg:h-5 text-amber-400" />
                   ) : (
-                    <Calendar className="w-4 h-4 text-white/70" />
+                    <Calendar className="w-4 h-4 lg:w-5 lg:h-5 text-white/70" />
                   )}
                   <span
-                    className={`text-xs font-medium ${
+                    className={`text-xs lg:text-sm font-medium ${
                       isAvailable === false ? "text-amber-300" : "text-white/70"
                     }`}
                   >
@@ -191,12 +191,15 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
                 </div>
 
                 {/* Turnos activos */}
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1 lg:gap-1.5">
                   {scheduleInfo.activeShifts.map((shift, index) => (
-                    <div key={index} className="flex items-center gap-2">
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 lg:gap-2.5"
+                    >
                       {shift.icon === "sun" ? (
                         <Sun
-                          className={`w-3.5 h-3.5 ${
+                          className={`w-3.5 h-3.5 lg:w-4 lg:h-4 ${
                             isAvailable === false
                               ? "text-amber-400"
                               : "text-yellow-400"
@@ -204,7 +207,7 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
                         />
                       ) : shift.icon === "moon" ? (
                         <Moon
-                          className={`w-3.5 h-3.5 ${
+                          className={`w-3.5 h-3.5 lg:w-4 lg:h-4 ${
                             isAvailable === false
                               ? "text-amber-400"
                               : "text-indigo-300"
@@ -212,7 +215,7 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
                         />
                       ) : (
                         <Clock
-                          className={`w-3.5 h-3.5 ${
+                          className={`w-3.5 h-3.5 lg:w-4 lg:h-4 ${
                             isAvailable === false
                               ? "text-amber-400"
                               : "text-white/70"
@@ -220,7 +223,7 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
                         />
                       )}
                       <span
-                        className={`text-xs font-semibold ${
+                        className={`text-xs lg:text-sm font-semibold ${
                           isAvailable === false
                             ? "text-amber-200"
                             : "text-white/90"
@@ -233,24 +236,24 @@ const FoodCard = memo(({ food, onClick, schedule, isAvailable }) => {
                 </div>
 
                 {isAvailable === false && (
-                  <span className="text-xs text-amber-400 font-medium mt-0.5">
+                  <span className="text-xs lg:text-sm text-amber-400 font-medium mt-0.5">
                     Fuera de horario
                   </span>
                 )}
               </div>
             )}
 
-            {/* Ver más button */}
+            {/* Ver más button - Más grande en desktop */}
             <button
-              className="group/btn flex items-center gap-2 bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white px-4 py-2.5 rounded-xl text-sm font-semibold border border-white/25 transition-all duration-300 hover:border-white/40"
+              className="group/btn flex items-center gap-2 lg:gap-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white px-4 py-2.5 lg:px-5 lg:py-3 rounded-xl lg:rounded-2xl text-sm lg:text-base font-semibold border border-white/30 transition-all duration-300 hover:border-white/50 shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
               onClick={(e) => {
                 e.stopPropagation();
                 handleClick();
               }}
             >
-              <Eye className="w-4 h-4" />
+              <Eye className="w-4 h-4 lg:w-5 lg:h-5" />
               <span>Ver más</span>
-              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-0.5" />
+              <ArrowRight className="w-4 h-4 lg:w-5 lg:h-5 transition-transform duration-300 group-hover/btn:translate-x-1" />
             </button>
           </div>
         </div>
