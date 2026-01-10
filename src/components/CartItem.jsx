@@ -45,10 +45,11 @@ const CartItem = memo(({ item, onIncrement, onDecrement, onRemove }) => {
           {item.nombre}
         </h4>
 
+        {/* Mostrar personalización de manera destacada */}
         {item.customizationText && (
-          <p className="text-xs text-green-600 dark:text-green-400 m-0 bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded border border-green-100 dark:border-green-800 font-medium">
-            {item.customizationText}
-          </p>
+          <div className="text-xs text-primary-700 dark:text-primary-400 m-0 bg-primary-50 dark:bg-primary-900/30 px-2.5 py-1.5 rounded-lg border border-primary-200 dark:border-primary-800 font-medium">
+            <span className="font-bold">Personalizado:</span> {item.customizationText}
+          </div>
         )}
 
         <p className="text-sm text-secondary-500 dark:text-secondary-400 m-0 font-medium">
