@@ -117,10 +117,10 @@ function PublicPage() {
       filtered = [...filtered].sort((a, b) => {
         const aHasOffer = getActiveOfferFromArray(a.nombre, activeOffers);
         const bHasOffer = getActiveOfferFromArray(b.nombre, activeOffers);
-        
+
         // Si ambos tienen oferta o ninguno tiene, mantener orden original
         if ((aHasOffer && bHasOffer) || (!aHasOffer && !bHasOffer)) return 0;
-        
+
         // Productos con oferta van primero
         return aHasOffer ? -1 : 1;
       });

@@ -57,15 +57,15 @@ const ProductCard = memo(({ product, onAddToCart, activeOffers = [] }) => {
   // Incluye la descripción de oferta si existe (ej: "DOBLE")
   const productWithOffer = useMemo(() => {
     if (!activeOffer) return product;
-    
+
     // Nombre del producto con variante de oferta
-    const nombreConOferta = activeOffer.offerDescription 
+    const nombreConOferta = activeOffer.offerDescription
       ? `${product.nombre} ${activeOffer.offerDescription}`
       : product.nombre;
-    
+
     // Usar originalPrice de la oferta (ej: precio de DOBLE) o el precio del producto
     const originalPrice = activeOffer.originalPrice || product.precio;
-    
+
     return {
       ...product,
       nombre: nombreConOferta,
@@ -171,7 +171,11 @@ const ProductCard = memo(({ product, onAddToCart, activeOffers = [] }) => {
             loading="lazy"
             decoding="async"
             style={{
-              objectPosition: `${product.imagenPosicion?.x ?? product.imagen_posicion?.x ?? 50}% ${product.imagenPosicion?.y ?? product.imagen_posicion?.y ?? 50}%`,
+              objectPosition: `${
+                product.imagenPosicion?.x ?? product.imagen_posicion?.x ?? 50
+              }% ${
+                product.imagenPosicion?.y ?? product.imagen_posicion?.y ?? 50
+              }%`,
             }}
           />
 
@@ -180,13 +184,17 @@ const ProductCard = memo(({ product, onAddToCart, activeOffers = [] }) => {
             <div className="absolute top-3 left-3 z-20 flex flex-col gap-1.5">
               <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-primary-700 to-primary-600 text-white shadow-lg">
                 <Percent className="w-3.5 h-3.5" />
-                <span className="text-xs font-bold">{discountPercentage}% OFF</span>
+                <span className="text-xs font-bold">
+                  {discountPercentage}% OFF
+                </span>
               </div>
               {/* Badge de variante especial (ej: DOBLE) */}
               {activeOffer.offerDescription && (
                 <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-500 text-white shadow-lg">
                   <Star className="w-3 h-3 fill-white" />
-                  <span className="text-[10px] font-black uppercase tracking-wide">{activeOffer.offerDescription}</span>
+                  <span className="text-[10px] font-black uppercase tracking-wide">
+                    {activeOffer.offerDescription}
+                  </span>
                 </div>
               )}
             </div>
@@ -205,7 +213,9 @@ const ProductCard = memo(({ product, onAddToCart, activeOffers = [] }) => {
             <div className="absolute bottom-3 left-3 z-20">
               <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg">
                 <Tag className="w-3 h-3" />
-                <span className="text-[10px] font-bold">{activeOffer.badge}</span>
+                <span className="text-[10px] font-bold">
+                  {activeOffer.badge}
+                </span>
               </div>
             </div>
           )}
@@ -214,20 +224,28 @@ const ProductCard = memo(({ product, onAddToCart, activeOffers = [] }) => {
         {/* Content - MISMO PADDING PARA TODAS */}
         <div className="relative p-5 sm:p-6 flex flex-col gap-3 grow bg-gradient-to-b from-white to-secondary-50/30 dark:from-secondary-800/95 dark:to-secondary-900/95">
           {/* Decorative accent line */}
-          <div className={`absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent ${activeOffer ? "via-primary-400/40" : "via-primary-400/30"} to-transparent`} />
+          <div
+            className={`absolute top-0 left-6 right-6 h-px bg-gradient-to-r from-transparent ${
+              activeOffer ? "via-primary-400/40" : "via-primary-400/30"
+            } to-transparent`}
+          />
 
           {/* Título con variante de oferta */}
           <div className="flex flex-col gap-1">
             <h3 className="text-lg sm:text-xl font-bold text-secondary-900 dark:text-white m-0 leading-tight tracking-tight transition-colors duration-300 group-hover:text-primary-600 dark:group-hover:text-primary-400">
               {product.nombre}
               {activeOffer?.offerDescription && (
-                <span className="text-primary-600 dark:text-primary-400"> {activeOffer.offerDescription}</span>
+                <span className="text-primary-600 dark:text-primary-400">
+                  {" "}
+                  {activeOffer.offerDescription}
+                </span>
               )}
             </h3>
             {/* Indicador de oferta especial */}
             {activeOffer?.offerDescription && (
               <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                ⭐ Hoy: {product.nombre} versión {activeOffer.offerDescription.toLowerCase()}
+                ⭐ Hoy: {product.nombre} versión{" "}
+                {activeOffer.offerDescription.toLowerCase()}
               </span>
             )}
           </div>
@@ -239,7 +257,13 @@ const ProductCard = memo(({ product, onAddToCart, activeOffers = [] }) => {
           {/* Footer - Precios y botón */}
           <div className="relative flex justify-between items-center mt-auto pt-4 gap-3">
             {/* Separator line */}
-            <div className={`absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent ${activeOffer ? "via-primary-200 dark:via-primary-800/50" : "via-secondary-200 dark:via-secondary-700"} to-transparent`} />
+            <div
+              className={`absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent ${
+                activeOffer
+                  ? "via-primary-200 dark:via-primary-800/50"
+                  : "via-secondary-200 dark:via-secondary-700"
+              } to-transparent`}
+            />
 
             {/* Precio */}
             <div className="flex flex-col">

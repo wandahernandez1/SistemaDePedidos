@@ -124,7 +124,8 @@ export const useCart = () => {
   const getTotalDiscount = useCallback(() => {
     return cartItems.reduce((discount, item) => {
       if (item.enOferta && item.precioOriginal) {
-        const itemDiscount = (item.precioOriginal - item.precio) * item.quantity;
+        const itemDiscount =
+          (item.precioOriginal - item.precio) * item.quantity;
         return discount + itemDiscount;
       }
       return discount;
@@ -145,7 +146,7 @@ export const useCart = () => {
    * Obtener items que tienen descuento aplicado
    */
   const getItemsWithDiscount = useCallback(() => {
-    return cartItems.filter(item => item.enOferta && item.precioOriginal);
+    return cartItems.filter((item) => item.enOferta && item.precioOriginal);
   }, [cartItems]);
 
   /**

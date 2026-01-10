@@ -102,10 +102,12 @@ export const generateWhatsAppMessage = (
     message += `   • Cantidad: ${item.quantity} ${unidadText}\n`;
     message += `   • Precio unitario: ${formatPrice(item.precio)}\n`;
     message += `   • Subtotal: ${formatPrice(subtotal)}\n`;
-    
+
     // Indicar si el item tiene oferta aplicada
     if (item.enOferta && item.precioOriginal) {
-      message += `   ⭐ *OFERTA* - Precio original: ${formatPrice(item.precioOriginal)}\n`;
+      message += `   ⭐ *OFERTA* - Precio original: ${formatPrice(
+        item.precioOriginal
+      )}\n`;
     }
 
     // Agregar detalle de empanadas personalizadas
@@ -123,29 +125,33 @@ export const generateWhatsAppMessage = (
   });
 
   message += "\n───────────────────\n";
-  
+
   // Si hay descuento, mostrar desglose detallado
   if (totalDiscount > 0 && totalWithoutDiscount > 0) {
     message += `Subtotal: ${formatPrice(totalWithoutDiscount)}\n\n`;
-    
+
     // Detalle de ofertas aplicadas
     if (itemsWithOffer && itemsWithOffer.length > 0) {
       message += `*🏷️ OFERTAS APLICADAS:*\n`;
-      itemsWithOffer.forEach(item => {
+      itemsWithOffer.forEach((item) => {
         const discountPerUnit = item.precioOriginal - item.precio;
         message += `   • ${item.nombre}`;
         if (item.quantity > 1) {
           message += ` x${item.quantity}`;
         }
-        message += `\n     Ahorro: ${formatPrice(discountPerUnit)} c/u = -${formatPrice(item.discount || discountPerUnit * item.quantity)}\n`;
+        message += `\n     Ahorro: ${formatPrice(
+          discountPerUnit
+        )} c/u = -${formatPrice(
+          item.discount || discountPerUnit * item.quantity
+        )}\n`;
       });
       message += `\n`;
     }
-    
+
     message += `*Total descuento: -${formatPrice(totalDiscount)}*\n`;
     message += `───────────────────\n`;
   }
-  
+
   message += `*TOTAL A PAGAR: ${formatPrice(total)}*\n\n`;
 
   // Método de pago

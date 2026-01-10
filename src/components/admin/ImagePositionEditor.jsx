@@ -121,7 +121,13 @@ const ImagePositionEditor = ({
       window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [isDragging, handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
+  }, [
+    isDragging,
+    handleMouseMove,
+    handleMouseUp,
+    handleTouchMove,
+    handleTouchEnd,
+  ]);
 
   const handleReset = useCallback(() => {
     setPosition({ x: 50, y: 50 });
@@ -143,7 +149,11 @@ const ImagePositionEditor = ({
         ref={containerRef}
         className={`
           relative overflow-hidden rounded-xl border-2 transition-all
-          ${isDragging ? "border-primary-500 cursor-grabbing" : "border-neutral-200 cursor-grab hover:border-primary-300"}
+          ${
+            isDragging
+              ? "border-primary-500 cursor-grabbing"
+              : "border-neutral-200 cursor-grab hover:border-primary-300"
+          }
         `}
         style={{ aspectRatio }}
         onMouseDown={handleMouseDown}

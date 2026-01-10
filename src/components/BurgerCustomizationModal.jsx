@@ -196,23 +196,25 @@ const BurgerCustomizationModal = ({ burger, onClose, onAddToCart }) => {
 
     // Calcular precio por unidad (incluyendo adicionales)
     const precioUnitario = calculateTotalPrice() / quantity;
-    
+
     // Si hay oferta, calcular precioOriginal con los adicionales
     const additionsPrice = addedIngredients.reduce(
       (sum, ing) => sum + ing.price * ing.quantity,
       0
     );
-    
+
     // El precioOriginal debe incluir los adicionales si existían
-    const precioOriginalConAdicionales = burger.precioOriginal 
-      ? burger.precioOriginal + additionsPrice 
+    const precioOriginalConAdicionales = burger.precioOriginal
+      ? burger.precioOriginal + additionsPrice
       : precioUnitario;
 
     const customizedBurger = {
       ...burger,
       precio: precioUnitario,
       // Preservar propiedades de oferta
-      precioOriginal: burger.enOferta ? precioOriginalConAdicionales : undefined,
+      precioOriginal: burger.enOferta
+        ? precioOriginalConAdicionales
+        : undefined,
       enOferta: burger.enOferta || false,
       offerDescription: burger.offerDescription,
       customization,

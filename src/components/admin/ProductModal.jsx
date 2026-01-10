@@ -1,6 +1,13 @@
 import { useState, useRef, useCallback } from "react";
 import { uploadImage, validateImage } from "../../supabase/storageService";
-import { Beef, Package, Scale, GlassWater, ImageIcon, Camera } from "lucide-react";
+import {
+  Beef,
+  Package,
+  Scale,
+  GlassWater,
+  ImageIcon,
+  Camera,
+} from "lucide-react";
 import ImagePositionEditor from "./ImagePositionEditor";
 
 const categoryNames = {
@@ -35,7 +42,8 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
     categoria: product?.categoria || category || "hamburguesas",
     precio: product?.precio || 0,
     imagen: product?.imagen || "",
-    imagenPosicion: product?.imagenPosicion || product?.imagen_posicion || { x: 50, y: 50 },
+    imagenPosicion: product?.imagenPosicion ||
+      product?.imagen_posicion || { x: 50, y: 50 },
     imagenZoom: product?.imagenZoom || product?.imagen_zoom || 100,
     unidad: product?.unidad || "unidad",
     disponible: product?.disponible !== false,
@@ -164,7 +172,7 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
               <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 Imagen del producto
               </label>
-              
+
               {/* Selector de imagen (solo cuando no hay imagen o no está en modo editor) */}
               {!showPositionEditor && (
                 <div
@@ -190,7 +198,9 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
                         alt="Preview"
                         className="w-full h-48 object-cover rounded-lg"
                         style={{
-                          objectPosition: `${formData.imagenPosicion?.x || 50}% ${formData.imagenPosicion?.y || 50}%`,
+                          objectPosition: `${
+                            formData.imagenPosicion?.x || 50
+                          }% ${formData.imagenPosicion?.y || 50}%`,
                         }}
                       />
                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
