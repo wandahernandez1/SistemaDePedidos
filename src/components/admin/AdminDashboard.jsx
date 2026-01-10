@@ -6,6 +6,7 @@ import EditableFoodCard from "./EditableFoodCard";
 import EditableServiceCard from "./EditableServiceCard";
 import ConfigManager from "./ConfigManager";
 import AdditionalsManager from "./AdditionalsManager";
+import OffersManager from "./OffersManager";
 import ProductModal from "./ProductModal";
 import FoodModal from "./FoodModal";
 import {
@@ -38,6 +39,7 @@ import {
   Package,
   ShoppingBag,
   ListPlus,
+  Tag,
 } from "lucide-react";
 import OrdersManager from "./OrdersManager";
 
@@ -213,6 +215,13 @@ const AdminDashboard = () => {
       if (productData.extras) {
         cleanProductData.extras = productData.extras;
       }
+      // Guardar posición de imagen si existe
+      if (productData.imagenPosicion) {
+        cleanProductData.imagen_posicion = productData.imagenPosicion;
+      }
+      if (productData.imagenZoom) {
+        cleanProductData.imagen_zoom = productData.imagenZoom;
+      }
 
       await update(COLLECTIONS.PRODUCTS, id, cleanProductData);
       await loadProducts();
@@ -240,6 +249,9 @@ const AdminDashboard = () => {
       const newProduct = {
         id: Date.now(),
         ...productData,
+        // Convertir a snake_case para la base de datos
+        imagen_posicion: productData.imagenPosicion || { x: 50, y: 50 },
+        imagen_zoom: productData.imagenZoom || 100,
       };
       await create(COLLECTIONS.PRODUCTS, newProduct);
       await loadProducts();
@@ -376,6 +388,7 @@ const AdminDashboard = () => {
     { id: "empanadas", label: "Empanadas", icon: Cookie },
     { id: "pizzas", label: "Pizzas", icon: Pizza },
     { id: "bebidas", label: "Bebidas", icon: GlassWater },
+    { id: "offers", label: "Ofertas", icon: Tag },
     { id: "additionals", label: "Adicionales", icon: ListPlus },
     { id: "services", label: "Servicios", icon: Briefcase },
     { id: "config", label: "Configuración", icon: Settings },
@@ -544,6 +557,8 @@ const AdminDashboard = () => {
                 ? "Servicios"
                 : activeSection === "additionals"
                 ? "Adicionales"
+                : activeSection === "offers"
+                ? "Ofertas"
                 : categoryNames[activeSection] || activeSection}
             </h2>
           </div>
@@ -552,7 +567,8 @@ const AdminDashboard = () => {
           {activeSection !== "dashboard" &&
             activeSection !== "config" &&
             activeSection !== "orders" &&
-            activeSection !== "additionals" && (
+            activeSection !== "additionals" &&
+            activeSection !== "offers" && (
               <button
                 onClick={() => {
                   if (activeSection === "foods") {
@@ -613,6 +629,8 @@ const AdminDashboard = () => {
           {activeSection === "config" && <ConfigManager />}
 
           {activeSection === "additionals" && <AdditionalsManager />}
+
+          {activeSection === "offers" && <OffersManager products={products} />}
 
           {activeSection === "foods" && (
             <FoodsSection

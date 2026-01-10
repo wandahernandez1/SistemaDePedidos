@@ -8,6 +8,7 @@ import {
   MessageCircle,
   Send,
   AlertCircle,
+  Tag,
 } from "lucide-react";
 import CartItem from "./CartItem";
 import { formatPrice } from "../utils/formatPrice";
@@ -46,6 +47,8 @@ const Cart = memo(
   ({
     cartItems,
     total,
+    totalDiscount = 0,
+    totalWithoutDiscount = 0,
     isOpen,
     onClose,
     onIncrement,
@@ -68,6 +71,19 @@ const Cart = memo(
     const { warning } = useToast();
 
     const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
+
+    /**
+     * Obtener items que tienen oferta aplicada con detalles del descuento
+     */
+    const itemsWithOffer = useMemo(() => {
+      return cartItems
+        .filter((item) => item.enOferta && item.precioOriginal)
+        .map((item) => ({
+          ...item,
+          discount: (item.precioOriginal - item.precio) * item.quantity,
+          discountPerUnit: item.precioOriginal - item.precio,
+        }));
+    }, [cartItems]);
 
     /**
      * Detectar categorías únicas de los items en el carrito
@@ -355,7 +371,10 @@ const Cart = memo(
         deliveryType,
         deliveryAddress,
         customerName,
-        paymentMethod
+        paymentMethod,
+        totalDiscount,
+        totalWithoutDiscount,
+        itemsWithOffer
       );
 
       const whatsappUrl = generateWhatsAppUrl(WHATSAPP_NUMBER, message);
@@ -372,6 +391,9 @@ const Cart = memo(
     }, [
       cartItems,
       total,
+      totalDiscount,
+      totalWithoutDiscount,
+      itemsWithOffer,
       deliveryType,
       deliveryTime,
       deliveryAddress,
@@ -426,228 +448,293 @@ const Cart = memo(
             </div>
           ) : (
             <>
-              {/* Cart Items */}
-              <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3 max-h-[35vh]">
-                {cartItems.map((item) => (
-                  <CartItem
-                    key={item.cartItemId || item.id}
-                    item={{ ...item, id: item.cartItemId || item.id }}
-                    onIncrement={onIncrement}
-                    onDecrement={onDecrement}
-                    onRemove={onRemove}
-                  />
-                ))}
-              </div>
-
-              {/* Footer */}
-              <div className="border-t border-secondary-200 dark:border-secondary-800 p-4 bg-white dark:bg-secondary-950 shrink-0">
-                {/* Delivery Type */}
-                <div className="mb-4">
-                  <label className="flex items-center gap-2 text-xs font-bold text-secondary-800 dark:text-secondary-200 mb-2">
-                    Tipo de entrega
-                  </label>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 border-2 rounded-lg cursor-pointer transition-colors duration-150 ${
-                        deliveryType === "pickup"
-                          ? "border-primary-500 bg-primary-50 dark:bg-primary-950/50"
-                          : "border-secondary-300 dark:border-secondary-700 bg-white dark:bg-secondary-900 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30"
-                      }`}
-                      onClick={handleSetPickup}
-                    >
-                      <Store
-                        className={`h-5 w-5 ${
-                          deliveryType === "pickup"
-                            ? "text-primary-500"
-                            : "text-secondary-500 dark:text-secondary-400"
-                        }`}
-                      />
-                      <span
-                        className={`text-xs font-semibold ${
-                          deliveryType === "pickup"
-                            ? "text-primary-600 dark:text-primary-400"
-                            : "text-secondary-700 dark:text-secondary-300"
-                        }`}
-                      >
-                        Retiro
-                      </span>
-                    </button>
-                    <button
-                      type="button"
-                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 border-2 rounded-lg cursor-pointer transition-colors duration-150 ${
-                        deliveryType === "delivery"
-                          ? "border-primary-500 bg-primary-50 dark:bg-primary-950/50"
-                          : "border-secondary-300 dark:border-secondary-700 bg-white dark:bg-secondary-900 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30"
-                      }`}
-                      onClick={handleSetDelivery}
-                    >
-                      <Truck
-                        className={`h-5 w-5 ${
-                          deliveryType === "delivery"
-                            ? "text-primary-500"
-                            : "text-secondary-500 dark:text-secondary-400"
-                        }`}
-                      />
-                      <span
-                        className={`text-xs font-semibold ${
-                          deliveryType === "delivery"
-                            ? "text-primary-600 dark:text-primary-400"
-                            : "text-secondary-700 dark:text-secondary-300"
-                        }`}
-                      >
-                        Envío
-                      </span>
-                    </button>
-                  </div>
-
-                  {/* Address Input */}
-                  {deliveryType === "delivery" && (
-                    <div className="mt-3 animate-fade-in">
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2.5 border-2 border-secondary-300 dark:border-secondary-700 rounded-lg text-sm transition-colors duration-150 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 placeholder:text-secondary-400 dark:placeholder:text-secondary-500"
-                        placeholder="Dirección de envío..."
-                        value={deliveryAddress}
-                        onChange={handleAddressChange}
-                      />
-                    </div>
-                  )}
+              {/* Contenido scrollable del carrito */}
+              <div className="flex-1 overflow-y-auto flex flex-col min-h-0">
+                {/* Cart Items */}
+                <div className="p-4 flex flex-col gap-3">
+                  {cartItems.map((item) => (
+                    <CartItem
+                      key={item.cartItemId || item.id}
+                      item={{ ...item, id: item.cartItemId || item.id }}
+                      onIncrement={onIncrement}
+                      onDecrement={onDecrement}
+                      onRemove={onRemove}
+                    />
+                  ))}
                 </div>
 
-                {/* Time Selection */}
-                <div className="mb-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="flex items-center gap-1.5 text-xs font-bold text-secondary-800 dark:text-secondary-200">
-                      <Clock className="h-4 w-4 text-primary-500" />
-                      Horario de entrega
+                {/* Footer - dentro del scroll */}
+                <div className="border-t border-secondary-200 dark:border-secondary-800 p-4 bg-white dark:bg-secondary-950">
+                  {/* Delivery Type */}
+                  <div className="mb-4">
+                    <label className="flex items-center gap-2 text-xs font-bold text-secondary-800 dark:text-secondary-200 mb-2">
+                      Tipo de entrega
                     </label>
-                    <span className="text-[10px] text-secondary-400">
-                      {effectiveSchedule.start} - {effectiveSchedule.end} hs
-                    </span>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 border-2 rounded-lg cursor-pointer transition-colors duration-150 ${
+                          deliveryType === "pickup"
+                            ? "border-primary-500 bg-primary-50 dark:bg-primary-950/50"
+                            : "border-secondary-300 dark:border-secondary-700 bg-white dark:bg-secondary-900 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30"
+                        }`}
+                        onClick={handleSetPickup}
+                      >
+                        <Store
+                          className={`h-5 w-5 ${
+                            deliveryType === "pickup"
+                              ? "text-primary-500"
+                              : "text-secondary-500 dark:text-secondary-400"
+                          }`}
+                        />
+                        <span
+                          className={`text-xs font-semibold ${
+                            deliveryType === "pickup"
+                              ? "text-primary-600 dark:text-primary-400"
+                              : "text-secondary-700 dark:text-secondary-300"
+                          }`}
+                        >
+                          Retiro
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 border-2 rounded-lg cursor-pointer transition-colors duration-150 ${
+                          deliveryType === "delivery"
+                            ? "border-primary-500 bg-primary-50 dark:bg-primary-950/50"
+                            : "border-secondary-300 dark:border-secondary-700 bg-white dark:bg-secondary-900 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30"
+                        }`}
+                        onClick={handleSetDelivery}
+                      >
+                        <Truck
+                          className={`h-5 w-5 ${
+                            deliveryType === "delivery"
+                              ? "text-primary-500"
+                              : "text-secondary-500 dark:text-secondary-400"
+                          }`}
+                        />
+                        <span
+                          className={`text-xs font-semibold ${
+                            deliveryType === "delivery"
+                              ? "text-primary-600 dark:text-primary-400"
+                              : "text-secondary-700 dark:text-secondary-300"
+                          }`}
+                        >
+                          Envío
+                        </span>
+                      </button>
+                    </div>
+
+                    {/* Address Input */}
+                    {deliveryType === "delivery" && (
+                      <div className="mt-3 animate-fade-in">
+                        <input
+                          type="text"
+                          className="w-full px-3 py-2.5 border-2 border-secondary-300 dark:border-secondary-700 rounded-lg text-sm transition-colors duration-150 bg-white dark:bg-secondary-900 text-secondary-900 dark:text-secondary-100 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 placeholder:text-secondary-400 dark:placeholder:text-secondary-500"
+                          placeholder="Dirección de envío..."
+                          value={deliveryAddress}
+                          onChange={handleAddressChange}
+                        />
+                      </div>
+                    )}
                   </div>
 
-                  {/* Info de horario restrictivo */}
-                  {effectiveSchedule.restrictiveCategory && (
-                    <div className="flex items-start gap-2 p-2 mb-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700">
-                      <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
-                      <p className="text-xs text-amber-700 dark:text-amber-300">
-                        Horario según disponibilidad de{" "}
-                        <span className="font-semibold capitalize">
-                          {effectiveSchedule.restrictiveCategory}
-                        </span>
-                      </p>
+                  {/* Time Selection */}
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="flex items-center gap-1.5 text-xs font-bold text-secondary-800 dark:text-secondary-200">
+                        <Clock className="h-4 w-4 text-primary-500" />
+                        Horario de entrega
+                      </label>
+                      <span className="text-[10px] text-secondary-400">
+                        {effectiveSchedule.start} - {effectiveSchedule.end} hs
+                      </span>
                     </div>
-                  )}
 
-                  <button
-                    type="button"
-                    className="w-full px-3 py-2.5 border-2 border-secondary-300 dark:border-secondary-700 rounded-lg text-sm font-semibold transition-colors duration-150 bg-white dark:bg-secondary-900 text-secondary-800 dark:text-secondary-100 cursor-pointer flex items-center gap-2 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30"
-                    onClick={handleOpenTimeSelector}
-                  >
-                    <span className="flex-1 text-left">
-                      {deliveryTime
-                        ? `${deliveryTime} hs`
-                        : "Seleccionar horario"}
-                    </span>
-                    <span className="text-xs text-secondary-400">▼</span>
-                  </button>
+                    {/* Info de horario restrictivo */}
+                    {effectiveSchedule.restrictiveCategory && (
+                      <div className="flex items-start gap-2 p-2 mb-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700">
+                        <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                        <p className="text-xs text-amber-700 dark:text-amber-300">
+                          Horario según disponibilidad de{" "}
+                          <span className="font-semibold capitalize">
+                            {effectiveSchedule.restrictiveCategory}
+                          </span>
+                        </p>
+                      </div>
+                    )}
 
-                  {/* Time Modal */}
-                  {showTimeSelector && (
-                    <div
-                      className="fixed inset-0 bg-black/50 flex items-end justify-center z-10000 modal-overlay"
-                      onClick={handleCloseTimeSelector}
+                    <button
+                      type="button"
+                      className="w-full px-3 py-2.5 border-2 border-secondary-300 dark:border-secondary-700 rounded-lg text-sm font-semibold transition-colors duration-150 bg-white dark:bg-secondary-900 text-secondary-800 dark:text-secondary-100 cursor-pointer flex items-center gap-2 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30"
+                      onClick={handleOpenTimeSelector}
                     >
-                      <div
-                        className="bg-white dark:bg-secondary-950 rounded-t-3xl w-full max-w-md max-h-[70vh] overflow-hidden animate-slide-in modal-content"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="flex items-center justify-between px-6 py-5 border-b border-secondary-200 dark:border-secondary-800 sticky top-0 bg-white dark:bg-secondary-950">
-                          <h3 className="text-lg font-bold m-0 text-secondary-900 dark:text-secondary-50">
-                            Selecciona un horario
-                          </h3>
-                          <button
-                            className="w-9 h-9 rounded-full border-none bg-secondary-100 dark:bg-secondary-800 cursor-pointer flex items-center justify-center transition-colors duration-150 hover:bg-secondary-200 dark:hover:bg-secondary-700"
-                            onClick={handleCloseTimeSelector}
-                          >
-                            <X className="h-5 w-5 text-secondary-600 dark:text-secondary-400" />
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-3 gap-3 p-5 max-h-[calc(70vh-80px)] overflow-y-auto">
-                          {timeOptions.map((time) => {
-                            const isPassed = isTimePassed(time);
-                            const isSelected = deliveryTime === time;
+                      <span className="flex-1 text-left">
+                        {deliveryTime
+                          ? `${deliveryTime} hs`
+                          : "Seleccionar horario"}
+                      </span>
+                      <span className="text-xs text-secondary-400">▼</span>
+                    </button>
 
-                            return (
-                              <button
-                                key={time}
-                                type="button"
-                                disabled={isPassed}
-                                className={`py-4 px-3 border-2 rounded-xl text-base font-semibold transition-colors duration-150 min-h-13 relative ${
-                                  isPassed
-                                    ? "bg-secondary-100 dark:bg-secondary-800 border-secondary-200 dark:border-secondary-700 text-secondary-400 dark:text-secondary-600 cursor-not-allowed line-through opacity-60"
-                                    : isSelected
-                                    ? "bg-primary-500 border-primary-500 text-white cursor-pointer"
-                                    : "bg-white dark:bg-secondary-900 border-secondary-300 dark:border-secondary-700 text-secondary-800 dark:text-secondary-100 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 cursor-pointer"
-                                }`}
-                                onClick={() =>
-                                  !isPassed && handleSelectTime(time)
-                                }
-                              >
-                                {time}
-                                {isPassed && (
-                                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-secondary-400 dark:bg-secondary-600 rounded-full flex items-center justify-center">
-                                    <Clock className="w-2.5 h-2.5 text-white" />
-                                  </span>
-                                )}
-                              </button>
-                            );
-                          })}
+                    {/* Time Modal */}
+                    {showTimeSelector && (
+                      <div
+                        className="fixed inset-0 bg-black/50 flex items-end justify-center z-10000 modal-overlay"
+                        onClick={handleCloseTimeSelector}
+                      >
+                        <div
+                          className="bg-white dark:bg-secondary-950 rounded-t-3xl w-full max-w-md max-h-[70vh] overflow-hidden animate-slide-in modal-content"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="flex items-center justify-between px-6 py-5 border-b border-secondary-200 dark:border-secondary-800 sticky top-0 bg-white dark:bg-secondary-950">
+                            <h3 className="text-lg font-bold m-0 text-secondary-900 dark:text-secondary-50">
+                              Selecciona un horario
+                            </h3>
+                            <button
+                              className="w-9 h-9 rounded-full border-none bg-secondary-100 dark:bg-secondary-800 cursor-pointer flex items-center justify-center transition-colors duration-150 hover:bg-secondary-200 dark:hover:bg-secondary-700"
+                              onClick={handleCloseTimeSelector}
+                            >
+                              <X className="h-5 w-5 text-secondary-600 dark:text-secondary-400" />
+                            </button>
+                          </div>
+                          <div className="grid grid-cols-3 gap-3 p-5 max-h-[calc(70vh-80px)] overflow-y-auto">
+                            {timeOptions.map((time) => {
+                              const isPassed = isTimePassed(time);
+                              const isSelected = deliveryTime === time;
+
+                              return (
+                                <button
+                                  key={time}
+                                  type="button"
+                                  disabled={isPassed}
+                                  className={`py-4 px-3 border-2 rounded-xl text-base font-semibold transition-colors duration-150 min-h-13 relative ${
+                                    isPassed
+                                      ? "bg-secondary-100 dark:bg-secondary-800 border-secondary-200 dark:border-secondary-700 text-secondary-400 dark:text-secondary-600 cursor-not-allowed line-through opacity-60"
+                                      : isSelected
+                                      ? "bg-primary-500 border-primary-500 text-white cursor-pointer"
+                                      : "bg-white dark:bg-secondary-900 border-secondary-300 dark:border-secondary-700 text-secondary-800 dark:text-secondary-100 hover:border-primary-400 hover:bg-primary-50/50 dark:hover:bg-primary-950/30 cursor-pointer"
+                                  }`}
+                                  onClick={() =>
+                                    !isPassed && handleSelectTime(time)
+                                  }
+                                >
+                                  {time}
+                                  {isPassed && (
+                                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-secondary-400 dark:bg-secondary-600 rounded-full flex items-center justify-center">
+                                      <Clock className="w-2.5 h-2.5 text-white" />
+                                    </span>
+                                  )}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {estimatedTime && (
-                    <p className="mt-2 px-2.5 py-2 bg-primary-500 rounded-lg text-xs text-white font-semibold text-center">
-                      Estimado: <strong>{estimatedTime}</strong>
-                      <span className="ml-1 opacity-80">
-                        (+{tiempoPreparacion} min)
+                    {estimatedTime && (
+                      <p className="mt-2 px-2.5 py-2 bg-primary-500 rounded-lg text-xs text-white font-semibold text-center">
+                        Estimado: <strong>{estimatedTime}</strong>
+                        <span className="ml-1 opacity-80">
+                          (+{tiempoPreparacion} min)
+                        </span>
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Total Section con descuento */}
+                  <div className="p-4 mb-4 bg-secondary-50 dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
+                    {/* Si hay descuento, mostrar desglose detallado */}
+                    {totalDiscount > 0 && itemsWithOffer.length > 0 && (
+                      <>
+                        {/* Subtotal (precio original) */}
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-xs font-medium text-secondary-400 dark:text-secondary-500">
+                            Subtotal
+                          </span>
+                          <span className="text-sm text-secondary-500 dark:text-secondary-400 line-through">
+                            {formatPrice(totalWithoutDiscount)}
+                          </span>
+                        </div>
+
+                        {/* Detalle de ofertas aplicadas */}
+                        <div className="mb-3 pb-3 border-b border-secondary-200 dark:border-secondary-700 space-y-2">
+                          <div className="flex items-center gap-1.5 mb-2">
+                            <Tag className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
+                            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">
+                              Ofertas aplicadas
+                            </span>
+                          </div>
+                          {itemsWithOffer.map((item, index) => (
+                            <div
+                              key={item.cartItemId || `offer-${index}`}
+                              className="flex justify-between items-start gap-2 pl-4 sm:pl-5"
+                            >
+                              <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+                                <span className="text-[11px] font-medium text-secondary-600 dark:text-secondary-400 truncate block max-w-full">
+                                  {item.nombre}
+                                  {item.quantity > 1 && (
+                                    <span className="text-secondary-400 dark:text-secondary-500">
+                                      {" "}
+                                      x{item.quantity}
+                                    </span>
+                                  )}
+                                </span>
+                                <span className="text-[10px] text-secondary-400 dark:text-secondary-500 truncate">
+                                  Ahorrás {formatPrice(item.discountPerUnit)}{" "}
+                                  c/u
+                                </span>
+                              </div>
+                              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap flex-shrink-0">
+                                -{formatPrice(item.discount)}
+                              </span>
+                            </div>
+                          ))}
+                          {/* Total descuento */}
+                          <div className="flex justify-between items-center pt-2 mt-2 border-t border-dashed border-secondary-200 dark:border-secondary-700">
+                            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                              Total descuento
+                            </span>
+                            <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                              -{formatPrice(totalDiscount)}
+                            </span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {/* Total final */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm font-bold text-secondary-500 dark:text-secondary-400 uppercase tracking-wide">
+                        Total
                       </span>
-                    </p>
-                  )}
-                </div>
+                      <span className="text-2xl font-bold text-secondary-900 dark:text-secondary-50 tracking-tight">
+                        {formatPrice(total)}
+                      </span>
+                    </div>
+                  </div>
 
-                {/* Total */}
-                <div className="flex justify-between items-center p-4 mb-4 bg-secondary-50 dark:bg-secondary-900 rounded-xl border border-secondary-200 dark:border-secondary-700">
-                  <span className="text-sm font-bold text-secondary-500 dark:text-secondary-400 uppercase tracking-wide">
-                    Total
-                  </span>
-                  <span className="text-2xl font-bold text-secondary-900 dark:text-secondary-50 tracking-tight">
-                    {formatPrice(total)}
-                  </span>
+                  {/* Actions */}
+                  <div className="flex gap-3">
+                    <button
+                      className="py-3.5 px-4 border-2 border-secondary-300 dark:border-secondary-700 rounded-xl text-sm font-bold cursor-pointer transition-colors duration-150 flex items-center justify-center gap-2 bg-white dark:bg-secondary-900 text-secondary-700 dark:text-secondary-300 hover:bg-error-50 dark:hover:bg-error-950/30 hover:border-error-400 hover:text-error-600 dark:hover:text-error-400 active:scale-[0.98]"
+                      onClick={handleClearCart}
+                      aria-label="Vaciar carrito"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      <span>Vaciar</span>
+                    </button>
+                    <button
+                      className="flex-1 py-3.5 px-5 border-none rounded-xl text-sm font-bold cursor-pointer transition-colors duration-150 flex items-center justify-center gap-2 bg-primary-500 text-white shadow-md hover:bg-primary-600 active:scale-[0.98]"
+                      onClick={handleFinishOrder}
+                      aria-label="Finalizar pedido por WhatsApp"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      <span>Enviar a WhatsApp</span>
+                    </button>
+                  </div>
                 </div>
-
-                {/* Actions */}
-                <div className="flex gap-3">
-                  <button
-                    className="py-3.5 px-4 border-2 border-secondary-300 dark:border-secondary-700 rounded-xl text-sm font-bold cursor-pointer transition-colors duration-150 flex items-center justify-center gap-2 bg-white dark:bg-secondary-900 text-secondary-700 dark:text-secondary-300 hover:bg-error-50 dark:hover:bg-error-950/30 hover:border-error-400 hover:text-error-600 dark:hover:text-error-400 active:scale-[0.98]"
-                    onClick={handleClearCart}
-                    aria-label="Vaciar carrito"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    <span>Vaciar</span>
-                  </button>
-                  <button
-                    className="flex-1 py-3.5 px-5 border-none rounded-xl text-sm font-bold cursor-pointer transition-colors duration-150 flex items-center justify-center gap-2 bg-primary-500 text-white shadow-md hover:bg-primary-600 active:scale-[0.98]"
-                    onClick={handleFinishOrder}
-                    aria-label="Finalizar pedido por WhatsApp"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    <span>Enviar a WhatsApp</span>
-                  </button>
-                </div>
+                {/* Fin del contenedor scrollable */}
               </div>
             </>
           )}

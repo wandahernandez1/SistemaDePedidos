@@ -21,6 +21,7 @@ const ProductList = memo(
     selectedCategory,
     categorySchedules,
     isCategoryAvailable,
+    activeOffers = [],
   }) => {
     // Nombres de categorías - memoizado
     const categoryNames = useMemo(
@@ -54,19 +55,19 @@ const ProductList = memo(
     // Vista de menú principal
     if (showMenuView) {
       return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10">
           {/* Header */}
-          <div className="text-center mb-6 sm:mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-secondary-900 dark:text-secondary-50 mb-2 tracking-tight">
+          <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-secondary-900 dark:text-secondary-50 mb-2 sm:mb-3 tracking-tight">
               Nuestro Menú
             </h2>
-            <p className="text-sm sm:text-base text-secondary-600 dark:text-secondary-400 m-0 font-medium px-2">
+            <p className="text-sm sm:text-base lg:text-lg text-secondary-600 dark:text-secondary-400 m-0 font-medium px-2 max-w-2xl mx-auto">
               Seleccioná una opción para ver los productos disponibles
             </p>
           </div>
 
-          {/* Menu Grid - 3 cards centradas en desktop, responsive en móvil */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12 product-grid max-w-5xl mx-auto">
+          {/* Menu Grid - 3 cards grandes y centradas en desktop */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 mb-8 sm:mb-12 product-grid max-w-6xl mx-auto">
             {foods &&
               foods.map((food) => {
                 const schedule = categorySchedules?.[food.category];
@@ -137,6 +138,7 @@ const ProductList = memo(
                   key={product.id}
                   product={product}
                   onAddToCart={onAddToCart}
+                  activeOffers={activeOffers}
                 />
               ))}
             </div>

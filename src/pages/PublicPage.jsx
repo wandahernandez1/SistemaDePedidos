@@ -9,6 +9,8 @@ import ScheduleNotificationModal from "../components/ScheduleNotificationModal";
 import { useCart } from "../hooks/useCart";
 import { useRealTimeSchedules } from "../shared/hooks/useRealTimeSchedules";
 import { useBackNavigation } from "../shared/hooks/useBackNavigation";
+import { useOffers } from "../shared/hooks/useOffers";
+import { getActiveOfferFromArray } from "../shared/constants/offers";
 import { getAll, TABLES as COLLECTIONS } from "../supabase/supabaseService";
 
 /**
@@ -24,6 +26,8 @@ function PublicPage() {
     removeFromCart,
     clearCart,
     getTotal,
+    getTotalDiscount,
+    getTotalWithoutDiscount,
     getTotalItems,
   } = useCart();
 
@@ -53,6 +57,9 @@ function PublicPage() {
     getUnavailabilityInfo,
     isRealTimeActive,
   } = useRealTimeSchedules();
+
+  // Hook de ofertas activas
+  const { activeOffers, loading: offersLoading } = useOffers();
 
   useEffect(() => {
     loadAllData();
@@ -87,7 +94,8 @@ function PublicPage() {
     }
   };
 
-  // Filtrar productos - memoizado para mejor rendimiento
+  // Filtrar y ordenar productos - memoizado para mejor rendimiento
+  // Los productos con oferta activa aparecen primero (anclados)
   const filteredProducts = useMemo(() => {
     let filtered = products;
 
@@ -104,8 +112,22 @@ function PublicPage() {
       );
     }
 
+    // Ordenar: productos con oferta primero
+    if (activeOffers && activeOffers.length > 0) {
+      filtered = [...filtered].sort((a, b) => {
+        const aHasOffer = getActiveOfferFromArray(a.nombre, activeOffers);
+        const bHasOffer = getActiveOfferFromArray(b.nombre, activeOffers);
+
+        // Si ambos tienen oferta o ninguno tiene, mantener orden original
+        if ((aHasOffer && bHasOffer) || (!aHasOffer && !bHasOffer)) return 0;
+
+        // Productos con oferta van primero
+        return aHasOffer ? -1 : 1;
+      });
+    }
+
     return filtered;
-  }, [selectedCategory, searchTerm, products]);
+  }, [selectedCategory, searchTerm, products, activeOffers]);
 
   const handleAddToCart = useCallback(
     (product) => {
@@ -211,6 +233,7 @@ function PublicPage() {
         selectedCategory={selectedCategory}
         categorySchedules={schedules}
         isCategoryAvailable={isCategoryAvailable}
+        activeOffers={activeOffers}
       />
 
       {showMenuView && <ServicesSection />}
@@ -218,6 +241,8 @@ function PublicPage() {
       <Cart
         cartItems={cartItems}
         total={getTotal()}
+        totalDiscount={getTotalDiscount()}
+        totalWithoutDiscount={getTotalWithoutDiscount()}
         isOpen={isCartOpen}
         onClose={handleCartClose}
         onIncrement={incrementQuantity}

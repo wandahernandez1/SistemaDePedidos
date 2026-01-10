@@ -1,6 +1,14 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { uploadImage, validateImage } from "../../supabase/storageService";
-import { Beef, Package, Scale, GlassWater } from "lucide-react";
+import {
+  Beef,
+  Package,
+  Scale,
+  GlassWater,
+  ImageIcon,
+  Camera,
+} from "lucide-react";
+import ImagePositionEditor from "./ImagePositionEditor";
 
 const categoryNames = {
   hamburguesas: "Hamburguesas",
@@ -27,17 +35,30 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
   const [uploading, setUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [imagePreview, setImagePreview] = useState(product?.imagen || "");
+  const [showPositionEditor, setShowPositionEditor] = useState(false);
   const [formData, setFormData] = useState({
     nombre: product?.nombre || "",
     descripcion: product?.descripcion || "",
     categoria: product?.categoria || category || "hamburguesas",
     precio: product?.precio || 0,
     imagen: product?.imagen || "",
+    imagenPosicion: product?.imagenPosicion ||
+      product?.imagen_posicion || { x: 50, y: 50 },
+    imagenZoom: product?.imagenZoom || product?.imagen_zoom || 100,
     unidad: product?.unidad || "unidad",
     disponible: product?.disponible !== false,
     destacado: product?.destacado || false,
   });
   const [errors, setErrors] = useState({});
+
+  // Callbacks para el editor de posición
+  const handlePositionChange = useCallback((position) => {
+    setFormData((prev) => ({ ...prev, imagenPosicion: position }));
+  }, []);
+
+  const handleZoomChange = useCallback((zoom) => {
+    setFormData((prev) => ({ ...prev, imagenZoom: zoom }));
+  }, []);
 
   const validateForm = () => {
     const newErrors = {};
@@ -151,69 +172,132 @@ const ProductModal = ({ product, isNew, category, onClose, onSave }) => {
               <label className="block text-sm font-semibold text-neutral-700 mb-2">
                 Imagen del producto
               </label>
-              <div
-                className={`
-                  relative border-2 border-dashed rounded-xl p-4 text-center transition-all cursor-pointer
-                  ${
-                    dragActive
-                      ? "border-primary-500 bg-primary-50"
-                      : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50"
-                  }
-                  ${errors.imagen ? "border-red-300 bg-red-50" : ""}
-                `}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-              >
-                {imagePreview ? (
-                  <div className="relative group">
-                    <img
-                      src={imagePreview}
-                      alt="Preview"
-                      className="w-full h-48 object-cover rounded-lg"
-                    />
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
-                      <span className="text-white font-medium">
-                        {uploading ? "Subiendo..." : "Cambiar imagen"}
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="py-8">
-                    <svg
-                      className="w-12 h-12 mx-auto text-neutral-400 mb-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+
+              {/* Selector de imagen (solo cuando no hay imagen o no está en modo editor) */}
+              {!showPositionEditor && (
+                <div
+                  className={`
+                    relative border-2 border-dashed rounded-xl p-4 text-center transition-all cursor-pointer
+                    ${
+                      dragActive
+                        ? "border-primary-500 bg-primary-50"
+                        : "border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50"
+                    }
+                    ${errors.imagen ? "border-red-300 bg-red-50" : ""}
+                  `}
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  {imagePreview ? (
+                    <div className="relative group">
+                      <img
+                        src={imagePreview}
+                        alt="Preview"
+                        className="w-full h-48 object-cover rounded-lg"
+                        style={{
+                          objectPosition: `${
+                            formData.imagenPosicion?.x || 50
+                          }% ${formData.imagenPosicion?.y || 50}%`,
+                        }}
                       />
-                    </svg>
-                    <p className="text-neutral-600 font-medium">
-                      {uploading
-                        ? "Subiendo imagen..."
-                        : "Arrastra una imagen o haz clic para seleccionar"}
-                    </p>
-                    <p className="text-xs text-neutral-400 mt-1">
-                      Soporta: JPG, PNG, WEBP, GIF, SVG, BMP, AVIF, HEIC (máx.
-                      10MB)
-                    </p>
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">
+                        <span className="text-white font-medium">
+                          {uploading ? "Subiendo..." : "Cambiar imagen"}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="py-8">
+                      <svg
+                        className="w-12 h-12 mx-auto text-neutral-400 mb-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      <p className="text-neutral-600 font-medium">
+                        {uploading
+                          ? "Subiendo imagen..."
+                          : "Arrastra una imagen o haz clic para seleccionar"}
+                      </p>
+                      <p className="text-xs text-neutral-400 mt-1">
+                        Soporta: JPG, PNG, WEBP, GIF, SVG, BMP, AVIF, HEIC (máx.
+                        10MB)
+                      </p>
+                    </div>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageChange(e.target.files[0])}
+                    className="hidden"
+                  />
+                </div>
+              )}
+
+              {/* Botón para abrir editor de posición */}
+              {imagePreview && !showPositionEditor && (
+                <button
+                  type="button"
+                  onClick={() => setShowPositionEditor(true)}
+                  className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-medium transition-colors border-none cursor-pointer"
+                >
+                  <ImageIcon className="w-4 h-4" />
+                  Ajustar posición de imagen
+                </button>
+              )}
+
+              {/* Editor de posición de imagen */}
+              {showPositionEditor && imagePreview && (
+                <div className="space-y-3">
+                  <ImagePositionEditor
+                    imageUrl={imagePreview}
+                    initialPosition={formData.imagenPosicion}
+                    initialZoom={formData.imagenZoom}
+                    onPositionChange={handlePositionChange}
+                    onZoomChange={handleZoomChange}
+                    aspectRatio="4/3"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowPositionEditor(false)}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-primary-500 hover:bg-primary-600 text-white font-medium transition-colors border-none cursor-pointer"
+                    >
+                      <Camera className="w-4 h-4" />
+                      Aceptar posición
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="px-4 py-2.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-medium transition-colors border-none cursor-pointer"
+                    >
+                      Cambiar foto
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        handleImageChange(e.target.files[0]);
+                        setShowPositionEditor(false);
+                      }}
+                      className="hidden"
+                    />
                   </div>
-                )}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageChange(e.target.files[0])}
-                  className="hidden"
-                />
-              </div>
+                </div>
+              )}
+
               {errors.imagen && (
                 <p className="text-red-500 text-sm mt-1">{errors.imagen}</p>
               )}

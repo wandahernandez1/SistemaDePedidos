@@ -11,6 +11,7 @@ export const TABLES = {
   SERVICES: "services",
   CONFIG: "config",
   ORDERS: "orders",
+  OFFERS: "offers",
 };
 
 /**
