@@ -68,7 +68,7 @@ const Cart = memo(
     const [customerName, setCustomerName] = useState("");
     const [paymentMethod, setPaymentMethod] = useState("cash");
 
-    const { warning } = useToast();
+    const { warning, info } = useToast();
 
     const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER;
 
@@ -314,23 +314,27 @@ const Cart = memo(
         return;
       }
 
-      if (paymentMethod === "transferencia") {
-        warning("Recuerda pasar el comprobante una vez recibido el alias");
-      }
-
       setShowConfirmation(true);
     }, [
       cartItems.length,
       deliveryTime,
       deliveryType,
       deliveryAddress,
-      paymentMethod,
       warning,
     ]);
 
     const handleCancelConfirmation = useCallback(() => {
       setShowConfirmation(false);
     }, []);
+
+    // Handler para seleccionar transferencia con aviso
+    const handleSelectTransfer = useCallback(() => {
+      setPaymentMethod("transfer");
+      info(
+        "📢 IMPORTANTE: Al elegir transferencia, deberás esperar la confirmación del pedido. Te enviaremos el ALIAS y luego debes enviar el comprobante de pago.",
+        8000 // 8 segundos para que el usuario tenga tiempo de leer
+      );
+    }, [info]);
 
     const handleConfirmOrder = useCallback(async () => {
       // Preparar los datos del pedido para guardar en la base de datos
@@ -378,6 +382,7 @@ const Cart = memo(
       );
 
       const whatsappUrl = generateWhatsAppUrl(WHATSAPP_NUMBER, message);
+      
       window.open(whatsappUrl, "_blank");
 
       onClearCart();
@@ -403,6 +408,7 @@ const Cart = memo(
       WHATSAPP_NUMBER,
       onClearCart,
       onClose,
+      info,
     ]);
 
     return (
@@ -816,7 +822,7 @@ const Cart = memo(
                       id="payment-transfer"
                       name="paymentMethod"
                       checked={paymentMethod === "transfer"}
-                      onChange={() => setPaymentMethod("transfer")}
+                      onChange={handleSelectTransfer}
                     />
                     <span className="font-medium text-secondary-700 dark:text-secondary-300">
                       Transferencia bancaria
