@@ -66,6 +66,7 @@ const Cart = memo(
     const [deliveryType, setDeliveryType] = useState("pickup");
     const [deliveryAddress, setDeliveryAddress] = useState("");
     const [customerName, setCustomerName] = useState("");
+    const [customerPhone, setCustomerPhone] = useState("");
     const [paymentMethod, setPaymentMethod] = useState("cash");
 
     const { warning, info } = useToast();
@@ -344,25 +345,48 @@ const Cart = memo(
           id: item.id,
           nombre: item.nombre,
           precio: item.precio,
+          originalPrice: item.originalPrice || item.precio, // Precio original si hay oferta
           quantity: item.quantity,
           imagen: item.imagen,
+          // Información de oferta
+          isOffer: !!item.isOffer,
+          offerName: item.offerName || null,
+          offerDescription: item.offerDescription || null,
+          discount: item.originalPrice ? item.originalPrice - item.precio : 0,
+          // Personalizaciones detalladas
           customizations:
             item.customizations ||
             item.ingredientesElegidos?.join(", ") ||
             null,
+          // Detalles específicos de personalización (para hamburguesas)
+          customizationDetails: item.customizations
+            ? {
+                removed: item.customizations.removed || [],
+                added: item.customizations.added || [],
+              }
+            : null,
         })),
         total,
+        total_without_discount: totalWithoutDiscount,
+        total_discount: totalDiscount,
         delivery_type: deliveryType,
         delivery_time: deliveryTime,
         delivery_address: deliveryType === "delivery" ? deliveryAddress : null,
+        customer_name: customerName,
+        customer_phone: customerPhone,
+        payment_method: paymentMethod,
         status: "pending",
         created_at: new Date().toISOString(),
       };
 
       try {
         // Guardar el pedido en Supabase
+        console.log("Guardando pedido en Supabase:", orderData);
         await createOrder(orderData);
+        console.log("Pedido guardado exitosamente");
       } catch (error) {
+        // Log del error para depuración
+        console.error("Error al guardar pedido en Supabase:", error);
         // Continuamos con WhatsApp aunque falle el guardado
       }
 
@@ -378,7 +402,8 @@ const Cart = memo(
         paymentMethod,
         totalDiscount,
         totalWithoutDiscount,
-        itemsWithOffer
+        itemsWithOffer,
+        customerPhone
       );
 
       const whatsappUrl = generateWhatsAppUrl(WHATSAPP_NUMBER, message);
@@ -390,6 +415,7 @@ const Cart = memo(
       setDeliveryType("pickup");
       setDeliveryAddress("");
       setCustomerName("");
+      setCustomerPhone("");
       setPaymentMethod("cash");
       setShowConfirmation(false);
       onClose();
@@ -403,6 +429,7 @@ const Cart = memo(
       deliveryTime,
       deliveryAddress,
       customerName,
+      customerPhone,
       paymentMethod,
       estimatedTime,
       WHATSAPP_NUMBER,
@@ -770,6 +797,20 @@ const Cart = memo(
                   placeholder="Tu nombre"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+
+              {/* Campo de celular */}
+              <div className="mb-4 text-left">
+                <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
+                  Número de celular
+                </label>
+                <Input
+                  type="tel"
+                  placeholder="Ej: 11 1234-5678"
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value)}
                   className="w-full"
                 />
               </div>

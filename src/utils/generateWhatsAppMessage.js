@@ -57,6 +57,7 @@ const formatBurgerDetail = (customization, customizationText) => {
  * @param {number} totalDiscount - Descuento total aplicado por ofertas
  * @param {number} totalWithoutDiscount - Total sin descuentos (precio original)
  * @param {Array} itemsWithOffer - Items que tienen oferta aplicada con detalle del descuento
+ * @param {string} customerPhone - Número de celular del cliente
  * @returns {string} Mensaje formateado para WhatsApp
  */
 export const generateWhatsAppMessage = (
@@ -70,7 +71,8 @@ export const generateWhatsAppMessage = (
   paymentMethod = "cash",
   totalDiscount = 0,
   totalWithoutDiscount = 0,
-  itemsWithOffer = []
+  itemsWithOffer = [],
+  customerPhone = ""
 ) => {
   let message = "═══════════════════════\n";
   message += "*NUEVO PEDIDO*\n";
@@ -79,6 +81,9 @@ export const generateWhatsAppMessage = (
   // Información del cliente
   if (customerName) {
     message += `*Cliente:* ${customerName}\n`;
+  }
+  if (customerPhone) {
+    message += `*Celular:* ${customerPhone}\n`;
   }
 
   // Tipo de entrega
