@@ -382,7 +382,7 @@ const Cart = memo(
       );
 
       const whatsappUrl = generateWhatsAppUrl(WHATSAPP_NUMBER, message);
-      
+
       window.open(whatsappUrl, "_blank");
 
       onClearCart();
