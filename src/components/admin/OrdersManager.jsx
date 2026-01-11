@@ -134,7 +134,9 @@ const OrderItem = ({ item }) => {
               <p className="text-xs text-green-600 dark:text-green-400">
                 <span className="font-medium">Extras:</span>{" "}
                 {customDetails.added
-                  .map((a) => (a.quantity > 1 ? `${a.quantity}x ${a.name}` : a.name))
+                  .map((a) =>
+                    a.quantity > 1 ? `${a.quantity}x ${a.name}` : a.name
+                  )
                   .join(", ")}
               </p>
             )}
@@ -225,7 +227,7 @@ const OrderCard = ({ order, onStatusChange, onDelete }) => {
                 {statusConfig.label}
               </span>
             </div>
-            
+
             {/* Nombre del cliente */}
             {order.customer_name && (
               <div className="flex items-center gap-1 text-sm font-medium text-neutral-700 dark:text-neutral-200 mb-1">
@@ -233,7 +235,7 @@ const OrderCard = ({ order, onStatusChange, onDelete }) => {
                 {order.customer_name}
               </div>
             )}
-            
+
             <div className="flex items-center gap-3 text-xs text-neutral-500 dark:text-neutral-400">
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
@@ -252,7 +254,9 @@ const OrderCard = ({ order, onStatusChange, onDelete }) => {
                 {order.payment_method === "transfer" ? (
                   <>
                     <Wallet className="w-3 h-3 text-blue-500" />
-                    <span className="text-blue-600 dark:text-blue-400 font-medium">Transferencia</span>
+                    <span className="text-blue-600 dark:text-blue-400 font-medium">
+                      Transferencia
+                    </span>
                   </>
                 ) : (
                   <>
