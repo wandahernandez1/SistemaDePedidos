@@ -14,6 +14,9 @@ import {
   ChevronUp,
   Calendar,
   ShoppingBag,
+  User,
+  Wallet,
+  Banknote,
 } from "lucide-react";
 import {
   getOrders,
@@ -68,9 +71,18 @@ const STATUS_CONFIG = {
  * Componente para mostrar un item del pedido
  */
 const OrderItem = ({ item }) => {
+  // Parsear customizationDetails si viene como string
+  const customDetails =
+    typeof item.customizationDetails === "string"
+      ? JSON.parse(item.customizationDetails || "{}")
+      : item.customizationDetails;
+
+  const hasRemoved = customDetails?.removed?.length > 0;
+  const hasAdded = customDetails?.added?.length > 0;
+
   return (
-    <div className="flex items-start gap-3 py-2 border-b border-neutral-100 dark:border-neutral-700 last:border-0">
-      <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-neutral-100 dark:bg-neutral-700">
+    <div className="flex items-start gap-3 py-3 border-b border-neutral-100 dark:border-neutral-700 last:border-0">
+      <div className="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-neutral-100 dark:bg-neutral-700 relative">
         {item.imagen && (
           <img
             src={item.imagen}
@@ -78,23 +90,78 @@ const OrderItem = ({ item }) => {
             className="w-full h-full object-cover"
           />
         )}
+        {/* Badge de oferta */}
+        {item.isOffer && (
+          <div className="absolute top-0 left-0 bg-amber-500 text-white text-[8px] font-bold px-1 py-0.5 rounded-br">
+            OFERTA
+          </div>
+        )}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-medium text-neutral-800 dark:text-neutral-200 text-sm">
-          {item.nombre}
-        </p>
-        {item.customizations && (
-          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
-            {item.customizations}
+        <div className="flex items-start justify-between gap-2">
+          <p className="font-semibold text-neutral-800 dark:text-neutral-200 text-sm">
+            {item.nombre}
           </p>
-        )}
-        <div className="flex items-center gap-2 mt-1">
-          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+          <span className="text-xs text-neutral-500 dark:text-neutral-400 shrink-0">
             x{item.quantity}
           </span>
-          <span className="text-xs font-medium text-primary-600 dark:text-primary-400">
+        </div>
+
+        {/* Info de oferta */}
+        {item.isOffer && (
+          <div className="mt-1 flex items-center gap-2">
+            <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">
+              {item.offerName || "En oferta"}
+            </span>
+            {item.discount > 0 && (
+              <span className="text-[10px] text-neutral-400 line-through">
+                {formatPrice(item.originalPrice * item.quantity)}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Personalizaciones detalladas */}
+        {(hasRemoved || hasAdded) && (
+          <div className="mt-1.5 space-y-0.5">
+            {hasRemoved && (
+              <p className="text-xs text-red-500 dark:text-red-400">
+                <span className="font-medium">Sin:</span>{" "}
+                {customDetails.removed.join(", ")}
+              </p>
+            )}
+            {hasAdded && (
+              <p className="text-xs text-green-600 dark:text-green-400">
+                <span className="font-medium">Extras:</span>{" "}
+                {customDetails.added
+                  .map((a) =>
+                    a.quantity > 1 ? `${a.quantity}x ${a.name}` : a.name
+                  )
+                  .join(", ")}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Fallback a customizations string si no hay details */}
+        {!hasRemoved && !hasAdded && item.customizations && (
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+            {typeof item.customizations === "string"
+              ? item.customizations
+              : JSON.stringify(item.customizations)}
+          </p>
+        )}
+
+        {/* Precio */}
+        <div className="flex items-center gap-2 mt-1.5">
+          <span className="text-sm font-bold text-primary-600 dark:text-primary-400">
             {formatPrice(item.precio * item.quantity)}
           </span>
+          {item.discount > 0 && (
+            <span className="text-[10px] bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 px-1.5 py-0.5 rounded font-medium">
+              -{formatPrice(item.discount * item.quantity)}
+            </span>
+          )}
         </div>
       </div>
     </div>
@@ -160,6 +227,15 @@ const OrderCard = ({ order, onStatusChange, onDelete }) => {
                 {statusConfig.label}
               </span>
             </div>
+
+            {/* Nombre del cliente */}
+            {order.customer_name && (
+              <div className="flex items-center gap-1 text-sm font-medium text-neutral-700 dark:text-neutral-200 mb-1">
+                <User className="w-3.5 h-3.5 text-primary-500" />
+                {order.customer_name}
+              </div>
+            )}
+
             <div className="flex items-center gap-3 text-xs text-neutral-500 dark:text-neutral-400">
               <span className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
@@ -172,6 +248,22 @@ const OrderCard = ({ order, onStatusChange, onDelete }) => {
                   <Store className="w-3 h-3" />
                 )}
                 {order.delivery_type === "delivery" ? "Envío" : "Retiro"}
+              </span>
+              {/* Método de pago */}
+              <span className="flex items-center gap-1">
+                {order.payment_method === "transfer" ? (
+                  <>
+                    <Wallet className="w-3 h-3 text-blue-500" />
+                    <span className="text-blue-600 dark:text-blue-400 font-medium">
+                      Transferencia
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Banknote className="w-3 h-3" />
+                    Efectivo
+                  </>
+                )}
               </span>
             </div>
           </div>
@@ -209,6 +301,28 @@ const OrderCard = ({ order, onStatusChange, onDelete }) => {
               {items.map((item, index) => (
                 <OrderItem key={index} item={item} />
               ))}
+            </div>
+
+            {/* Resumen de totales */}
+            <div className="mt-4 pt-3 border-t border-neutral-200 dark:border-neutral-700 space-y-1">
+              {order.total_discount > 0 && (
+                <>
+                  <div className="flex justify-between text-xs text-neutral-500 dark:text-neutral-400">
+                    <span>Subtotal:</span>
+                    <span>{formatPrice(order.total_without_discount)}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-green-600 dark:text-green-400">
+                    <span>Descuento ofertas:</span>
+                    <span>-{formatPrice(order.total_discount)}</span>
+                  </div>
+                </>
+              )}
+              <div className="flex justify-between text-sm font-bold text-neutral-800 dark:text-neutral-200">
+                <span>Total:</span>
+                <span className="text-primary-600 dark:text-primary-400">
+                  {formatPrice(order.total)}
+                </span>
+              </div>
             </div>
           </div>
 
